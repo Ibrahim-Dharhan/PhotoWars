@@ -10,6 +10,7 @@ Babel |
 Express | 
 Node | 
 MongoDB | 
+Mongoose | 
 React | 
 Typescript | 
 Webpack | 
