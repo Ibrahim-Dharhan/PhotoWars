@@ -1,12 +1,13 @@
 "use strict"
 
+import { Request, Response } from 'express';
+
 let express = require('express');
 let app = express();
 
-console.log(__dirname);
 app.use(express.static(__dirname));
 
-app.get('/', function(request, response) {
+app.get('/', function(request: Request, response: Response) {
   response.send('Simple web server of files from ' + __dirname);
 });
 

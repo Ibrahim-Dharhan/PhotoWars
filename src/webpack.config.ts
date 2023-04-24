@@ -1,3 +1,4 @@
+const path = require('path');
 const NodemonPlugin = require('nodemon-webpack-plugin');
 
 module.exports = {
@@ -24,9 +25,19 @@ module.exports = {
     extensions: ["*", ".js", ".jsx", ".ts", ".tsx"]
   },
   output: {
-    path: `${__dirname}/compiled`,
-    publicPath: '/',
+    path: path.resolve(__dirname, 'compiled/'),
     filename: '[name].bundle.js',
+  },
+  devServer: {
+    static: path.resolve(__dirname),
+    hot: true,
+    port: 3000,
+    proxy: {
+      '*': {
+        target: 'http://localhost:8080/',
+        secure: false
+      }
+    },
   },
   plugins: [
     new NodemonPlugin({
