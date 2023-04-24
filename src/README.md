@@ -30,10 +30,22 @@ Webpack |
 
 ### **Setting Up Local Development Environment**
 
-To start the server on a local port, run (in the src/ directory)
+All commands should be run in the `src/` directory.
+
+Install `npm` packages:
 
         npm install
+
+To start the server on a local port, run
+
         npm run build
         npm run start
 
-Then, in your browser, go to the localhost URL.
+Then, in your browser, go to the localhost URL printed in the terminal.
+
+Alternatively, if you would like to have the browser automatically refresh
+when you save changes to React components and `server.js`, instead run
+
+        npm run watch
+
+Then, go to the **Loopback** URL, **not** the URL following `nodemon` output.

@@ -26,10 +26,11 @@ module.exports = {
   },
   output: {
     path: path.resolve(__dirname, 'compiled/'),
+    publicPath: '/compiled/',
     filename: '[name].bundle.js',
   },
   devServer: {
-    static: path.resolve(__dirname),
+    static: path.resolve(__dirname, 'compiled/'),
     hot: true,
     port: 3000,
     proxy: {
