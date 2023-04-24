@@ -1,3 +1,5 @@
+const NodemonPlugin = require('nodemon-webpack-plugin');
+
 module.exports = {
   mode: "development",
   entry: {
@@ -26,4 +28,11 @@ module.exports = {
     publicPath: '/',
     filename: '[name].bundle.js',
   },
+  plugins: [
+    new NodemonPlugin({
+      script: './server.ts',
+      watch: './server.ts',
+      verbose: true,
+    }),
+  ],
 };
