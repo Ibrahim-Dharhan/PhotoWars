@@ -30,5 +30,9 @@ Webpack |
 
 ### **Setting Up Local Development Environment**
 
-To start the server on a local port, run
-        node server.ts
+To start the server on a local port, run (in the src/ directory)
+        npm install
+        npm run build
+        npm run start
+
+Then, in your browser, go to the localhost URL.
