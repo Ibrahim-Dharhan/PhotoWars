@@ -24,6 +24,6 @@ module.exports = {
   output: {
     path: `${__dirname}/compiled`,
     publicPath: '/',
-    filename: '[name].bundle.ts',
+    filename: '[name].bundle.js',
   },
 };
