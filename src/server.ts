@@ -10,7 +10,7 @@ app.get('/', function(request, response) {
   response.send('Simple web server of files from ' + __dirname);
 });
 
-let PORT_NUM = 3000;
+let PORT_NUM = 8080;
 let server = app.listen(PORT_NUM, function() {
   let port = server.address().port;
   console.log('Listening at http://localhost:' + port
