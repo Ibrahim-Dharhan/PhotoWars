@@ -30,4 +30,5 @@ Webpack |
 
 ### **Setting Up Local Development Environment**
 
-
+To start the server on a local port, run
+        node server.ts
