@@ -3,6 +3,17 @@
 This file describes steps for installing and/or using different components of
 the MERN stack to develop our project application locally.
 
+## **Different Technologies Used**
+Name | Description
+--- | ---
+Babel | 
+Express | 
+Node | 
+MongoDB | 
+React | 
+Typescript | 
+Webpack | 
+
 ## **Node**
 
 ### **Mac Installation**
