@@ -1,23 +1,10 @@
-# **Setup Steps for developing locally**
+# Development
 
-This file describes steps for installing and/or using different components of
-the MERN stack to develop our project application locally.
+This file describes steps for installing and/or using different parts of
+the MERN stack to develop our project application locally. The end of the file
+describes the different technologies and frameworks we used.
 
-## **Different Technologies Used**
-Name | Description
---- | ---
-Babel | A Javascript and Typescript transpiler that allows compatibility with older environments if language features are not supported natively. Babel also helps transpile JSX/TSX syntax and React components to browser-supported JavaScript.
-Express | Express(.js) is a server-side middleware framework that runs inside Node, supporting URL routing and handling HTTP requests and responses.
-Node | Node(.js) is a cross-platform server environment that supports   JavaScript outside of the browser.
-MongoDB | MongoDB is a NoSQL database program supporting JSON-like documents and schemas.
-Mongoose | Mongoose is a Object Data Modeling (ORM) library for MongoDB and Node that manages data and schemas, providing functionality like schema validation to enforce some structure in a MongoDB database.
-React | React(.js) is a JavaScript framework for building UI/UX interfaces via individual pieces called components.
-Typescript | TypeScript is a superset of JavaScript that adds static typing.
-webpack | webpack is a module bundler for JavaScript that turns a JavaScript module into a static, self-contained package with all necessary and dependent modules.
-
-## **Node**
-
-### **Mac Installation**
+## Mac Installation of Node
 
 1. Install Homebrew, a terminal-based package manager. If you haven't yet
     installed Homebrew, you can do so [here](https://brew.sh/).
@@ -28,9 +15,9 @@ webpack | webpack is a module bundler for JavaScript that turns a JavaScript mod
         node -v
         npm -v
 
-### **Setting Up Local Development Environment**
+## Setting Up Local Development Environment
 
-All commands should be run in the `src/` directory.
+**All commands should be run in the `src/` directory.**
 
 Install `npm` packages:
 
@@ -49,3 +36,16 @@ when you save changes to React components and `server.js`, instead run
         npm run watch
 
 Then, go to the **Loopback** URL, **not** the URL following `nodemon` output.
+
+## Different Technologies Used
+Name | Description
+--- | ---
+Babel | A Javascript and Typescript transpiler that allows compatibility with older environments if language features are not supported natively. Babel also helps transpile JSX/TSX syntax and React components to browser-supported JavaScript.
+Express | Express(.js) is a server-side middleware framework that runs inside Node, supporting URL routing and handling HTTP requests and responses.
+Node | Node(.js) is a cross-platform server environment that supports   JavaScript outside of the browser.
+MongoDB | MongoDB is a NoSQL database program supporting JSON-like documents and schemas.
+Mongoose | Mongoose is a Object Data Modeling (ORM) library for MongoDB and Node that manages data and schemas, providing functionality like schema validation to enforce some structure in a MongoDB database.
+React | React(.js) is a JavaScript framework for building UI/UX interfaces via individual pieces called components.
+Typescript | TypeScript is a superset of JavaScript that adds static typing.
+webpack | webpack is a module bundler for JavaScript that turns a JavaScript module into a static, self-contained package with all necessary and dependent modules.
+
