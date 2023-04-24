@@ -31,6 +31,7 @@ Webpack |
 ### **Setting Up Local Development Environment**
 
 To start the server on a local port, run (in the src/ directory)
+
         npm install
         npm run build
         npm run start
