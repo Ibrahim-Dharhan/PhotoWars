@@ -14,12 +14,13 @@ const kittySchema = new mongoose.Schema({
 const Kitten = mongoose.model('Kitten', kittySchema);
 Promise.all([Kitten.deleteMany({})]).then(function() {
   Kitten.create({
-                    name: 'Silence'
-                  }).then(function(kittyObj) {
-                    kittyObj.save();
-                  });
+      name: 'Silence'
+  }).then(function(kittyObj) {
+      kittyObj.save().then(() => {
+        Kitten.find().then(function(kitten) { console.log(kitten) })
+      });
+  });
 
-  const kittens = Kitten.find().then(function(kitten) { console.log(kitten) });
 });
 
 import express from 'express';
