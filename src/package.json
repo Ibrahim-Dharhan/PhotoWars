@@ -5,7 +5,7 @@
   "main": "server.ts",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "lint": "eslint *.ts *.tsx routes/**/*.ts",
+    "lint": "eslint **/*.ts **/*.tsx",
     "build": "webpack --config webpack.config.ts",
     "start": "nodemon server.ts",
     "watch": "webpack serve --config webpack.config.ts"
@@ -31,6 +31,9 @@
     "webpack-dev-server": "^4.13.3"
   },
   "dependencies": {
+    "@emotion/react": "^11.10.6",
+    "@emotion/styled": "^11.10.6",
+    "@mui/material": "^5.12.2",
     "@types/jest": "^29.5.1",
     "@types/node": "^18.16.0",
     "@types/react": "^18.0.38",
@@ -40,6 +43,7 @@
     "mongoose": "^7.0.5",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
+    "swagger-jsdoc": "^6.2.8",
     "swagger-ui-express": "^4.6.2",
     "yaml": "^2.2.2"
   }
