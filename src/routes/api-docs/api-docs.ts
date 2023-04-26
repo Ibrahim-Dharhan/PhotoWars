@@ -1,8 +1,8 @@
-const express = require('express');
-const swaggerUi = require('swagger-ui-express');
+import express = require('express');
+import swaggerUi = require('swagger-ui-express');
 
-const fs = require('fs');
-const YAML = require('yaml');
+import fs = require('fs');
+import YAML = require('yaml');
 const file = fs.readFileSync('./routes/api-docs/swagger.yaml', 'utf8');
 const swaggerDocument = YAML.parse(file);
 

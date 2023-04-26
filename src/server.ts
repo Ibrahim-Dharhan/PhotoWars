@@ -1,9 +1,10 @@
 "use strict"
 
-import async from 'async';
+import async = require('async');
+import mongoose from 'mongoose';
+import express = require('express');
 
 const MONGODB_NAME = 'cs194';
-import mongoose from 'mongoose';
 mongoose.connect('mongodb://127.0.0.1:27017/' + MONGODB_NAME)
         .then(()=>console.log('Mongoose successfully connected to MongoDB.'));
 
@@ -25,7 +26,6 @@ Promise.all([Kitten.deleteMany({})]).then(function() {
 });
 ///////////////////////
 
-import express from 'express';
 const app = express();
 app.use(express.static(__dirname));
 
@@ -68,5 +68,5 @@ const PORT_NUM = 8080;
 /* eslint-disable-next-line @typescript-eslint/no-unused-vars */
 const server = app.listen(PORT_NUM, function() {
   console.log('Listening at http://127.0.0.1:' + PORT_NUM
-              + ' exporting the directory ' + __dirname);
+              + ' exporting the directory ' + __dirname + '.');
 });
