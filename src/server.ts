@@ -6,8 +6,8 @@ import express = require('express');
 const app = express();
 app.use(express.static(__dirname));
 
-import { apiDocsRouter } from './routes/api-docs/api-docs';
-app.use('/api-docs', apiDocsRouter);
+import { swaggerRouter } from './routes/swagger/swagger';
+app.use('/swagger', swaggerRouter );
 
 import { testRouter } from './routes/test/test';
 app.use('/test', testRouter);
