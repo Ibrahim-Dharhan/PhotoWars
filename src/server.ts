@@ -29,7 +29,7 @@ Promise.all([Kitten.deleteMany({})]).then(function() {
 const app = express();
 app.use(express.static(__dirname));
 
-const apiDocsRouter = require('./routes/api-docs/api-docs.ts');
+import apiDocsRouter = require('./routes/api-docs/api-docs.ts');
 app.use('/api-docs', apiDocsRouter);
 
 app.get('/', function(request: express.Request, response: express.Response) {
@@ -42,7 +42,7 @@ app.get('/test', function(request, response) {
     collection: any;
     count?: number;
   }
-  let collections: Collection[] = [
+  const collections: Collection[] = [
       {name: 'kittens', collection: Kitten, count: 0}
   ];
   async.each(collections, function (col: any, done_callback: any) {
