@@ -7,6 +7,7 @@ import mongoose from 'mongoose';
 mongoose.connect('mongodb://127.0.0.1:27017/' + MONGODB_NAME)
         .then(()=>console.log('Mongoose successfully connected to MongoDB.'));
 
+/////////////////////// MongoDB Test Code
 const kittySchema = new mongoose.Schema({
   name: String
 });
@@ -22,11 +23,14 @@ Promise.all([Kitten.deleteMany({})]).then(function() {
   });
 
 });
+///////////////////////
 
 import express from 'express';
 const app = express();
-
 app.use(express.static(__dirname));
+
+const apiDocsRouter = require('./routes/api-docs/api-docs.ts');
+app.use('/api-docs', apiDocsRouter);
 
 app.get('/', function(request: express.Request, response: express.Response) {
   response.send('Simple web server of files from ' + __dirname);
