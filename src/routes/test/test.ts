@@ -14,7 +14,7 @@ const testRouter = express.Router();
  *     responses:
  *       200:
  *         description: Successfully retrieved Kitten object.
- *         contents:
+ *         content:
  *           application/json:
  *             schema:
  *               $ref: '#/components/schemas/Kitten'
@@ -32,7 +32,7 @@ testRouter.get('/kitten', (request, response) => {
           console.log(kitten);
           response.status(200).send(JSON.stringify(kitten));
           Kitten.collection.drop();
-        }).catch(function(err) {
+        }).catch(function() {
           response.status(500).send("Internal Server Error");
         });
       });
