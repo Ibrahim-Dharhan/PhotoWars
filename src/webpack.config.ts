@@ -1,3 +1,5 @@
+"use strict"
+
 import path = require('path');
 import NodemonPlugin = require('nodemon-webpack-plugin');
 

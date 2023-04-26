@@ -1,3 +1,5 @@
+"use strict"
+
 import express = require('express');
 import swaggerUi = require('swagger-ui-express');
 

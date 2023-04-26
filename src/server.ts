@@ -30,5 +30,5 @@ async function initServer() {
     console.log('Listening at http://127.0.0.1:' + PORT_NUM
                 + ' exporting the directory ' + __dirname + '.');
   });
-};
+}
 initServer();
