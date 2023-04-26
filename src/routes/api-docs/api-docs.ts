@@ -11,4 +11,4 @@ const apiDocsRouter = express.Router();
 apiDocsRouter.use('/', swaggerUi.serve);
 apiDocsRouter.get('/', swaggerUi.setup(swaggerDocument));
 
-module.exports = apiDocsRouter
+export { apiDocsRouter };

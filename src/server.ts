@@ -29,7 +29,7 @@ Promise.all([Kitten.deleteMany({})]).then(function() {
 const app = express();
 app.use(express.static(__dirname));
 
-import apiDocsRouter = require('./routes/api-docs/api-docs.ts');
+import { apiDocsRouter } from './routes/api-docs/api-docs';
 app.use('/api-docs', apiDocsRouter);
 
 app.get('/', function(request: express.Request, response: express.Response) {
