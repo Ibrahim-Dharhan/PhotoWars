@@ -5,7 +5,7 @@
   "main": "server.ts",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "lint": "eslint server.ts *.tsx",
+    "lint": "eslint *.ts *.tsx routes/**/*.ts",
     "build": "webpack --config webpack.config.ts",
     "start": "ts-node server.ts",
     "watch": "webpack serve --config webpack.config.ts"
