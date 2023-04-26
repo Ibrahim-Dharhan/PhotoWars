@@ -32,9 +32,12 @@ app.use(express.static(__dirname));
 import { apiDocsRouter } from './routes/api-docs/api-docs';
 app.use('/api-docs', apiDocsRouter);
 
+/*
+ * Not called on because index.html is served instead, as expected.
 app.get('/', function(request: express.Request, response: express.Response) {
   response.send('Simple web server of files from ' + __dirname);
 });
+*/
 
 app.get('/test', function(request, response) {
   interface Collection {
