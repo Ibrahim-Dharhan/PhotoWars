@@ -34,9 +34,7 @@ const swaggerRouter = express.Router();
  *               type: object
  */
 swaggerRouter.get('/swaggerSpec', (request, response) => {
-  response.header("Content-Type",'application/json');
-  const specStr = JSON.stringify(swaggerSpec);
-  response.type('json').send(specStr);
+  response.type('json').json(swaggerSpec);
 });
 
 /**

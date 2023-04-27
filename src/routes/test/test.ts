@@ -29,8 +29,7 @@ testRouter.get('/kitten', (request, response) => {
     }).then(function(kittyObj) {
       kittyObj.save().then(() => {
         Kitten.findOne().then(function(kitten) {
-          console.log(kitten);
-          response.status(200).send(JSON.stringify(kitten));
+          response.status(200).json(kitten);
           Kitten.collection.drop();
         }).catch(function() {
           response.status(500).send("Internal Server Error");
