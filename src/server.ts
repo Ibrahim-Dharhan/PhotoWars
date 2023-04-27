@@ -1,10 +1,11 @@
 "use strict"
 
-import mongoose from 'mongoose';
 import express = require('express');
+import mongoose from 'mongoose';
 
 const app = express();
 app.use(express.static(__dirname));
+app.use(express.json());
 
 import { swaggerRouter } from './routes/swagger/swagger';
 app.use('/swagger', swaggerRouter );
