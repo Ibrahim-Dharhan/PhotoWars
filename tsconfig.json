@@ -1,6 +1,7 @@
 {
   "compilerOptions": {
     "typeRoots": ["./src/node_modules/@types"],
-    "jsx": "react"
+    "jsx": "react",
+    "allowSyntheticDefaultImports": true
   }
 }

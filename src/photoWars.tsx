@@ -1,16 +1,19 @@
 import React from 'react';
-import ReactDOM from 'react-dom';
+import { createRoot } from 'react-dom/client';
 
+/* Importing Components */
 import HelloWorld from './components/helloWorld/HelloWorld';
 
 class PhotoWars extends React.Component {
   render() {
     return (
-      <div>
+      <React.StrictMode>
         <HelloWorld />
-      </div>
+      </React.StrictMode>
     );
   }
 }
 
-ReactDOM.render(<PhotoWars />, document.getElementById('photowarsapp'));
+// const rootElement = document.getElementById('root');
+const root = createRoot(document.getElementById('root') as HTMLElement);
+root.render(<PhotoWars />);
