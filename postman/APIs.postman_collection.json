@@ -7,22 +7,67 @@
 	},
 	"item": [
 		{
-			"name": "Testing",
+			"name": "/test",
 			"item": [
 				{
-					"name": "/test",
+					"name": "/test/kitten",
 					"request": {
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "http://{{ip}}:{{port}}/test",
+							"raw": "http://{{ip}}:{{port}}/test/kitten",
 							"protocol": "http",
 							"host": [
 								"{{ip}}"
 							],
 							"port": "{{port}}",
 							"path": [
-								"test"
+								"test",
+								"kitten"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "/swagger",
+			"item": [
+				{
+					"name": "/swagger",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://{{ip}}:{{port}}/swagger",
+							"protocol": "http",
+							"host": [
+								"{{ip}}"
+							],
+							"port": "{{port}}",
+							"path": [
+								"swagger"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "/swagger/swagger.json",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://{{ip}}:{{port}}/swagger/spec",
+							"protocol": "http",
+							"host": [
+								"{{ip}}"
+							],
+							"port": "{{port}}",
+							"path": [
+								"swagger",
+								"spec"
 							]
 						}
 					},
