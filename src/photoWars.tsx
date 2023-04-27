@@ -14,6 +14,5 @@ class PhotoWars extends React.Component {
   }
 }
 
-// const rootElement = document.getElementById('root');
 const root = createRoot(document.getElementById('root') as HTMLElement);
 root.render(<PhotoWars />);
