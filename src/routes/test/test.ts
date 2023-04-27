@@ -22,17 +22,17 @@ const testRouter = express.Router();
  *         description: Internal server error.
  *
  */
-testRouter.get('/kitten', (request, response) => {
+testRouter.get('/kitten', (req, res) => {
   Kitten.deleteMany({}).then(function() {
     Kitten.create({
       name: 'Silence'
     }).then(function(kittyObj) {
       kittyObj.save().then(() => {
         Kitten.findOne().then(function(kitten) {
-          response.status(200).json(kitten);
+          res.status(200).json(kitten);
           Kitten.collection.drop();
         }).catch(function() {
-          response.status(500).send("Internal Server Error");
+          res.status(500).send("Internal Server Error");
         });
       });
     });

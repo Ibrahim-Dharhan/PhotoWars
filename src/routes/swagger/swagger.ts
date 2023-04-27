@@ -33,8 +33,8 @@ const swaggerRouter = express.Router();
  *             schema:
  *               type: object
  */
-swaggerRouter.get('/swaggerSpec', (request, response) => {
-  response.type('json').json(swaggerSpec);
+swaggerRouter.get('/swaggerSpec', (req, res) => {
+  res.type('json').json(swaggerSpec);
 });
 
 /**
