@@ -45,7 +45,7 @@ module.exports = {
   plugins: [
     new NodemonPlugin({
       script: './server.ts',
-      watch: ['./server.ts', './routes/**/*.ts'], 
+      watch: ['./server.ts', './endpoints/**/*.ts'], 
       verbose: true,
     }),
   ],
