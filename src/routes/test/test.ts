@@ -23,15 +23,15 @@ const testRouter = express.Router();
  *
  */
 testRouter.get('/kitten', (req, res) => {
-  Kitten.deleteMany({}).then(function() {
+  Kitten.deleteMany({}).then(() => {
     Kitten.create({
       name: 'Silence'
-    }).then(function(kittyObj) {
+    }).then((kittyObj) => {
       kittyObj.save().then(() => {
-        Kitten.findOne().then(function(kitten) {
+        Kitten.findOne().then((kitten) => {
           res.status(200).json(kitten);
           Kitten.collection.drop();
-        }).catch(function() {
+        }).catch(() => {
           res.status(500).send("Internal Server Error");
         });
       });
