@@ -7,10 +7,10 @@ const app = express();
 app.use(express.static(__dirname));
 app.use(express.json());
 
-import { swaggerRouter } from './routes/swagger/swagger';
+import { swaggerRouter } from './endpoints/swagger/swagger';
 app.use('/swagger', swaggerRouter );
 
-import { testRouter } from './routes/test/test';
+import { testRouter } from './endpoints/test/test';
 app.use('/test', testRouter);
 
 /*

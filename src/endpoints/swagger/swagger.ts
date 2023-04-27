@@ -14,7 +14,7 @@ const options = {
       version: "1.0",
     }
   },
-  apis: ["./server.ts", "./routes/**/*.ts", "./schemas/**/*.ts"]
+  apis: ["./**/*.ts"]
 };
 const swaggerSpec = swaggerJSDoc(options);
 
@@ -22,7 +22,7 @@ const swaggerRouter = express.Router();
 
 /**
  * @openapi
- * /swagger/swagger:
+ * /swagger/spec:
  *   get:
  *     summary: Returns JSON of Swagger OpenAPI specification.
  *     responses:
@@ -33,7 +33,7 @@ const swaggerRouter = express.Router();
  *             schema:
  *               type: object
  */
-swaggerRouter.get('/swaggerSpec', (req, res) => {
+swaggerRouter.get('/spec', (req, res) => {
   res.type('json').json(swaggerSpec);
 });
 
