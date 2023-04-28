@@ -26,7 +26,6 @@ async function initServer() {
   console.log('Mongoose successfully connected to MongoDB.');
 
   const PORT_NUM = 8080;
-  /* eslint-disable-next-line @typescript-eslint/no-unused-vars */
   app.listen(PORT_NUM, function() {
     console.log('Listening at http://127.0.0.1:' + PORT_NUM
                 + ' exporting the directory ' + __dirname + '.');
