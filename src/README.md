@@ -15,6 +15,12 @@ describes the different technologies and frameworks we used.
         node -v
         npm -v
 
+## Mac Installation of MongoDB
+
+1. Follow these instructions [here](https://www.mongodb.com/docs/manual/tutorial/install-mongodb-on-os-x/)
+2. To check that the installation was successful, run `mongosh`. If it doesn't
+   fail then the installation was successful and MongoDB is now running.
+
 ## Setting Up Local Development Environment
 
 **All commands should be run in the `src/` directory.**
