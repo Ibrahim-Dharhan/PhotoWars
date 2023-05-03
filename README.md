@@ -3,3 +3,5 @@ Photo Wars is a web platform for user-submitted and user-voted photo humor, insp
 
 # Wiki
 https://github.com/StanfordCS194/spr23-Team15/wiki
+
+Ibrahim Dharhan
