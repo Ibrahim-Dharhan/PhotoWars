@@ -8,11 +8,13 @@ https://github.com/StanfordCS194/spr23-Team15/wiki
 Jackie Gong
 
 
-
 Ibrahim Dharhan
+
+
 Grace Zhou
 
 
 Jakob Nordhagen
+
 
 Caroline Wang
