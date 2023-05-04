@@ -7,15 +7,19 @@ import Typography from '@mui/material/Typography';
 
 import axios from 'axios';
 
-class HelloWorld extends React.Component {
+interface State {
+  buttonText: string
+}
+
+class HelloWorld extends React.Component<{}, State> {
   constructor(props) {
     super(props);
     this.state = { buttonText: 'Ping' };
   }
 
-  clickLearnMore(event) {
+  clickLearnMore() {
     const path = '/test/ping'
-    let promise = axios.get(path);
+    const promise = axios.get(path);
     promise.then((res) => {
       this.setState({ buttonText: res.data});
     }).catch((err) => {
@@ -41,7 +45,7 @@ class HelloWorld extends React.Component {
           </Typography>
         </CardContent>
         <CardActions>
-          <Button size="small" onclick=clickLearnMore>{this.state.buttonText}</Button>
+          <Button size="small" onClick={() => this.clickLearnMore()}>{this.state.buttonText}</Button>
         </CardActions>
       </Card>
     );
