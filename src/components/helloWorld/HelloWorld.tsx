@@ -5,7 +5,24 @@ import CardContent from '@mui/material/CardContent';
 import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
 
+import axios from 'axios';
+
 class HelloWorld extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = { buttonText: 'Ping' };
+  }
+
+  clickLearnMore(event) {
+    const path = '/test/ping'
+    let promise = axios.get(path);
+    promise.then((res) => {
+      this.setState({ buttonText: res.data});
+    }).catch((err) => {
+      console.log(err);
+    });
+  }
+
   render() {
     return (
       <Card sx={{ minWidth: 275 }}>
@@ -20,11 +37,11 @@ class HelloWorld extends React.Component {
             greeting
           </Typography>
           <Typography variant="body2">
-            common phrase used in computer programs.
+            a common phrase used in computer programs.
           </Typography>
         </CardContent>
         <CardActions>
-          <Button size="small">Learn More</Button>
+          <Button size="small" onclick=clickLearnMore>{this.state.buttonText}</Button>
         </CardActions>
       </Card>
     );

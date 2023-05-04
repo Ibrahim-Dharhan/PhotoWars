@@ -39,4 +39,22 @@ testRouter.get('/kitten', (req, res) => {
   });
 });
 
+/**
+ * @openapi
+ * /test/ping:
+ *   get:
+ *     summary: Returns a 200 response on successful ping.
+ *     responses:
+ *       200:
+ *         description: Returns 'Pong' text.
+ *         content:
+ *           text/plain:
+ *            schema:
+ *              type: string
+ *              example: Pong
+ */
+testRouter.get('/ping', (req, res) => {
+  res.status(200).send("Pong");
+});
+
 export { testRouter };
