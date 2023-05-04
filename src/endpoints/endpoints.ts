@@ -1,58 +1,24 @@
 /**
  * @openapi
- * /user/new:
- *   post:
- *     summary: Creating a new user.
- *     responses:
- *       200:
- *         description: Successfully created new user.
- *       400:
- *         description: Missing information to create a new user.
- *       500:
- *         description: Internal server error.
- */
-
-/**
- * @openapi
- * /user:
- *   delete:
- *     summary: Delete logged in user and all of their related content.
- *     responses:
- *       200:
- *         description: Successfully delete user data.
- *       401:
- *         description:
- *           User is not logged in.
- *       500:
- *         description: Internal server error.
- *   put:
- *     summary: Update user profile information.
- *     responses:
- *       200:
- *         description: Successfully delete user data.
- *       401:
- *         description: User is not logged in.
- *       500:
- *         description: Internal server error.
- */
-
-/**
- * @openapi
- * /user/{id}:
- *   get:
- *     summary: Returns information for user with id.
- *     parameters:
- *       - in: path
- *         name: id
- *         schema:
- *           type: string
- *         required: true
- *         description: Database ID of user
- *     responses:
- *       200:
- *         description: Successfully returned JSON object with user information.
- *       500:
- *         description: Internal server error.
+ * components:
+ *   parameters:
+ *     idParam:
+ *       in: path
+ *       name: id
+ *       description: Database ID of object.
+ *       schema:
+ *         type: string
+ *       required: true
+ *
+ *   responses:
+ *     401:
+ *       description: User is not logged in.
+ *     403:
+ *       description: User is not the owner of this resource.
+ *     404:
+ *       description: Resource not found.
+ *     500:
+ *       description: Internal server error.
  */
 
 /**
@@ -66,9 +32,9 @@
  *       400:
  *         description: Missing information to create a new battle.
  *       401:
- *         description: User is not logged in.
+ *         $ref: '#/components/responses/401'
  *       500:
- *         description: Internal server error.
+ *         $ref: '#/components/responses/500'
  */
 
 /**
@@ -77,126 +43,123 @@
  *   get:
  *     summary: Return information about a battle.
  *     parameters:
- *       - in: path
- *         name: id
- *         schema:
- *           type: string
- *         required: true
- *         description: Database ID of user
+ *       - $ref: '#/components/parameters/idParam'
  *     responses:
  *       200:
  *         description: Successfully returned information about battle.
  *       404:
- *         description: Failed to find battle, or battle did not exist.
+ *         $ref: '#/components/responses/404'
  *       500:
- *         description: Internal server error.
+ *         $ref: '#/components/responses/500'
  *   put:
  *     summary: Update battle information if user is the battle creator.
+ *     parameters:
+ *       - $ref: '#/components/parameters/idParam'
  *     responses:
  *       200:
  *         description: Successfully updated battle information.
  *       401:
- *         description: User not logged in.
+ *         $ref: '#/components/responses/401'
  *       403:
- *         description: User is not the creator of the battle.
+ *         $ref: '#/components/responses/403'
  *       404:
- *         description: Failed to find battle, or battle did not exist.
+ *         $ref: '#/components/responses/404'
  *       500:
- *         description: Internal server error.
- */
-
-/**
- * @openapi
- * /battle/{id}/submission:
- *   post:
- *     summary: Creating a new submission to a battle by a user.
+ *         $ref: '#/components/responses/500'
+ *   delete:
+ *     summary: Delete battle if user is the battle creator.
+ *     parameters:
+ *       - $ref: '#/components/parameters/idParam'
  *     responses:
  *       200:
- *         description: Successfully created new submission.
- *       400:
- *         description: Missing information to create a new submission.
+ *         description: Successfully deleted battle.
  *       401:
- *         description: User is not logged in.
+ *         $ref: '#/components/responses/401'
+ *       403:
+ *         $ref: '#/components/responses/403'
+ *       404:
+ *         $ref: '#/components/responses/404'
  *       500:
- *         description: Internal server error.
+ *         $ref: '#/components/responses/500'
  */
 
 /**
  * @openapi
  * /battle/{id}/comment:
+ *   get:
+ *     summary: Retrieve comments for battle.
+ *     parameters:
+ *       - $ref: '#/components/parameters/idParam'
+ *     responses:
+ *       200:
+ *         description: Successfully returned comments.
+ *       404:
+ *         $ref: '#/components/responses/404'
+ *       500:
+ *         $ref: '#/components/responses/500'
  *   post:
  *     summary: Creating a new comment by a user on a battle.
+ *     parameters:
+ *       - $ref: '#/components/parameters/idParam'
  *     responses:
  *       200:
  *         description: Successfully created new comment.
  *       400:
  *         description: Missing information to create a new comment.
  *       401:
- *         description: User is not logged in.
+ *         $ref: '#/components/responses/401'
  *       500:
- *         description: Internal server error.
+ *         $ref: '#/components/responses/500'
  */
 
 /**
  * @openapi
- * /submission/{id}:
- *   get:
- *     summary: Return information about a submission.
- *     parameters:
- *       - in: path
- *         name: id
- *         schema:
- *           type: string
- *         required: true
- *         description: Database ID of submission.
- *     responses:
- *       200:
- *         description: Successfully returned information about submission.
- *       404:
- *         description: Failed to find battle, or battle did not exist.
- *       500:
- *         description: Internal server error.
- *   put:
- *     summary: Update submission information if user is the creator.
- *     parameters:
- *       - in: path
- *         name: id
- *         schema:
- *           type: string
- *         required: true
- *         description: Database ID of submission.
- *     responses:
- *       200:
- *         description: Successfully commented on submission.
- *       401:
- *         description: User not logged in.
- *       404:
- *         description: Failed to find submission, or submission did not exist.
- *       500:
- *         description: Internal server error.
- */
-
-/**
- * @openapi
- * /submission/{id}/comment:
+ * /battle/{id}/like:
  *   post:
- *     summary: Creating new comment by a user on a submission.
+ *     summary: Like a battle.
  *     parameters:
- *       - in: path
- *         name: id
- *         schema:
- *           type: string
- *         required: true
- *         description: Database ID of submission.
+ *       - $ref: '#/components/parameters/idParam'
  *     responses:
  *       200:
- *         description: Successfully commented on submission.
+ *         description: Successfully liked the battle.
  *       401:
- *         description: User not logged in.
- *       404:
- *         description: Failed to find submission, or submission did not exist.
+ *         $ref: '#/components/responses/401'
  *       500:
- *         description: Internal server error.
+ *         $ref: '#/components/responses/500'
+ */
+
+/**
+ * @openapi
+ * /battle/{id}/submit:
+ *   post:
+ *     summary: Creating a new submission to a battle by a user.
+ *     parameters:
+ *       - $ref: '#/components/parameters/idParam'
+ *     responses:
+ *       200:
+ *         description: Successfully created new submission.
+ *       400:
+ *         description: Missing information to create a new submission.
+ *       401:
+ *         $ref: '#/components/responses/401'
+ *       500:
+ *         $ref: '#/components/responses/500'
+ */
+
+/**
+ * @openapi
+ * /battle/{id}/unlike:
+ *   post:
+ *     summary: Unlike a battle.
+ *     parameters:
+ *       - $ref: '#/components/parameters/idParam'
+ *     responses:
+ *       200:
+ *         description: Successfully unliked the battle.
+ *       401:
+ *         $ref: '#/components/responses/401'
+ *       500:
+ *         $ref: '#/components/responses/500'
  */
 
 /**
@@ -205,39 +168,262 @@
  *   get:
  *     summary: Get comment information.
  *     parameters:
- *       - in: path
- *         name: id
- *         schema:
- *           type: string
- *         required: true
- *         description: Database ID of comment.
+ *       - $ref: '#/components/parameters/idParam'
  *     responses:
  *       200:
  *         description: Successfully retrieved comment.
  *       404:
- *         description: Failed to find submission, or submission did not exist.
+ *         $ref: '#/components/responses/404'
  *       500:
- *         description: Internal server error.
+ *         $ref: '#/components/responses/500'
  *   put:
  *     summary: Updating a comment by a user.
  *     parameters:
- *       - in: path
- *         name: id
- *         schema:
- *           type: string
- *         required: true
- *         description: Database ID of comment.
+ *       - $ref: '#/components/parameters/idParam'
  *     responses:
  *       200:
  *         description: Successfully updated user comment.
  *       401:
- *         description: User not logged in.
+ *         $ref: '#/components/responses/401'
  *       403:
- *         description: User is not the creator of the comment.
+ *         $ref: '#/components/responses/403'
  *       404:
- *         description: Failed to find comment, or comment did not exist.
+ *         $ref: '#/components/responses/404'
  *       500:
- *         description: Internal server error.
+ *         $ref: '#/components/responses/500'
+ *   delete:
+ *     summary: Delete comment if user is the comment owner.
+ *     parameters:
+ *       - $ref: '#/components/parameters/idParam'
+ *     responses:
+ *       200:
+ *         description: Successfully deleted comment.
+ *       401:
+ *         $ref: '#/components/responses/401'
+ *       403:
+ *         $ref: '#/components/responses/403'
+ *       404:
+ *         $ref: '#/components/responses/404'
+ *       500:
+ *         $ref: '#/components/responses/500'
+ */
+
+/**
+ * @openapi
+ * /comment/{id}/like:
+ *   post:
+ *     summary: Like a comment.
+ *     parameters:
+ *       - $ref: '#/components/parameters/idParam'
+ *     responses:
+ *       200:
+ *         description: Successfully liked the comment.
+ *       401:
+ *         $ref: '#/components/responses/401'
+ *       500:
+ *         $ref: '#/components/responses/500'
+ */
+
+/**
+ * @openapi
+ * /comment/{id}/unlike:
+ *   post:
+ *     summary: Unlike a comment.
+ *     parameters:
+ *       - $ref: '#/components/parameters/idParam'
+ *     responses:
+ *       200:
+ *         description: Successfully unliked the comment.
+ *       401:
+ *         $ref: '#/components/responses/401'
+ *       500:
+ *         $ref: '#/components/responses/500'
+ */
+
+/**
+ * @openapi
+ * /login:
+ *   post:
+ *     summary: Attempt to log in with given credentials.
+ *     responses:
+ *       200:
+ *         description: Successfully logged in.
+ *       400:
+ *         description: Failed to login user with credentials.
+ *       500:
+ *         $ref: '#/components/responses/500'
+ */
+
+/**
+ * @openapi
+ * /logout:
+ *   post:
+ *     summary: Log user out.
+ *     responses:
+ *       200:
+ *         description: Successfully logged out.
+ *       400:
+ *         description: Failed to logout user.
+ *       401:
+ *         $ref: '#/components/responses/401'
+ *       500:
+ *         $ref: '#/components/responses/500'
+ */
+
+/**
+ * @openapi
+ * /submission/{id}:
+ *   get:
+ *     summary: Return information about a submission.
+ *     parameters:
+ *       - $ref: '#/components/parameters/idParam'
+ *     responses:
+ *       200:
+ *         description: Successfully returned information about submission.
+ *       404:
+ *         $ref: '#/components/responses/404'
+ *       500:
+ *         $ref: '#/components/responses/500'
+ *   put:
+ *     summary: Update submission information if user is the creator.
+ *     parameters:
+ *       - $ref: '#/components/parameters/idParam'
+ *     responses:
+ *       200:
+ *         description: Successfully commented on submission.
+ *       401:
+ *         $ref: '#/components/responses/401'
+ *       404:
+ *         $ref: '#/components/responses/404'
+ *       500:
+ *         $ref: '#/components/responses/500'
+ *   delete:
+ *     summary: Delete submission if user is the comment owner.
+ *     parameters:
+ *       - $ref: '#/components/parameters/idParam'
+ *     responses:
+ *       200:
+ *         description: Successfully deleted submission.
+ *       401:
+ *         $ref: '#/components/responses/401'
+ *       403:
+ *         $ref: '#/components/responses/403'
+ *       404:
+ *         $ref: '#/components/responses/404'
+ *       500:
+ *         $ref: '#/components/responses/500'
+ */
+
+/**
+ * @openapi
+ * /submission/{id}/comment:
+ *   get:
+ *     summary: Retrieve comments for submission.
+ *     parameters:
+ *       - $ref: '#/components/parameters/idParam'
+ *     responses:
+ *       200:
+ *         description: Successfully returned comments.
+ *       404:
+ *         $ref: '#/components/responses/404'
+ *       500:
+ *         $ref: '#/components/responses/500'
+ *   post:
+ *     summary: Creating new comment by a user on a submission.
+ *     parameters:
+ *       - $ref: '#/components/parameters/idParam'
+ *     responses:
+ *       200:
+ *         description: Successfully commented on submission.
+ *       401:
+ *         $ref: '#/components/responses/401'
+ *       404:
+ *         $ref: '#/components/responses/404'
+ *       500:
+ *         $ref: '#/components/responses/500'
+ */
+
+/**
+ * @openapi
+ * /submission/{id}/like:
+ *   post:
+ *     summary: Like a submission.
+ *     parameters:
+ *       - $ref: '#/components/parameters/idParam'
+ *     responses:
+ *       200:
+ *         description: Successfully liked the submission.
+ *       401:
+ *         $ref: '#/components/responses/401'
+ *       500:
+ *         $ref: '#/components/responses/500'
+ */
+
+/**
+ * @openapi
+ * /submission/{id}/unlike:
+ *   post:
+ *     summary: Unlike a submission.
+ *     parameters:
+ *       - $ref: '#/components/parameters/idParam'
+ *     responses:
+ *       200:
+ *         description: Successfully unliked the submission.
+ *       401:
+ *         $ref: '#/components/responses/401'
+ *       500:
+ *         $ref: '#/components/responses/500'
+ */
+
+/**
+ * @openapi
+ * /user:
+ *   delete:
+ *     summary: Delete logged in user and all of their related content.
+ *     responses:
+ *       200:
+ *         description: Successfully delete user data.
+ *       401:
+ *         $ref: '#/components/responses/401'
+ *       500:
+ *         $ref: '#/components/responses/500'
+ *   put:
+ *     summary: Update user profile information.
+ *     responses:
+ *       200:
+ *         description: Successfully delete user data.
+ *       401:
+ *         $ref: '#/components/responses/401'
+ *       500:
+ *         $ref: '#/components/responses/500'
+ */
+
+/**
+ * @openapi
+ * /user/new:
+ *   post:
+ *     summary: Creating a new user.
+ *     responses:
+ *       200:
+ *         description: Successfully created new user.
+ *       400:
+ *         description: Missing information to create a new user.
+ *       500:
+ *         $ref: '#/components/responses/500'
+ */
+
+/**
+ * @openapi
+ * /user/{id}:
+ *   get:
+ *     summary: Returns information for user with id.
+ *     parameters:
+ *       - $ref: '#/components/parameters/idParam'
+ *     responses:
+ *       200:
+ *         description: Successfully returned JSON object with user information.
+ *       500:
+ *         $ref: '#/components/responses/500'
  */
 
 /**
@@ -277,7 +463,7 @@
  *             schema:
  *               $ref: '#/components/schemas/Kitten'
  *       500:
- *         description: Internal server error.
+ *         $ref: '#/components/responses/500'
  *
  */
 
@@ -295,4 +481,3 @@
  *              type: string
  *              example: Pong
  */
-
