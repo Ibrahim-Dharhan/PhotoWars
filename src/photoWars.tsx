@@ -3,12 +3,13 @@ import { createRoot } from 'react-dom/client';
 
 /* Importing Components */
 import HelloWorld from './components/helloWorld/HelloWorld';
+import Test from './components/sideBar/SideBar';
 
 class PhotoWars extends React.Component {
   render() {
     return (
       <React.StrictMode>
-        <HelloWorld />
+        <Test />
       </React.StrictMode>
     );
   }
