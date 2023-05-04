@@ -10,19 +10,20 @@ import mongoose from 'mongoose';
  *       type: object
  *       properties:
  *         _id:
- *           type: String
+ *           type: string
  *         __v:
- *           type: Number 
+ *           type: number 
  *         author_id:
- *           type: String
+ *           type: string
  *         creation_time:
- *           type: Date
+ *           type: string
+ *           format: date-time
  *         num_likes:
- *           type: Number
+ *           type: number
  *         submission_id:
- *           type: String
+ *           type: string
  *         text:
- *           type: String
+ *           type: string
  */
 const commentSchema = new mongoose.Schema({
   author_id: mongoose.Schema.Types.ObjectId,

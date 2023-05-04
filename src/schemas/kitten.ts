@@ -14,7 +14,7 @@ import mongoose from 'mongoose';
  *         name:
  *           type: string
  *         __v:
- *           type: integer
+ *           type: number
  */
 const kittenSchema = new mongoose.Schema({
   name: String

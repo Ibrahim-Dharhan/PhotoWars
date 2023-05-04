@@ -10,23 +10,25 @@ import mongoose from 'mongoose';
  *       type: object
  *       properties:
  *         _id:
- *           type: String
+ *           type: string
  *         __v:
- *           type: Number 
+ *           type: number 
  *         author_id:
- *           type: String
+ *           type: string
  *         caption:
- *           type: String
+ *           type: string
  *         creation_time:
- *           type: Date
+ *           type: string
+ *           format: date-time
  *         deadline:
- *           type: Date
+ *           type: string
+ *           format: date-time
  *         file_name:
- *           type: String
+ *           type: string
  *         num_likes:
- *           type: Number 
+ *           type: number 
  *         num_submissions:
- *           type: integer
+ *           type: number
  */
 const battleSchema = new mongoose.Schema({
   author_id: mongoose.Schema.Types.ObjectId,

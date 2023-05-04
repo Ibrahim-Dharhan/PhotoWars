@@ -10,20 +10,23 @@ import mongoose from 'mongoose';
  *       type: object
  *       properties:
  *         _id:
- *           type: String
+ *           type: string
  *         __v:
- *           type: Number 
+ *           type: number 
  *         description:
- *           type: String
+ *           type: string
+ *         display_name:
+ *           type: string
  *         file_name:
- *           type: String
+ *           type: string
  *         login_name:
- *           type: String
+ *           type: string
  *         login_password:
- *           type: String
+ *           type: string
  */
 const userSchema = new mongoose.Schema({
   description: String,
+  display_name: String,
   file_name: String,
   login_name: String,
   login_password: String
