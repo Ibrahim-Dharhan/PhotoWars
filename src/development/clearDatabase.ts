@@ -1,6 +1,6 @@
 "use strict";
 
-import mongoose from 'mongoose';
+import mongoose = require('mongoose');
 
 const MONGODB_NAME = 'cs194';
 mongoose.connect('mongodb://127.0.0.1:27017/' + MONGODB_NAME);

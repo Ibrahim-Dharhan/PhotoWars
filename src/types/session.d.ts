@@ -1,4 +1,4 @@
-import mongoose from 'mongoose';
+import mongoose = require('mongoose');
 
 declare module 'express-session' {
   interface SessionData {

@@ -2,7 +2,7 @@
 
 import express = require('express');
 import session = require('express-session');
-import mongoose from 'mongoose';
+import mongoose = require('mongoose');
 
 const app = express();
 /* Allowing express to use middlewares. */
