@@ -30,6 +30,42 @@ const dummyData = dummyDataFunc();
     console.error(err);
   }
 
+  console.log('Populating battles.');
+  const battleModels = dummyData.battles();
+  try {
+    await Promise.all(battleModels.map(async (battle) => {
+      const battleObj = await User.create(battle);
+      await battleObj.save();
+      console.log(`Added battle "${battle.caption}" to database.`);
+    }));
+  } catch (err) {
+    console.error(err);
+  }
+
+  console.log('Populating comments.');
+  const commentModels = dummyData.comments();
+  try {
+    await Promise.all(commentModels.map(async (comment) => {
+      const commentObj = await User.create(comment);
+      await commentObj.save();
+      console.log(`Added comment "${comment.text}" to database.`);
+    }));
+  } catch (err) {
+    console.error(err);
+  }
+
+  console.log('Populating submissions.');
+  const submissionModels = dummyData.submissions();
+  try {
+    await Promise.all(submissionModels.map(async (submission) => {
+      const submissionObj = await User.create(submission);
+      await submissionObj.save();
+      console.log(`Added submission "${submission.caption}" to database.`);
+    }));
+  } catch (err) {
+    console.error(err);
+  }
+
   console.log('Populating users.');
   const userModels = dummyData.users();
   try {

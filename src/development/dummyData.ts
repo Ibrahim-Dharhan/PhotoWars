@@ -36,7 +36,7 @@ function dummyDataFunc() {
   const comment1 = { _id: '64544dd0803990cdf005cae5',
                      author_id: user1._id,
                      creation_time: '2023-05-05T00:29:04.296Z', num_likes: 1,
-                     submission_id: submission1._id };
+                     submission_id: submission1._id, text: 'comment1' };
 
   const fakeComments = [comment1];
 
