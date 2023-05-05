@@ -8,13 +8,16 @@ const app = express();
 /* Allowing express to use middlewares. */
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+app.use(express.static(__dirname));
 app.use(session({
   cookie: {},
   resave: false,
   saveUninitialized: false,
   secret: 'CS194 Photo Wars',
 }));
-app.use(express.static(__dirname));
+
+import { accountRouter } from './endpoints/account/account';
+app.use('/account', accountRouter );
 
 import { swaggerRouter } from './endpoints/swagger/swagger';
 app.use('/swagger', swaggerRouter );
