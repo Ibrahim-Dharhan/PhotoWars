@@ -16,6 +16,9 @@ app.use(session({
 }));
 app.use(express.static(__dirname));
 
+import { accountRouter } from './endpoints/account/account';
+app.use('/account', accountRouter );
+
 import { swaggerRouter } from './endpoints/swagger/swagger';
 app.use('/swagger', swaggerRouter );
 

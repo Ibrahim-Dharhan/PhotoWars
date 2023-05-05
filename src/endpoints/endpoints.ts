@@ -11,7 +11,7 @@
  *       required: true
  *
  *   responses:
- *     401:
+ *     401NotLoggedIn:
  *       description: User is not logged in.
  *     403:
  *       description: User is not the owner of this resource.
@@ -32,7 +32,7 @@
  *       400:
  *         description: Missing information to create a new battle.
  *       401:
- *         $ref: '#/components/responses/401'
+ *         $ref: '#/components/responses/401NotLoggedIn'
  *       500:
  *         $ref: '#/components/responses/500'
  */
@@ -59,7 +59,7 @@
  *       200:
  *         description: Successfully updated battle information.
  *       401:
- *         $ref: '#/components/responses/401'
+ *         $ref: '#/components/responses/401NotLoggedIn'
  *       403:
  *         $ref: '#/components/responses/403'
  *       404:
@@ -74,7 +74,7 @@
  *       200:
  *         description: Successfully deleted battle.
  *       401:
- *         $ref: '#/components/responses/401'
+ *         $ref: '#/components/responses/401NotLoggedIn'
  *       403:
  *         $ref: '#/components/responses/403'
  *       404:
@@ -107,7 +107,7 @@
  *       400:
  *         description: Missing information to create a new comment.
  *       401:
- *         $ref: '#/components/responses/401'
+ *         $ref: '#/components/responses/401NotLoggedIn'
  *       500:
  *         $ref: '#/components/responses/500'
  */
@@ -123,7 +123,7 @@
  *       200:
  *         description: Successfully liked the battle.
  *       401:
- *         $ref: '#/components/responses/401'
+ *         $ref: '#/components/responses/401NotLoggedIn'
  *       500:
  *         $ref: '#/components/responses/500'
  */
@@ -141,7 +141,7 @@
  *       400:
  *         description: Missing information to create a new submission.
  *       401:
- *         $ref: '#/components/responses/401'
+ *         $ref: '#/components/responses/401NotLoggedIn'
  *       500:
  *         $ref: '#/components/responses/500'
  */
@@ -157,7 +157,7 @@
  *       200:
  *         description: Successfully unliked the battle.
  *       401:
- *         $ref: '#/components/responses/401'
+ *         $ref: '#/components/responses/401NotLoggedIn'
  *       500:
  *         $ref: '#/components/responses/500'
  */
@@ -184,7 +184,7 @@
  *       200:
  *         description: Successfully updated user comment.
  *       401:
- *         $ref: '#/components/responses/401'
+ *         $ref: '#/components/responses/401NotLoggedIn'
  *       403:
  *         $ref: '#/components/responses/403'
  *       404:
@@ -199,7 +199,7 @@
  *       200:
  *         description: Successfully deleted comment.
  *       401:
- *         $ref: '#/components/responses/401'
+ *         $ref: '#/components/responses/401NotLoggedIn'
  *       403:
  *         $ref: '#/components/responses/403'
  *       404:
@@ -219,7 +219,7 @@
  *       200:
  *         description: Successfully liked the comment.
  *       401:
- *         $ref: '#/components/responses/401'
+ *         $ref: '#/components/responses/401NotLoggedIn'
  *       500:
  *         $ref: '#/components/responses/500'
  */
@@ -235,37 +235,7 @@
  *       200:
  *         description: Successfully unliked the comment.
  *       401:
- *         $ref: '#/components/responses/401'
- *       500:
- *         $ref: '#/components/responses/500'
- */
-
-/**
- * @openapi
- * /login:
- *   post:
- *     summary: Attempt to log in with given credentials.
- *     responses:
- *       200:
- *         description: Successfully logged in.
- *       400:
- *         description: Failed to login user with credentials.
- *       500:
- *         $ref: '#/components/responses/500'
- */
-
-/**
- * @openapi
- * /logout:
- *   post:
- *     summary: Log user out.
- *     responses:
- *       200:
- *         description: Successfully logged out.
- *       400:
- *         description: Failed to logout user.
- *       401:
- *         $ref: '#/components/responses/401'
+ *         $ref: '#/components/responses/401NotLoggedIn'
  *       500:
  *         $ref: '#/components/responses/500'
  */
@@ -292,7 +262,7 @@
  *       200:
  *         description: Successfully commented on submission.
  *       401:
- *         $ref: '#/components/responses/401'
+ *         $ref: '#/components/responses/401NotLoggedIn'
  *       404:
  *         $ref: '#/components/responses/404'
  *       500:
@@ -305,7 +275,7 @@
  *       200:
  *         description: Successfully deleted submission.
  *       401:
- *         $ref: '#/components/responses/401'
+ *         $ref: '#/components/responses/401NotLoggedIn'
  *       403:
  *         $ref: '#/components/responses/403'
  *       404:
@@ -336,7 +306,7 @@
  *       200:
  *         description: Successfully commented on submission.
  *       401:
- *         $ref: '#/components/responses/401'
+ *         $ref: '#/components/responses/401NotLoggedIn'
  *       404:
  *         $ref: '#/components/responses/404'
  *       500:
@@ -354,7 +324,7 @@
  *       200:
  *         description: Successfully liked the submission.
  *       401:
- *         $ref: '#/components/responses/401'
+ *         $ref: '#/components/responses/401NotLoggedIn'
  *       500:
  *         $ref: '#/components/responses/500'
  */
@@ -370,7 +340,7 @@
  *       200:
  *         description: Successfully unliked the submission.
  *       401:
- *         $ref: '#/components/responses/401'
+ *         $ref: '#/components/responses/401NotLoggedIn'
  *       500:
  *         $ref: '#/components/responses/500'
  */
@@ -384,7 +354,7 @@
  *       200:
  *         description: Successfully delete user data.
  *       401:
- *         $ref: '#/components/responses/401'
+ *         $ref: '#/components/responses/401NotLoggedIn'
  *       500:
  *         $ref: '#/components/responses/500'
  *   put:
@@ -393,7 +363,7 @@
  *       200:
  *         description: Successfully delete user data.
  *       401:
- *         $ref: '#/components/responses/401'
+ *         $ref: '#/components/responses/401NotLoggedIn'
  *       500:
  *         $ref: '#/components/responses/500'
  */
