@@ -37,8 +37,8 @@ accountRouter.post('/login', async (req, res) => {
       res.status(401).send('Invalid credentials.');
     }
   } catch (err) {
-    res.status(500).send("Internal server error.");
-    console.error("Failed to query database.");
+    res.status(500).send('Internal server error.');
+    console.error('Failed to query database.');
   }
 
 });
@@ -59,8 +59,9 @@ accountRouter.post('/login', async (req, res) => {
  *         $ref: '#/components/responses/500'
  */
 accountRouter.post('/logout', (req, res) => {
-  console.log(req);
-  res.status(501).send('Not Implemented');
+  req.session.logged_in = false;
+  req.session.user_id = null;
+  res.status(200).send('Successfully logged out.');
 });
 
 export { accountRouter };
