@@ -15,6 +15,8 @@ import mongoose from 'mongoose';
  *           type: number 
  *         author_id:
  *           type: string
+ *         battle_id:
+ *           type: string
  *         caption:
  *           type: string
  *         creation_time:
@@ -29,6 +31,7 @@ import mongoose from 'mongoose';
  */
 const submissionSchema = new mongoose.Schema({
   author_id: mongoose.Schema.Types.ObjectId,
+  battle_id: mongoose.Schema.Types.ObjectId,
   caption: String,
   creation_time: {type: Date, default: Date.now},
   file_name: String,
