@@ -16,14 +16,15 @@ import ShareIcon from '@mui/icons-material/Share';
 import MoreVertIcon from '@mui/icons-material/MoreVert';
 import { CardActionArea } from '@mui/material';
 import ImageIcon from '@mui/icons-material/Image';
+import Box from '@mui/material/Box';
 
 const HelloWorld = () => {
   return (
-    <Grid container spacing={24}>
-      <Grid item xs={3}>
+    <Grid container spacing={7}>
+      <Grid item xs={4}>
         Sidebar
       </Grid>
-      <Grid item xs={6}>
+      <Grid item xs={4}>
         <Card variant="outlined">
           <CardActionArea>
             <CardHeader
@@ -39,7 +40,7 @@ const HelloWorld = () => {
               }
               title="user_name"
             />
-            <CardContent>
+            <CardContent sx={{ mt: -3 }}>
               <Typography variant="h6">
                 Incredibly Fast Cat
               </Typography>
@@ -47,25 +48,33 @@ const HelloWorld = () => {
             <CardMedia
               component="img"
               image="components/images/cat.jpeg"
-              alt="Paella dish"
             />
             <CardActions disableSpacing>
               <IconButton aria-label="add to favorites">
-                <ImageIcon />
+                <ImageIcon sx={{ pr: 1 }}/>
+                <Typography>
                 328
+                </Typography>
               </IconButton>
               <IconButton aria-label="share">
-                <FavoriteIcon />
-                87
+                <FavoriteIcon sx={{ pr: 1 }}/>
+                <Typography>
+                73
+                </Typography>
               </IconButton>
-              <Button variant="outlined" size="small" color="primary">
-                Enter
-              </Button>
+              <Box display="flex" marginLeft="auto" alignItems="center">
+                <Typography sx={{ pr: 2 }}>
+                  2 hours left
+                </Typography>
+                <Button variant="outlined" size="small" color="primary">
+                  Enter
+                </Button>
+              </Box>
             </CardActions>
           </CardActionArea>
         </Card>
       </Grid>
-      <Grid item xs={3}>
+      <Grid item xs={4}>
         Side column
       </Grid>
     </Grid>
