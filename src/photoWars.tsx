@@ -2,12 +2,12 @@ import React from 'react';
 import { createRoot } from 'react-dom/client';
 
 /* Importing Components */
-import { HelloWorld } from './components/helloWorld/HelloWorld';
+import { Home } from './pages/home/Home';
 
 const PhotoWars = () => {
   return (
     <React.StrictMode>
-      <HelloWorld />
+      <Home />
     </React.StrictMode>
   );
 };
