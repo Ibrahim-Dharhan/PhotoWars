@@ -19,6 +19,9 @@ app.use(session({
 import { accountRouter } from './endpoints/account/account';
 app.use('/account', accountRouter );
 
+import { commentRouter } from './endpoints/comment/comment';
+app.use('/comment', commentRouter );
+
 import { swaggerRouter } from './endpoints/swagger/swagger';
 app.use('/swagger', swaggerRouter );
 
