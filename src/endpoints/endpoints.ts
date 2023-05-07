@@ -11,6 +11,8 @@
  *       required: true
  *
  *   responses:
+ *     200ResourceRetrieved:
+ *       description: Resource successfully retrieved.
  *     401NotLoggedIn:
  *       description: User is not logged in.
  *     403:
@@ -165,17 +167,6 @@
 /**
  * @openapi
  * /comment/{id}:
- *   get:
- *     summary: Get comment information.
- *     parameters:
- *       - $ref: '#/components/parameters/idParam'
- *     responses:
- *       200:
- *         description: Successfully retrieved comment.
- *       404:
- *         $ref: '#/components/responses/404'
- *       500:
- *         $ref: '#/components/responses/500'
  *   put:
  *     summary: Updating a comment by a user.
  *     parameters:
