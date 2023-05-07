@@ -32,9 +32,10 @@ const dummyData = dummyDataFunc();
 
   console.log('Populating battles.');
   const battleModels = dummyData.battles();
+  console.log(battleModels);
   try {
     await Promise.all(battleModels.map(async (battle) => {
-      const battleObj = await User.create(battle);
+      const battleObj = await Battle.create(battle);
       await battleObj.save();
       console.log(`Added battle "${battle.caption}" to database.`);
     }));
@@ -46,7 +47,7 @@ const dummyData = dummyDataFunc();
   const commentModels = dummyData.comments();
   try {
     await Promise.all(commentModels.map(async (comment) => {
-      const commentObj = await User.create(comment);
+      const commentObj = await Comment.create(comment);
       await commentObj.save();
       console.log(`Added comment "${comment.text}" to database.`);
     }));
@@ -58,7 +59,7 @@ const dummyData = dummyDataFunc();
   const submissionModels = dummyData.submissions();
   try {
     await Promise.all(submissionModels.map(async (submission) => {
-      const submissionObj = await User.create(submission);
+      const submissionObj = await Submission.create(submission);
       await submissionObj.save();
       console.log(`Added submission "${submission.caption}" to database.`);
     }));
