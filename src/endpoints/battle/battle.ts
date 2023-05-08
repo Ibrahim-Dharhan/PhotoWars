@@ -22,15 +22,15 @@ const battleRouter = express.Router();
  *         $ref: '#/components/responses/500'
  */
 battleRouter.get('/:id', async (req, res) => {
-  const battle_id = req.params.id;
-  const query = Battle.findById(battle_id);
+  const battleId = req.params.id;
+  const query = Battle.findById(battleId);
   try {
     const result = await query.lean().exec();
     if (result) {
-      /* Found battle matching battle_id.  */
+      /* Found battle matching battleId.  */
       res.status(200).json(result);
     } else {
-      /* Did not find a battle with matching battle_id.  */
+      /* Did not find a battle with matching battleId.  */
       res.status(401).send('Invalid battle id.');
     }
   } catch (err) {
@@ -60,14 +60,14 @@ battleRouter.get('/:id', async (req, res) => {
  */
 battleRouter.put('/:id', async (req, res) => {
   try {
-    const battle_id = req.params.id;
-    const query = Battle.findById(battle_id);
+    const battleId = req.params.id;
+    const query = Battle.findById(battleId);
     const result = await query.exec();
     if (result) {
-      /* Found battle matching battle_id. */
-      if (!req.session.logged_in) {
+      /* Found battle matching battleId. */
+      if (!req.session.loggedIn) {
         res.status(401).send('Not logged in');
-      } else if (result.author_id.toString() !== req.session.user_id) {
+      } else if (result.authorId.toString() !== req.session.userId) {
         res.status(403).send('Access to that resource is forbidden');
       } else {
         const caption =
@@ -75,7 +75,7 @@ battleRouter.put('/:id', async (req, res) => {
         const deadline =
           req.body.deadline !== null ? req.body.deadline : result.deadline;
         Battle.updateOne(
-          { _id: battle_id },
+          { _id: battleId },
           {
             $set: {
               caption: caption,
@@ -83,11 +83,11 @@ battleRouter.put('/:id', async (req, res) => {
             },
           }
         );
-        const updatedBattle = await Battle.findById(battle_id).exec();
+        const updatedBattle = await Battle.findById(battleId).exec();
         res.status(200).json(updatedBattle);
       }
     } else {
-      /* Did not find a battle with matching battle_id. */
+      /* Did not find a battle with matching battleId. */
       res.status(401).send('Invalid battle id.');
     }
   } catch (err) {
@@ -113,15 +113,15 @@ battleRouter.put('/:id', async (req, res) => {
  */
 battleRouter.post('/new', upload.single('file'), async (req, res) => {
   try {
-    if (req.session.logged_in) {
+    if (req.session.loggedIn) {
       // TODO: Ensure all params are valid
       const newBattleObj = await Battle.create({
-        author_id: req.session.user_id,
+        authorId: req.session.userId,
         caption: req.body.caption,
         deadline: req.body.deadline,
-        file_name: req.file.filename,
-        num_likes: 1,
-        num_submissions: 1,
+        filename: req.file.filename,
+        numLikes: 1,
+        numSubmissions: 1,
       });
       await newBattleObj.save();
       res.status(200).json(newBattleObj);

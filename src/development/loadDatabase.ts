@@ -73,7 +73,7 @@ const dummyData = dummyDataFunc();
     await Promise.all(userModels.map(async (user) => {
       const userObj = await User.create(user);
       await userObj.save();
-      console.log(`Added user ${user.first_name} ${user.last_name} to database.`);
+      console.log(`Added user ${user.firstName} ${user.lastName} to database.`);
     }));
   } catch (err) {
     console.error(err);

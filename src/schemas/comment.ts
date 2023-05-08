@@ -13,20 +13,20 @@ import mongoose = require('mongoose');
  *           type: string
  *         __v:
  *           type: number 
- *         author_id:
+ *         authorId:
  *           type: string
- *         creation_time:
+ *         creationTime:
  *           type: string
  *           format: date-time
- *         num_likes:
+ *         numLikes:
  *           type: number
  *         text:
  *           type: string
  */
 const commentSchema = new mongoose.Schema({
-  author_id: mongoose.Schema.Types.ObjectId,
-  creation_time: {type: Date, default: Date.now},
-  num_likes: Number,
+  authorId: mongoose.Schema.Types.ObjectId,
+  creationTime: {type: Date, default: Date.now},
+  numLikes: Number,
   text: String
 });
 

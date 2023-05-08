@@ -13,31 +13,31 @@ import mongoose = require('mongoose');
  *           type: string
  *         __v:
  *           type: number 
- *         author_id:
+ *         authorId:
  *           type: string
  *         caption:
  *           type: string
- *         comment_ids:
+ *         commentIds:
  *           type: array
  *           items:
  *             type: string
- *         creation_time:
+ *         creationTime:
  *           type: string
  *           format: date-time
- *         file_name:
+ *         filename:
  *           type: string
- *         num_likes:
+ *         numLikes:
  *           type: number 
- *         num_comments:
+ *         numComments:
  *           type: number 
  */
 const submissionSchema = new mongoose.Schema({
-  author_id: mongoose.Schema.Types.ObjectId,
+  authorId: mongoose.Schema.Types.ObjectId,
   caption: String,
-  comment_ids: [mongoose.Schema.Types.ObjectId],
-  creation_time: {type: Date, default: Date.now},
-  file_name: String,
-  num_votes: Number
+  commentIds: [mongoose.Schema.Types.ObjectId],
+  creationTime: {type: Date, default: Date.now},
+  filename: String,
+  numVotes: Number
 });
 
 const Submission = mongoose.model('Submission', submissionSchema);

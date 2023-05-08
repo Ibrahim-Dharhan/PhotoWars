@@ -18,13 +18,13 @@ const accountRouter = express.Router();
  *           schema:
  *             type: object
  *             properties:
- *               login_name:
+ *               loginName:
  *                 type: string
- *               login_password:
+ *               loginPassword:
  *                 type: string
  *             required:
- *               - login_name
- *               - login_password
+ *               - loginName
+ *               - loginPassword
  *     responses:
  *       200:
  *         description: Successfully logged in.
@@ -34,17 +34,17 @@ const accountRouter = express.Router();
  *         $ref: '#/components/responses/500'
  */
 accountRouter.post('/login', async (req, res) => {
-  const login_name = req.body.login_name;
-  const login_password = req.body.login_password;
-  const query = User.findOne({ login_name: login_name,
-                               login_password: login_password });
+  const loginName = req.body.loginName;
+  const loginPassword = req.body.loginPassword;
+  const query = User.findOne({ loginName: loginName,
+                               loginPassword: loginPassword });
 
   try {
     const result = await query.lean().exec();
     if (result) {
       /* Found user matching login credentials.  */
-      req.session.logged_in = true;
-      req.session.user_id = result._id.toString();
+      req.session.loggedIn = true;
+      req.session.userId = result._id.toString();
       // TODO: Change response message.
       res.status(200).json(result);
     } else {
@@ -74,8 +74,8 @@ accountRouter.post('/login', async (req, res) => {
  *         $ref: '#/components/responses/500'
  */
 accountRouter.post('/logout', (req, res) => {
-  req.session.logged_in = false;
-  req.session.user_id = null;
+  req.session.loggedIn = false;
+  req.session.userId = null;
   res.status(200).send('Successfully logged out.');
 });
 

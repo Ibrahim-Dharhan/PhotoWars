@@ -15,27 +15,27 @@ import mongoose = require('mongoose');
  *           type: number 
  *         description:
  *           type: string
- *         display_name:
+ *         displayName:
  *           type: string
- *         file_name:
+ *         filename:
  *           type: string
- *         first_name:
+ *         firstName:
  *           type: string
- *         last_name:
+ *         lastName:
  *           type: string
- *         login_name:
+ *         loginName:
  *           type: string
- *         login_password:
+ *         loginPassword:
  *           type: string
  */
 const userSchema = new mongoose.Schema({
   description: String,
-  display_name: String,
-  file_name: String,
-  first_name: String,
-  last_name: String,
-  login_name: String,
-  login_password: String
+  displayName: String,
+  filename: String,
+  firstName: String,
+  lastName: String,
+  loginName: String,
+  loginPassword: String
 });
 
 const User = mongoose.model('User', userSchema);

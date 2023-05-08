@@ -13,38 +13,38 @@ import mongoose = require('mongoose');
  *           type: string
  *         __v:
  *           type: number 
- *         author_id:
+ *         authorId:
  *           type: string
  *         caption:
  *           type: string
- *         comment_ids:
+ *         commentIds:
  *           type: array
  *           items:
  *             type: string
- *         creation_time:
+ *         creationTime:
  *           type: string
  *           format: date-time
  *         deadline:
  *           type: string
  *           format: date-time
- *         file_name:
+ *         filename:
  *           type: string
- *         num_likes:
+ *         numLikes:
  *           type: number 
- *         submission_ids:
+ *         submissionIds:
  *           type: array
  *           items:
  *             type: string
  */
 const battleSchema = new mongoose.Schema({
-  author_id: mongoose.Schema.Types.ObjectId,
+  authorId: mongoose.Schema.Types.ObjectId,
   caption: String,
-  creation_time: {type: Date, default: Date.now},
-  comment_ids: [mongoose.Schema.Types.ObjectId],
+  creationTime: {type: Date, default: Date.now},
+  commentIds: [mongoose.Schema.Types.ObjectId],
   deadline: Date,
-  file_name: String,
-  num_likes: Number,
-  submission_ids: [mongoose.Schema.Types.ObjectId]
+  filename: String,
+  numLikes: Number,
+  submissionIds: [mongoose.Schema.Types.ObjectId]
 });
 
 const Battle = mongoose.model('Battle', battleSchema);

@@ -23,8 +23,8 @@ const commentRouter = express.Router();
  *         $ref: '#/components/responses/500'
 */
 commentRouter.get('/:id', async (req, res) => {
-  const comment_id = req.params.id;
-  const query = Comment.findById(comment_id);
+  const commentId = req.params.id;
+  const query = Comment.findById(commentId);
 
   try {
     const result = await query.lean().exec();
@@ -33,7 +33,7 @@ commentRouter.get('/:id', async (req, res) => {
       res.status(200).json(result);
     } else {
       /* Did not find comment with id.  */
-      res.status(404).send(`Comment with ID ${comment_id} not found.`);
+      res.status(404).send(`Comment with ID ${commentId} not found.`);
     }
   } catch (err) {
     res.status(500).send('Internal server error.');
@@ -61,33 +61,33 @@ commentRouter.get('/:id', async (req, res) => {
  *         $ref: '#/components/responses/500'
  */
 commentRouter.delete('/:id', async (req, res) => {
-  if (!req.session.logged_in) {
+  if (!req.session.loggedIn) {
     res.status(401).send('User is not logged in.');
     return;
   }
 
-  const comment_id = req.params.id;
-  const query = Comment.findById(comment_id);
+  const commentId = req.params.id;
+  const query = Comment.findById(commentId);
 
   try {
     const result = await query.exec();
     if (!result) {
       /* Did not find comment with id.  */
-      res.status(404).send(`Comment with ID ${comment_id} not found.`);
-    } else if (req.session.user_id !== result.author_id.toString()) {
+      res.status(404).send(`Comment with ID ${commentId} not found.`);
+    } else if (req.session.userId !== result.authorId.toString()) {
       /* User requesting change is not the comment's author.  */
       res.status(403).send('User is not the comment author.');
     } else {
       /* Remove reference to either Battle or Submission.  */
-      const bQuery = await Battle.findOne({ comment_ids: result._id });
-      const sQuery = await Submission.findOne({ comment_ids: result._id });
+      const bQuery = await Battle.findOne({ commentIds: result._id });
+      const sQuery = await Submission.findOne({ commentIds: result._id });
       const refDoc = bQuery ? bQuery : sQuery;
 
-      const index = refDoc.comment_ids.indexOf(result._id);
-      refDoc.comment_ids.splice(index, 1);
+      const index = refDoc.commentIds.indexOf(result._id);
+      refDoc.commentIds.splice(index, 1);
       await refDoc.save();
 
-      await Comment.findByIdAndDelete(comment_id);
+      await Comment.findByIdAndDelete(commentId);
       res.status(200).send('Successfully deleted comment text.');
     }
   } catch (err) {
@@ -128,20 +128,20 @@ commentRouter.delete('/:id', async (req, res) => {
  *         $ref: '#/components/responses/500'
  */
 commentRouter.put('/:id', async (req, res) => {
-  if (!req.session.logged_in) {
+  if (!req.session.loggedIn) {
     res.status(401).send('User is not logged in.');
     return;
   }
 
-  const comment_id = req.params.id;
-  const query = Comment.findById(comment_id);
+  const commentId = req.params.id;
+  const query = Comment.findById(commentId);
 
   try {
     const result = await query.exec();
     if (!result) {
       /* Did not find comment with id.  */
-      res.status(404).send(`Comment with ID ${comment_id} not found.`);
-    } else if (req.session.user_id !== result.author_id.toString()) {
+      res.status(404).send(`Comment with ID ${commentId} not found.`);
+    } else if (req.session.userId !== result.authorId.toString()) {
       /* User requesting change is not the comment's author.  */
       res.status(403).send('User is not the comment author.');
     } else {
