@@ -4,6 +4,7 @@ import Typography from '@mui/material/Typography';
 import TextField from '@mui/material/TextField';
 import Input from '@mui/material/Input';
 import Box from '@mui/material/Box';
+import "./create.css";
 
 const Create = () => {
   const [title, setTitle] = useState('');
@@ -45,25 +46,31 @@ const Create = () => {
           onChange={handleTitleChange}
         />
 
-        <Box
-          className="image-upload-box"
-          onDrop={handleImageDrop}
-          onDragOver={(event) => event.preventDefault()}
-          sx={{ p: 2, border: '1px dashed grey' }}
-        >
+        {image ? (
+          <img
+            src={URL.createObjectURL(image)}
+            className='image-preview'
+          />)
+          : (
+            <Box
+              className="image-upload-box"
+              onDrop={handleImageDrop}
+              onDragOver={(event) => event.preventDefault()}
+              sx={{ p: 2, border: '1px dashed grey' }}
+            >
 
-          <label htmlFor="image-upload">
-            Drag and drop an image, or click to select a file:
-          </label>
-          <input
-            type="file"
-            id="image-upload"
-            accept="image/*"
-            onChange={handleImageChange}
-          />
-
-        </Box>
-
+              <label htmlFor="image-upload">
+                Drag and drop an image, or click to select a file:
+              </label>
+              <input
+                type="file"
+                id="image-upload"
+                accept="image/*"
+                onChange={handleImageChange}
+              />
+            </Box>
+          )
+        }
         <Button
           variant="contained"
           component="label"
