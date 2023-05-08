@@ -1,7 +1,7 @@
 "use strict"
 
 import express = require('express');
-import { User } from '../../schemas/user';
+import { User } from '../../definitions/schemas/user';
 
 const accountRouter = express.Router();
 

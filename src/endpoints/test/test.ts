@@ -2,7 +2,7 @@
 
 import express = require('express');
 
-import { Kitten } from '../../schemas/kitten';
+import { Kitten } from '../../definitions/schemas/kitten';
 
 const testRouter = express.Router();
 
