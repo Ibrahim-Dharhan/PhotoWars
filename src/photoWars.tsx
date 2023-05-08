@@ -8,6 +8,7 @@ import axios from 'axios';
 /* Importing Components */
 import { Home } from './pages/home/Home';
 import { Create } from './pages/create/Create';
+import { Battle } from './pages/battle/Battle';
 
 const PhotoWars = () => {
   return (
@@ -16,6 +17,7 @@ const PhotoWars = () => {
         <Routes>
         <Route path='/' element={<Home />} />
         <Route path='/create' element={<Create />} />
+        <Route path='/battle' element={<Battle />} />
         </Routes>
       </Router>
     </React.StrictMode>

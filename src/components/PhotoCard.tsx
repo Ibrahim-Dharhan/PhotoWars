@@ -15,9 +15,13 @@ import Box from '@mui/material/Box';
 import Avatar from '@mui/material/Avatar';
 import IconButton, { IconButtonProps } from '@mui/material/IconButton';
 
-const PhotoCard = () => {
+type PhotoCardProps = {
+  onClick: () => void;
+};
+
+const PhotoCard = ({ onClick }: PhotoCardProps) => {
   return (
-    <Card variant="outlined">
+    <Card variant="outlined" onClick={onClick}>
       <CardActionArea>
         <CardHeader
           avatar={
