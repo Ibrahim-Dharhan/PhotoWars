@@ -19,8 +19,8 @@ import mongoose = require('mongoose');
  *           type: string
  *         comment_ids:
  *           type: array
- *             items:
- *               type: string
+ *           items:
+ *             type: string
  *         creation_time:
  *           type: string
  *           format: date-time
@@ -33,8 +33,8 @@ import mongoose = require('mongoose');
  *           type: number 
  *         submission_ids:
  *           type: array
- *             items:
- *               type: string
+ *           items:
+ *             type: string
  */
 const battleSchema = new mongoose.Schema({
   author_id: mongoose.Schema.Types.ObjectId,
