@@ -40,13 +40,13 @@ accountRouter.post('/login', async (req, res) => {
                                login_password: login_password });
 
   try {
-    const result = await query.exec();
+    const result = await query.lean().exec();
     if (result) {
       /* Found user matching login credentials.  */
       req.session.logged_in = true;
       req.session.user_id = result._id;
       // TODO: Change response message.
-      res.status(200).send(JSON.parse(JSON.stringify(result)));
+      res.status(200).json(result);
     } else {
       /* Did not find a user with credentials.  */
       res.status(401).send('Invalid credentials.');
