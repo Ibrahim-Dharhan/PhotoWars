@@ -5,7 +5,7 @@ function dummyDataFunc() {
                login_name: 'ab', login_password: 'ab' };
 
   const user2 = { _id: '645449c2d0215be49c7e1301', description: 'Desc',
-               file_name: 'seagull.jpg', first_name: 'c', last_name: 'c',
+               file_name: 'seagull.jpg', first_name: 'b', last_name: 'c',
                login_name: 'bc', login_password: 'bc' };
 
   const fakeUsers = [user1, user2];

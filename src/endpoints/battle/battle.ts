@@ -67,7 +67,7 @@ battleRouter.put('/:id', async (req, res) => {
       /* Found battle matching battle_id. */
       if (!req.session.logged_in) {
         res.status(401).send('Not logged in');
-      } else if (result.author_id != req.session.user_id) {
+      } else if (result.author_id.toString() !== req.session.user_id) {
         res.status(403).send('Access to that resource is forbidden');
       } else {
         const caption =

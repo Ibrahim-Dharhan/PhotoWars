@@ -126,41 +126,6 @@
 
 /**
  * @openapi
- * /comment/{id}:
- *   put:
- *     summary: Updating a comment by a user.
- *     parameters:
- *       - $ref: '#/components/parameters/idParam'
- *     responses:
- *       200:
- *         description: Successfully updated user comment.
- *       401:
- *         $ref: '#/components/responses/401NotLoggedIn'
- *       403:
- *         $ref: '#/components/responses/403'
- *       404:
- *         $ref: '#/components/responses/404'
- *       500:
- *         $ref: '#/components/responses/500'
- *   delete:
- *     summary: Delete comment if user is the comment owner.
- *     parameters:
- *       - $ref: '#/components/parameters/idParam'
- *     responses:
- *       200:
- *         description: Successfully deleted comment.
- *       401:
- *         $ref: '#/components/responses/401NotLoggedIn'
- *       403:
- *         $ref: '#/components/responses/403'
- *       404:
- *         $ref: '#/components/responses/404'
- *       500:
- *         $ref: '#/components/responses/500'
- */
-
-/**
- * @openapi
  * /comment/{id}/like:
  *   post:
  *     summary: Like a comment.
