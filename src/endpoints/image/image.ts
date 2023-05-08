@@ -35,6 +35,7 @@ imageRouter.get('/:filename', (req, res) => {
   res.sendFile(filename, options, (err) => {
     if (err) {
       console.error('Failed to send file.', err);
+      res.status(404).send('Image does not exist');
     } else {
       console.log(`Sent: ${filename}`);
     }
