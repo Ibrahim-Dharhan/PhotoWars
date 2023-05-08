@@ -3,11 +3,11 @@
 import express = require('express');
 import { Battle } from '../../definitions/schemas/battle';
 import { upload } from '../../server';
+
 const battleRouter = express.Router();
 
 /**
  * @openapi
-
  * /battle/{id}:
  *   get:
  *     summary: Return information about a battle.
@@ -17,7 +17,7 @@ const battleRouter = express.Router();
  *       200:
  *         description: Successfully returned information about battle.
  *       404:
- *         $ref: '#/components/responses/404'
+ *         $ref: '#/components/responses/404ResourceNotFound'
  *       500:
  *         $ref: '#/components/responses/500'
  */
@@ -31,11 +31,11 @@ battleRouter.get('/:id', async (req, res) => {
       res.status(200).json(result);
     } else {
       /* Did not find a battle with matching battleId.  */
-      res.status(401).send('Invalid battle id.');
+      res.status(404).send('Invalid battle id.');
     }
   } catch (err) {
     res.status(500).send('Internal server error.');
-    console.error('Failed to query database.');
+    console.error(err);
   }
 });
 
@@ -46,6 +46,22 @@ battleRouter.get('/:id', async (req, res) => {
  *     summary: Update battle information if user is the battle creator.
  *     parameters:
  *       - $ref: '#/components/parameters/idParam'
+ *     requestBody:
+ *       description: Battle information to be updated.
+ *       require: true
+ *       content:
+ *         application/x-www-form-urlencoded:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               caption:
+ *                 type: string
+ *               deadline:
+ *                 type: string
+ *                 format: date-time
+ *             required:
+ *               - caption
+ *               - deadline
  *     responses:
  *       200:
  *         description: Successfully updated battle information.
@@ -54,7 +70,7 @@ battleRouter.get('/:id', async (req, res) => {
  *       403:
  *         $ref: '#/components/responses/403'
  *       404:
- *         $ref: '#/components/responses/404'
+ *         $ref: '#/components/responses/404ResourceNotFound'
  *       500:
  *         $ref: '#/components/responses/500'
  */
@@ -88,11 +104,11 @@ battleRouter.put('/:id', async (req, res) => {
       }
     } else {
       /* Did not find a battle with matching battleId. */
-      res.status(401).send('Invalid battle id.');
+      res.status(404).send('Invalid battle id.');
     }
   } catch (err) {
     res.status(500).send('Internal server error.');
-    console.error('Failed to query database.');
+    console.error(err);
   }
 });
 
@@ -101,6 +117,26 @@ battleRouter.put('/:id', async (req, res) => {
  * /battle/new:
  *   post:
  *     summary: Creating a new battle by a user.
+ *     requestBody:
+ *       description: Battle information to be updated.
+ *       require: true
+ *       content:
+ *         multipart/form-data:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               caption:
+ *                 type: string
+ *               deadline:
+ *                 type: string
+ *                 format: date-time
+ *               file:
+ *                 type: string
+ *                 format: binary
+ *             required:
+ *               - caption
+ *               - deadline
+ *               - file
  *     responses:
  *       200:
  *         description: Successfully created new battle.
@@ -130,7 +166,7 @@ battleRouter.post('/new', upload.single('file'), async (req, res) => {
     }
   } catch (err) {
     res.status(500).send('Internal server error.');
-    console.error('Failed to query database.');
+    console.error(err);
   }
 });
 
