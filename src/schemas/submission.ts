@@ -15,8 +15,6 @@ import mongoose = require('mongoose');
  *           type: number 
  *         author_id:
  *           type: string
- *         battle_id:
- *           type: string
  *         caption:
  *           type: string
  *         comment_ids:
@@ -35,7 +33,6 @@ import mongoose = require('mongoose');
  */
 const submissionSchema = new mongoose.Schema({
   author_id: mongoose.Schema.Types.ObjectId,
-  battle_id: mongoose.Schema.Types.ObjectId,
   caption: String,
   comment_ids: [mongoose.Schema.Types.ObjectId],
   creation_time: {type: Date, default: Date.now},

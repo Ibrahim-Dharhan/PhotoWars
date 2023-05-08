@@ -31,8 +31,10 @@ import mongoose = require('mongoose');
  *           type: string
  *         num_likes:
  *           type: number 
- *         num_submissions:
- *           type: number
+ *         submission_ids:
+ *           type: array
+ *             items:
+ *               type: string
  */
 const battleSchema = new mongoose.Schema({
   author_id: mongoose.Schema.Types.ObjectId,
@@ -42,7 +44,7 @@ const battleSchema = new mongoose.Schema({
   deadline: Date,
   file_name: String,
   num_likes: Number,
-  num_submissions: Number
+  submission_ids: [mongoose.Schema.Types.ObjectId]
 });
 
 const Battle = mongoose.model('Battle', battleSchema);

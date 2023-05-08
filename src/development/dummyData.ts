@@ -23,21 +23,9 @@ function dummyDataFunc() {
 
   const fakeComments = [comment1, comment2];
 
-  /* Fake battles.  */
-  const battle1 = { _id: '64544bf83f9238e774994e00',
-                    author_id: user1._id, caption: 'battle1',
-                    creation_time: '2023-05-05T00:24:14.710Z',
-                    comment_ids: [comment2._id],
-                    deadline: '2023-05-05T00:26:13.696Z',
-                    file_name: 'seagull.jpg', num_likes: 1,
-                    num_submissions: 1 };
-
-  const fakeBattles = [battle1];
-
   /* Fake submissions.  */
   const submission1 = { _id: '64544e66d74751fa1b70b200',
                         author_id: user2._id,
-                        battle_id: battle1._id,
                         caption: 'submission1',
                         comment_ids: [comment1._id],
                         creation_time: '2023-05-05T00:32:09.969Z',
@@ -46,6 +34,17 @@ function dummyDataFunc() {
                         num_comments: 1 };
 
   const fakeSubmissions = [submission1];
+
+  /* Fake battles.  */
+  const battle1 = { _id: '64544bf83f9238e774994e00',
+                    author_id: user1._id, caption: 'battle1',
+                    creation_time: '2023-05-05T00:24:14.710Z',
+                    comment_ids: [comment2._id],
+                    deadline: '2023-05-05T00:26:13.696Z',
+                    file_name: 'seagull.jpg', num_likes: 1,
+                    submission_ids: [submission1._id] };
+
+  const fakeBattles = [battle1];
 
 
   const battles = () => {
