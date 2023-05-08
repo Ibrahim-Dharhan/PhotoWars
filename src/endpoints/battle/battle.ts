@@ -7,29 +7,29 @@ const battleRouter = express.Router();
 
 /**
  * @openapi
- * /account/login:
- *   post:
- *     summary: Attempt to log in with given credentials.
+
+ * /battle/{id}:
+ *   get:
+ *     summary: Return information about a battle.
+ *     parameters:
+ *       - $ref: '#/components/parameters/idParam'
  *     responses:
  *       200:
- *         description: Successfully logged in.
- *       401:
- *         description: Invalid credentials.
+ *         description: Successfully returned information about battle.
+ *       404:
+ *         $ref: '#/components/responses/404'
  *       500:
  *         $ref: '#/components/responses/500'
  */
 battleRouter.get("/:id", async (req, res) => {
   const battle_id = req.params.id;
-  const query = Battle.findOne({
-    _id: battle_id,
-  });
+  const query = Battle.findById(battle_id);
   try {
-    const result = await query.exec();
-    console.log(result);
+    const result = await query.lean().exec();
     if (result) {
       /* Found battle matching battle_id.  */
       // TODO: Change response message.
-      res.status(200).send(JSON.parse(JSON.stringify(result)));
+      res.status(200).json(result);
     } else {
       /* Did not find a user with credentials.  */
       res.status(401).send("Invalid battle id.");

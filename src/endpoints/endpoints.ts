@@ -40,17 +40,6 @@
 /**
  * @openapi
  * /battle/{id}:
- *   get:
- *     summary: Return information about a battle.
- *     parameters:
- *       - $ref: '#/components/parameters/idParam'
- *     responses:
- *       200:
- *         description: Successfully returned information about battle.
- *       404:
- *         $ref: '#/components/responses/404'
- *       500:
- *         $ref: '#/components/responses/500'
  *   put:
  *     summary: Update battle information if user is the battle creator.
  *     parameters:
