@@ -1,13 +1,22 @@
 import React from 'react';
 import { createRoot } from 'react-dom/client';
+import {
+  BrowserRouter as Router, Route, Routes
+} from 'react-router-dom';
 
 /* Importing Components */
-import { HelloWorld } from './components/helloWorld/HelloWorld';
+import { Home } from './pages/home/Home';
+import { Create } from './pages/create/Create';
 
 const PhotoWars = () => {
   return (
     <React.StrictMode>
-      <HelloWorld />
+      <Router>
+        <Routes>
+        <Route path='/' element={<Home />} />
+        <Route path='/create' element={<Create />} />
+        </Routes>
+      </Router>
     </React.StrictMode>
   );
 };

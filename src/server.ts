@@ -1,9 +1,12 @@
 'use strict';
 
 import express = require('express');
-import session = require('express-session');
+import fs = require('fs');
 import mongoose = require('mongoose');
 import multer = require('multer');
+import session = require('express-session');
+
+import * as constants from './definitions/constants';
 
 const storage = multer.diskStorage({
   destination: function (req, file, cb) {
@@ -32,14 +35,17 @@ app.use(
 import { accountRouter } from './endpoints/account/account';
 app.use('/account', accountRouter);
 
+import { battleRouter } from './endpoints/battle/battle';
+app.use('/battle', battleRouter);
+
+import { imageRouter } from './endpoints/image/image';
+app.use('/image', imageRouter);
+
 import { swaggerRouter } from './endpoints/swagger/swagger';
 app.use('/swagger', swaggerRouter);
 
 import { testRouter } from './endpoints/test/test';
 app.use('/test', testRouter);
-
-import { battleRouter } from './endpoints/battle/battle';
-app.use('/battle', battleRouter);
 
 /*
  * Not called on because index.html is served instead, as expected.
@@ -49,19 +55,15 @@ app.get('/', function(request: express.Request, response: express.Response) {
 */
 
 async function initServer() {
-  const MONGODB_NAME = 'cs194';
-  await mongoose.connect('mongodb://127.0.0.1:27017/' + MONGODB_NAME);
-  console.log('Mongoose successfully connected to MongoDB.');
+  mongoose.connect('mongodb://127.0.0.1:27017/' + constants._mongoDatabaseName);
 
-  const PORT_NUM = 8080;
-  app.listen(PORT_NUM, function () {
-    console.log(
-      'Listening at http://127.0.0.1:' +
-        PORT_NUM +
-        ' exporting the directory ' +
-        __dirname +
-        '.'
-    );
+  if (!fs.existsSync(constants._imageDir)){
+    fs.mkdirSync(constants._imageDir, { recursive: true });
+  }
+
+  app.listen(constants._portNum, function() {
+    console.log('Listening at http://127.0.0.1:' + constants._portNum
+                + ' exporting the directory ' + __dirname + '.');
   });
 }
 initServer();
