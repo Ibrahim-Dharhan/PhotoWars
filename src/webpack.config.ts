@@ -47,6 +47,7 @@ module.exports = {
       script: './server.ts',
       watch: [
         './server.ts',
+        './definitions/**/*.ts',
         './development/**/*.ts',
         './endpoints/**/*.ts',
         './schemas/**/*.ts',

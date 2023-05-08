@@ -39,16 +39,14 @@ app.get('/', function(request: express.Request, response: express.Response) {
 */
 
 async function initServer() {
-  const MONGODB_NAME = 'cs194';
-  mongoose.connect('mongodb://127.0.0.1:27017/' + MONGODB_NAME);
+  mongoose.connect('mongodb://127.0.0.1:27017/' + constants._mongoDatabaseName);
 
-  if (!fs.existsSync(constants.IMAGE_DIR)){
-    fs.mkdirSync(constants.IMAGE_DIR, { recursive: true });
+  if (!fs.existsSync(constants._imageDir)){
+    fs.mkdirSync(constants._imageDir, { recursive: true });
   }
 
-  const PORT_NUM = 8080;
-  app.listen(PORT_NUM, function() {
-    console.log('Listening at http://127.0.0.1:' + PORT_NUM
+  app.listen(constants._portNum, function() {
+    console.log('Listening at http://127.0.0.1:' + constants._portNum
                 + ' exporting the directory ' + __dirname + '.');
   });
 }

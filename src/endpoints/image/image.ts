@@ -23,7 +23,7 @@ const imageRouter = express.Router();
  */
 imageRouter.get('/:filename', (req, res) => {
   const options = {
-    root: path.join('.', constants.IMAGE_DIR),
+    root: path.join('.', constants._imageDir),
     dotfiles: 'deny',
     headers: {
       'x-timestamp': Date.now(),
