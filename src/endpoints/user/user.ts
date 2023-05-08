@@ -1,9 +1,7 @@
 "use strict"
 
 import express = require('express');
-import { Battle } from '../../definitions/schemas/battle';
-import { Comment } from '../../definitions/schemas/comment';
-import { Submission } from '../../definitions/schemas/submission';
+import { User } from '../../definitions/schemas/user';
 
 const userRouter = express.Router();
 
@@ -22,8 +20,21 @@ const userRouter = express.Router();
  *       500:
  *         $ref: '#/components/responses/500'
  */
-userRouter.post('/:id', async (req, res) => {
-  res.status(501).send('Not implemented.');
+userRouter.get('/:id', async (req, res) => {
+  const userId = req.params.id;
+  const query = User.findOne({ _id: userId });
+
+  try {
+    const userObj = await query.lean().exec();
+    if (!userObj) {
+      res.status(404).send('Resource not found.');
+      return;
+    }
+    res.status(200).json(userObj);
+  } catch (err) {
+    res.status(500).send('Internal server error.');
+    return;
+  }
 });
 
 export { userRouter };

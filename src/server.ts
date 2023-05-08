@@ -50,6 +50,9 @@ app.use('/swagger', swaggerRouter);
 import { testRouter } from './endpoints/test/test';
 app.use('/test', testRouter);
 
+import { userRouter } from './endpoints/user/user';
+app.use('/user', userRouter);
+
 /*
  * Not called on because index.html is served instead, as expected.
 app.get('/', function(request: express.Request, response: express.Response) {
