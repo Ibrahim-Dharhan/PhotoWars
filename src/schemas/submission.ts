@@ -19,8 +19,8 @@ import mongoose = require('mongoose');
  *           type: string
  *         comment_ids:
  *           type: array
- *             items:
- *               type: string
+ *           items:
+ *             type: string
  *         creation_time:
  *           type: string
  *           format: date-time
