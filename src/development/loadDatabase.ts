@@ -32,7 +32,6 @@ const dummyData = dummyDataFunc();
 
   console.log('Populating battles.');
   const battleModels = dummyData.battles();
-  console.log(battleModels);
   try {
     await Promise.all(battleModels.map(async (battle) => {
       const battleObj = await Battle.create(battle);

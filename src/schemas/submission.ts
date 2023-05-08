@@ -19,6 +19,10 @@ import mongoose = require('mongoose');
  *           type: string
  *         caption:
  *           type: string
+ *         comment_ids:
+ *           type: array
+ *             items:
+ *               type: string
  *         creation_time:
  *           type: string
  *           format: date-time
@@ -33,10 +37,10 @@ const submissionSchema = new mongoose.Schema({
   author_id: mongoose.Schema.Types.ObjectId,
   battle_id: mongoose.Schema.Types.ObjectId,
   caption: String,
+  comment_ids: [mongoose.Schema.Types.ObjectId],
   creation_time: {type: Date, default: Date.now},
   file_name: String,
-  num_votes: Number,
-  num_comments: Number
+  num_votes: Number
 });
 
 const Submission = mongoose.model('Submission', submissionSchema);
