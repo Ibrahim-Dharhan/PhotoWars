@@ -10,6 +10,21 @@ const accountRouter = express.Router();
  * /account/login:
  *   post:
  *     summary: Attempt to log in with given credentials.
+ *     requestBody:
+ *       description: Username and password for a user.
+ *       required: true
+ *       content:
+ *         application/x-www-form-urlencoded:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               login_name:
+ *                 type: string
+ *               login_password:
+ *                 type: string
+ *             required:
+ *               - login_name
+ *               - login_password
  *     responses:
  *       200:
  *         description: Successfully logged in.
@@ -25,13 +40,13 @@ accountRouter.post('/login', async (req, res) => {
                                login_password: login_password });
 
   try {
-    const result = await query.exec();
+    const result = await query.lean().exec();
     if (result) {
       /* Found user matching login credentials.  */
       req.session.logged_in = true;
       req.session.user_id = result._id;
       // TODO: Change response message.
-      res.status(200).send(JSON.parse(JSON.stringify(result)));
+      res.status(200).json(result);
     } else {
       /* Did not find a user with credentials.  */
       res.status(401).send('Invalid credentials.');
@@ -54,7 +69,7 @@ accountRouter.post('/login', async (req, res) => {
  *       400:
  *         description: Failed to logout user.
  *       401:
- *         $ref: '#/components/responses/401'
+ *         $ref: '#/components/responses/401NotLoggedIn'
  *       500:
  *         $ref: '#/components/responses/500'
  */
