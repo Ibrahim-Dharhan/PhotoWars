@@ -1,28 +1,29 @@
 "use strict"
 
 import express = require('express');
+import path = require('path');
+
+import * as constants from '../../definitions/constants';
 
 const imageRouter = express.Router();
-const IMAGE_DIR = 'public/images';
 
 /**
  * @openapi
  * /image/{filename}:
- *   post:
- *     summary: Log user out.
- *     responses:
- *       200:
- *         description: Successfully logged out.
- *       400:
- *         description: Failed to logout user.
- *       401:
- *         $ref: '#/components/responses/401NotLoggedIn'
- *       500:
- *         $ref: '#/components/responses/500'
+ *   get:
+ *     summary: Retrieves image with filename.
+ *     parameters:
+ *       - in: path
+ *         name: filename
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: Filename of the image.
+ *
  */
-imageRouter.get('/image/:filename', (req, res) => {
+imageRouter.get('/:filename', (req, res) => {
   const options = {
-    root: path.join(__dirname, IMAGE_DIR),
+    root: path.join('.', constants.IMAGE_DIR),
     dotfiles: 'deny',
     headers: {
       'x-timestamp': Date.now(),
@@ -30,12 +31,12 @@ imageRouter.get('/image/:filename', (req, res) => {
     }
   };
 
-  const filename = req.params.name;
+  const filename = req.params.filename;
   res.sendFile(filename, options, (err) => {
     if (err) {
       console.error('Failed to send file.', err);
     } else {
-      console.log(`Send: ${filename}`);
+      console.log(`Sent: ${filename}`);
     }
   });
 });
