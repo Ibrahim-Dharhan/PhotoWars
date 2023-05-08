@@ -23,7 +23,7 @@ const imageRouter = express.Router();
  */
 imageRouter.get('/:filename', (req, res) => {
   const options = {
-    root: path.join('.', constants.IMAGE_DIR),
+    root: path.join('.', constants._imageDir),
     dotfiles: 'deny',
     headers: {
       'x-timestamp': Date.now(),
@@ -35,6 +35,7 @@ imageRouter.get('/:filename', (req, res) => {
   res.sendFile(filename, options, (err) => {
     if (err) {
       console.error('Failed to send file.', err);
+      res.status(404).send('Image does not exist');
     } else {
       console.log(`Sent: ${filename}`);
     }
