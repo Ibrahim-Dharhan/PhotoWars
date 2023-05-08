@@ -44,7 +44,7 @@ accountRouter.post('/login', async (req, res) => {
     if (result) {
       /* Found user matching login credentials.  */
       req.session.logged_in = true;
-      req.session.user_id = result._id;
+      req.session.user_id = result._id.toString();
       // TODO: Change response message.
       res.status(200).send(JSON.parse(JSON.stringify(result)));
     } else {

@@ -17,6 +17,8 @@
  *       description: User is not logged in.
  *     403:
  *       description: User is not the owner of this resource.
+ *     403NotOwned:
+ *       description: User is not the owner of this resource.
  *     404:
  *       description: Resource not found.
  *     500:
