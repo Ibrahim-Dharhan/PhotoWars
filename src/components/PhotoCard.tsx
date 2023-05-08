@@ -7,13 +7,12 @@ import CardHeader from '@mui/material/CardHeader';
 import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
 import FavoriteIcon from '@mui/icons-material/Favorite';
-import ShareIcon from '@mui/icons-material/Share';
 import MoreVertIcon from '@mui/icons-material/MoreVert';
 import { CardActionArea } from '@mui/material';
 import ImageIcon from '@mui/icons-material/Image';
 import Box from '@mui/material/Box';
 import Avatar from '@mui/material/Avatar';
-import IconButton, { IconButtonProps } from '@mui/material/IconButton';
+import IconButton from '@mui/material/IconButton';
 
 const PhotoCard = () => {
   return (

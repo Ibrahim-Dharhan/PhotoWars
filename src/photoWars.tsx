@@ -3,7 +3,6 @@ import { createRoot } from 'react-dom/client';
 import {
   BrowserRouter as Router, Route, Routes
 } from 'react-router-dom';
-import axios from 'axios';
 
 /* Importing Components */
 import { Home } from './pages/home/Home';
