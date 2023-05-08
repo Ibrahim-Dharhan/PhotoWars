@@ -53,35 +53,36 @@ const Create = () => {
           />)
           : (
             <Box
-              className="image-upload-box"
+              // className="image-upload-box"
               onDrop={handleImageDrop}
               onDragOver={(event) => event.preventDefault()}
               sx={{ p: 2, border: '1px dashed grey' }}
             >
-
               <label htmlFor="image-upload">
-                Drag and drop an image, or click to select a file:
+                Drag and drop an image, or
               </label>
-              <input
-                type="file"
-                id="image-upload"
-                accept="image/*"
-                onChange={handleImageChange}
-              />
+
+              <Button
+                variant="outlined"
+                component="label"
+              >
+                Upload File
+                <input
+                  type="file"
+                  hidden
+                  id="image-upload"
+                  accept="image/*"
+                  onChange={handleImageChange}
+                />
+              </Button>
+
             </Box>
           )
         }
         <Button
           variant="contained"
-          component="label"
+          type="submit"
         >
-          Upload File
-          <input
-            type="file"
-            hidden
-          />
-        </Button>
-        <Button type="submit">
           Post
         </Button>
       </form>
