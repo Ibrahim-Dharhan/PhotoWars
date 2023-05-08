@@ -41,6 +41,9 @@ app.use('/battle', battleRouter);
 import { imageRouter } from './endpoints/image/image';
 app.use('/image', imageRouter);
 
+import { commentRouter } from './endpoints/comment/comment';
+app.use('/comment', commentRouter );
+
 import { swaggerRouter } from './endpoints/swagger/swagger';
 app.use('/swagger', swaggerRouter);
 

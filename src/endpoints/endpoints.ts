@@ -11,9 +11,13 @@
  *       required: true
  *
  *   responses:
+ *     200ResourceRetrieved:
+ *       description: Resource successfully retrieved.
  *     401NotLoggedIn:
  *       description: User is not logged in.
  *     403:
+ *       description: User is not the owner of this resource.
+ *     403NotOwned:
  *       description: User is not the owner of this resource.
  *     404:
  *       description: Resource not found.
@@ -116,52 +120,6 @@
  *         description: Successfully unliked the battle.
  *       401:
  *         $ref: '#/components/responses/401NotLoggedIn'
- *       500:
- *         $ref: '#/components/responses/500'
- */
-
-/**
- * @openapi
- * /comment/{id}:
- *   get:
- *     summary: Get comment information.
- *     parameters:
- *       - $ref: '#/components/parameters/idParam'
- *     responses:
- *       200:
- *         description: Successfully retrieved comment.
- *       404:
- *         $ref: '#/components/responses/404'
- *       500:
- *         $ref: '#/components/responses/500'
- *   put:
- *     summary: Updating a comment by a user.
- *     parameters:
- *       - $ref: '#/components/parameters/idParam'
- *     responses:
- *       200:
- *         description: Successfully updated user comment.
- *       401:
- *         $ref: '#/components/responses/401NotLoggedIn'
- *       403:
- *         $ref: '#/components/responses/403'
- *       404:
- *         $ref: '#/components/responses/404'
- *       500:
- *         $ref: '#/components/responses/500'
- *   delete:
- *     summary: Delete comment if user is the comment owner.
- *     parameters:
- *       - $ref: '#/components/parameters/idParam'
- *     responses:
- *       200:
- *         description: Successfully deleted comment.
- *       401:
- *         $ref: '#/components/responses/401NotLoggedIn'
- *       403:
- *         $ref: '#/components/responses/403'
- *       404:
- *         $ref: '#/components/responses/404'
  *       500:
  *         $ref: '#/components/responses/500'
  */
