@@ -2,7 +2,7 @@
 
 import express = require('express');
 import { checkSchema, validationResult } from 'express-validator';
-import { User, newUserSchema } from '../../schemas/user';
+import { User, newUserSchema } from '../../definitions/schemas/user';
 
 const accountRouter = express.Router();
 

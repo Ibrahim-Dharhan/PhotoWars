@@ -50,7 +50,6 @@ module.exports = {
         './definitions/**/*.ts',
         './development/**/*.ts',
         './endpoints/**/*.ts',
-        './schemas/**/*.ts',
         './types/**/*.ts'
       ], 
       verbose: true,
