@@ -1,28 +1,28 @@
 "use strict"
 
 import express = require('express');
-import { Battle } from '../../schemas/battle';
-import { Comment } from '../../schemas/comment';
-import { Submission } from '../../schemas/submission';
+import { Battle } from '../../definitions/schemas/battle';
+import { Comment } from '../../definitions/schemas/comment';
+import { Submission } from '../../definitions/schemas/submission';
 
 const userRouter = express.Router();
 
 /**
  * @openapi
- * /user/new:
- *   post:
- *     summary: Creating a new user.
- *     requestBody:
- *       description: User profile.
+ * /user/{id}:
+ *   get:
+ *     summary: Returns information for user with id.
+ *     parameters:
+ *       - $ref: '#components/parameters/idParam'
  *     responses:
  *       200:
- *         description: Successfully created new user.
- *       400:
- *         description: Missing information to create a new user.
+ *         description: Successfully found and returned user data.
+ *       404:
+ *         $ref: '#/components/responses/404ResourceNotFound'
  *       500:
  *         $ref: '#/components/responses/500'
  */
-userRouter.post('/new', async (req, res) => {
+userRouter.post('/:id', async (req, res) => {
   res.status(501).send('Not implemented.');
 });
 

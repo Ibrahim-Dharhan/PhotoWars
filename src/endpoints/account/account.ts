@@ -108,6 +108,8 @@ accountRouter.post('/logout', (req, res) => {
  *         description: Successfully created new user.
  *       400:
  *         description: Missing information to create new user.
+ *       409:
+ *         description: User already exists.
  *       500:
  *         $ref: '#/components/responses/500'
  */
