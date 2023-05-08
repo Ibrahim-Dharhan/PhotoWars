@@ -90,7 +90,7 @@ battleRouter.put('/:id', async (req, res) => {
           req.body.caption !== null ? req.body.caption : result.caption;
         const deadline =
           req.body.deadline !== null ? req.body.deadline : result.deadline;
-        Battle.updateOne(
+        await Battle.updateOne(
           { _id: battleId },
           {
             $set: {
