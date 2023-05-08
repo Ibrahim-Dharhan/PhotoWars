@@ -29,9 +29,7 @@ function dummyDataFunc() {
                         caption: 'submission1',
                         comment_ids: [comment1._id],
                         creation_time: '2023-05-05T00:32:09.969Z',
-                        file_name: 'seagull.jpg',
-                        num_votes: 1,
-                        num_comments: 1 };
+                        file_name: 'seagull.jpg', num_votes: 1 };
 
   const fakeSubmissions = [submission1];
 
