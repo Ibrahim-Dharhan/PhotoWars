@@ -28,6 +28,9 @@ app.use('/image', imageRouter);
 import { commentRouter } from './endpoints/comment/comment';
 app.use('/comment', commentRouter );
 
+import { commentRouter } from './endpoints/comment/comment';
+app.use('/comment', commentRouter );
+
 import { swaggerRouter } from './endpoints/swagger/swagger';
 app.use('/swagger', swaggerRouter);
 
