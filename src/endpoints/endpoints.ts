@@ -286,20 +286,6 @@
 
 /**
  * @openapi
- * /user/new:
- *   post:
- *     summary: Creating a new user.
- *     responses:
- *       200:
- *         description: Successfully created new user.
- *       400:
- *         description: Missing information to create a new user.
- *       500:
- *         $ref: '#/components/responses/500'
- */
-
-/**
- * @openapi
  * /user/{id}:
  *   get:
  *     summary: Returns information for user with id.
