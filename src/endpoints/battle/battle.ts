@@ -28,7 +28,6 @@ battleRouter.get('/:id', async (req, res) => {
     const result = await query.lean().exec();
     if (result) {
       /* Found battle matching battle_id.  */
-      // TODO: Change response message.
       res.status(200).json(result);
     } else {
       /* Did not find a battle with matching battle_id.  */
