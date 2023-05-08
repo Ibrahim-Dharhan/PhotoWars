@@ -1,8 +1,8 @@
-"use strict";
+'use strict';
 
-import express = require("express");
-import { Battle } from "../../schemas/battle";
-
+import express = require('express');
+import { Battle } from '../../schemas/battle';
+import { upload } from '../../server';
 const battleRouter = express.Router();
 
 /**
@@ -21,7 +21,7 @@ const battleRouter = express.Router();
  *       500:
  *         $ref: '#/components/responses/500'
  */
-battleRouter.get("/:id", async (req, res) => {
+battleRouter.get('/:id', async (req, res) => {
   const battle_id = req.params.id;
   const query = Battle.findById(battle_id);
   try {
@@ -32,11 +32,11 @@ battleRouter.get("/:id", async (req, res) => {
       res.status(200).json(result);
     } else {
       /* Did not find a battle with matching battle_id.  */
-      res.status(401).send("Invalid battle id.");
+      res.status(401).send('Invalid battle id.');
     }
   } catch (err) {
-    res.status(500).send("Internal server error.");
-    console.error("Failed to query database.");
+    res.status(500).send('Internal server error.');
+    console.error('Failed to query database.');
   }
 });
 
@@ -59,43 +59,41 @@ battleRouter.get("/:id", async (req, res) => {
  *       500:
  *         $ref: '#/components/responses/500'
  */
-battleRouter.put("/:id", async (req, res) => {
+battleRouter.put('/:id', async (req, res) => {
   try {
     const battle_id = req.params.id;
     const query = Battle.findById(battle_id);
     const result = await query.exec();
     if (result) {
-      /* Found battle matching battle_id. */ 
+      /* Found battle matching battle_id. */
       if (!req.session.logged_in) {
-        res.status(401).send("Not logged in");
+        res.status(401).send('Not logged in');
       } else if (result.author_id != req.session.user_id) {
-        res.status(403).send("Access to that resource is forbidden");
+        res.status(403).send('Access to that resource is forbidden');
       } else {
         const caption =
           req.body.caption !== null ? req.body.caption : result.caption;
         const deadline =
           req.body.deadline !== null ? req.body.deadline : result.deadline;
-        console.log(
-          Battle.updateOne(
-            { _id: battle_id },
-            {
-              $set: {
-                caption: caption,
-                deadline: deadline,
-              },
-            }
-          )
+        Battle.updateOne(
+          { _id: battle_id },
+          {
+            $set: {
+              caption: caption,
+              deadline: deadline,
+            },
+          }
         );
         const updatedBattle = await Battle.findById(battle_id).exec();
         res.status(200).json(updatedBattle);
       }
     } else {
       /* Did not find a battle with matching battle_id. */
-      res.status(401).send("Invalid battle id.");
+      res.status(401).send('Invalid battle id.');
     }
   } catch (err) {
-    res.status(500).send("Internal server error.");
-    console.error("Failed to query database.");
+    res.status(500).send('Internal server error.');
+    console.error('Failed to query database.');
   }
 });
 
@@ -114,7 +112,7 @@ battleRouter.put("/:id", async (req, res) => {
  *       500:
  *         $ref: '#/components/responses/500'
  */
-battleRouter.post("/new", async (req, res) => {
+battleRouter.post('/new', upload.single('file'), async (req, res) => {
   try {
     if (req.session.logged_in) {
       // TODO: Ensure all params are valid
@@ -122,19 +120,18 @@ battleRouter.post("/new", async (req, res) => {
         author_id: req.session.user_id,
         caption: req.body.caption,
         deadline: req.body.deadline,
-        file_name: req.body.file_name,
+        file_name: req.file.filename,
         num_likes: 1,
         num_submissions: 1,
       });
-      console.log(req.body);
       await newBattleObj.save();
       res.status(200).json(newBattleObj);
     } else {
-      res.status(401).send("Not logged in");
+      res.status(401).send('Not logged in');
     }
   } catch (err) {
-    res.status(500).send("Internal server error.");
-    console.error("Failed to query database.");
+    res.status(500).send('Internal server error.');
+    console.error('Failed to query database.');
   }
 });
 
