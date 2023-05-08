@@ -17,6 +17,10 @@ import mongoose = require('mongoose');
  *           type: string
  *         caption:
  *           type: string
+ *         comment_ids:
+ *           type: array
+ *             items:
+ *               type: string
  *         creation_time:
  *           type: string
  *           format: date-time
@@ -34,6 +38,7 @@ const battleSchema = new mongoose.Schema({
   author_id: mongoose.Schema.Types.ObjectId,
   caption: String,
   creation_time: {type: Date, default: Date.now},
+  comment_ids: [mongoose.Schema.Types.ObjectId],
   deadline: Date,
   file_name: String,
   num_likes: Number,
