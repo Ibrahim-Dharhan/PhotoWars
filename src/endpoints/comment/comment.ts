@@ -78,15 +78,6 @@ commentRouter.delete('/:id', async (req, res) => {
       /* User requesting change is not the comment's author.  */
       res.status(403).send('User is not the comment author.');
     } else {
-      /* Remove reference to either Battle or Submission.  */
-      const bQuery = await Battle.findOne({ commentIds: result._id });
-      const sQuery = await Submission.findOne({ commentIds: result._id });
-      const refDoc = bQuery ? bQuery : sQuery;
-
-      const index = refDoc.commentIds.indexOf(result._id);
-      refDoc.commentIds.splice(index, 1);
-      await refDoc.save();
-
       await Comment.findByIdAndDelete(commentId);
       res.status(200).send('Successfully deleted comment text.');
     }
