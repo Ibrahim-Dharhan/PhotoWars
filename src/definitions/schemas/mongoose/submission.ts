@@ -23,18 +23,13 @@ import { Comment } from './comment';
  *           format: date-time
  *         filename:
  *           type: string
- *         numLikes:
- *           type: number 
- *         numComments:
- *           type: number 
  */
 const submissionSchema = new mongoose.Schema({
   authorId: { type: mongoose.Schema.Types.ObjectId, ref: 'User' },
   battleId: { type: mongoose.Schema.Types.ObjectId, ref: 'Battle' },
   caption: String,
   creationTime: {type: Date, default: Date.now},
-  filename: String,
-  numVotes: Number
+  filename: String
 });
 
 /* Middleware to delete or update Submission-related documents before deletion.  */

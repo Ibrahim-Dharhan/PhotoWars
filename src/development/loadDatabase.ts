@@ -11,6 +11,7 @@ import { Battle } from '../definitions/schemas/mongoose/battle';
 import { Comment } from '../definitions/schemas/mongoose/comment';
 import { Submission } from '../definitions/schemas/mongoose/submission';
 import { User } from '../definitions/schemas/mongoose/user';
+import { Vote } from '../definitions/schemas/mongoose/vote';
 
 /* Dummy data.  */
 import { dummyDataFunc } from './dummyData';
@@ -22,7 +23,8 @@ const dummyData = dummyDataFunc();
     Battle.deleteMany({}),
     Comment.deleteMany({}),
     Submission.deleteMany({}),
-    User.deleteMany({})
+    User.deleteMany({}),
+    Vote.deleteMany({})
   ];
   try {
     await Promise.all(removePromises);
@@ -74,6 +76,18 @@ const dummyData = dummyDataFunc();
       const userObj = await User.create(user);
       await userObj.save();
       console.log(`Added user ${user.firstName} ${user.lastName} to database.`);
+    }));
+  } catch (err) {
+    console.error(err);
+  }
+
+  console.log('Populating votes.');
+  const voteModels = dummyData.votes();
+  try {
+    await Promise.all(voteModels.map(async (vote) => {
+      const voteObj = await Vote.create(vote);
+      await voteObj.save();
+      console.log(`Added vote to database.`);
     }));
   } catch (err) {
     console.error(err);

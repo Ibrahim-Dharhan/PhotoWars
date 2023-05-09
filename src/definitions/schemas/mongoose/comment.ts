@@ -20,8 +20,6 @@ import mongoose = require('mongoose');
  *         creationTime:
  *           type: string
  *           format: date-time
- *         numLikes:
- *           type: number
  *         postId:
  *           type: string
  *         text:
@@ -34,7 +32,6 @@ const commentSchema = new mongoose.Schema({
     enum: ['Battle', 'Submission']
   },
   creationTime: {type: Date, default: Date.now},
-  numLikes: Number,
   postId: { type: mongoose.Schema.Types.ObjectId,
             refPath: 'commentedModel' },
   text: String

@@ -31,17 +31,38 @@ function dummyDataFunc() {
 
   /* Fake comments.  */
   const comment1 = { _id: '64544dd0803990cdf005ca00',
-                     authorId: user1._id, commentedModel: 'Battle',
+                     authorId: user2._id, commentedModel: 'Battle',
                      creationTime: '2023-05-05T00:29:04.296Z', numLikes: 1,
                      postId: battle1._id, text: 'comment1' };
 
   const comment2 = { _id: '64544dd0803990cdf005ca01',
                      authorId: user1._id, commentedModel: 'Submission',
                      creationTime: '2023-05-05T00:29:04.296Z', numLikes: 1,
-                     postId: submission1._id, text: 'comment1' };
+                     postId: submission1._id, text: 'comment2' };
 
   const fakeComments = [comment1, comment2];
 
+  const vote1 = { _id: '645a1ed6d7064bcc4d28ae00',
+                  creationTime: '2023-05-09T10:22:14.220Z',
+                  postId: battle1._id, userId: user2._id,
+                  votedModel: 'Battle' };
+
+  const vote2 = { _id: '645a1ed6d7064bcc4d28ae01',
+                  creationTime: '2023-05-09T10:22:14.220Z',
+                  postId: comment2._id, userId: user2._id,
+                  votedModel: 'Comment' };
+
+  const vote3 = { _id: '645a1ed6d7064bcc4d28ae02',
+                  creationTime: '2023-05-09T10:22:14.220Z',
+                  postId: comment1._id, userId: user1._id,
+                  votedModel: 'Comment' };
+
+  const vote4 = { _id: '645a1ed6d7064bcc4d28ae03',
+                  creationTime: '2023-05-09T10:22:14.220Z',
+                  postId: submission1._id, userId: user1._id,
+                  votedModel: 'Submission' };
+
+  const fakeVotes = [vote1, vote2, vote3, vote4];
 
   const battles = () => {
     return fakeBattles;
@@ -59,11 +80,16 @@ function dummyDataFunc() {
     return fakeUsers;
   };
 
+  const votes = () => {
+    return fakeVotes;
+  };
+
   const dummyData = {
     battles: battles,
     comments: comments,
     submissions: submissions,
-    users: users
+    users: users,
+    votes: votes
   };
 
   return dummyData;
