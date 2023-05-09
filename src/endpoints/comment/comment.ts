@@ -1,9 +1,7 @@
 "use strict"
 
 import express = require('express');
-import { Battle } from '../../definitions/schemas/battle';
 import { Comment } from '../../definitions/schemas/comment';
-import { Submission } from '../../definitions/schemas/submission';
 
 const commentRouter = express.Router();
 
