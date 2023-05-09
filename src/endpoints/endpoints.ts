@@ -79,17 +79,6 @@
 /**
  * @openapi
  * /submission/{id}:
- *   get:
- *     summary: Return information about a submission.
- *     parameters:
- *       - $ref: '#/components/parameters/idParam'
- *     responses:
- *       200:
- *         description: Successfully returned information about submission.
- *       404:
- *         $ref: '#/components/responses/404'
- *       500:
- *         $ref: '#/components/responses/500'
  *   put:
  *     summary: Update submission information if user is the creator.
  *     parameters:
