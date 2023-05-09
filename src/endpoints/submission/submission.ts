@@ -22,7 +22,6 @@ const submissionRouter = express.Router();
  */
 submissionRouter.get('/:id', async (req, res) => {
   const submissionId = req.params.id;
-  console.log(submissionId);
   const query = Submission.findById(submissionId);
   try {
     const result = await query.lean().exec();
