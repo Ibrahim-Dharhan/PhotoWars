@@ -38,7 +38,7 @@ const commentSchema = new mongoose.Schema({
   text: String
 });
 
-commentSchema.pre(['deleteMany'], async function() {
+commentSchema.pre(['deleteMany', 'findOneAndDelete'], async function() {
   const results = await Comment.find(this.getQuery(), '_id');
   const _ids = results.map(comment => comment._id);
   /* Delete all votes on Comment.  */
