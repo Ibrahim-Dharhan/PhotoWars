@@ -31,12 +31,12 @@ function dummyDataFunc() {
 
   /* Fake comments.  */
   const comment1 = { _id: '64544dd0803990cdf005ca00',
-                     authorId: user1._id,
+                     authorId: user1._id, commentedModel: 'Battle',
                      creationTime: '2023-05-05T00:29:04.296Z', numLikes: 1,
                      postId: battle1._id, text: 'comment1' };
 
   const comment2 = { _id: '64544dd0803990cdf005ca01',
-                     authorId: user1._id,
+                     authorId: user1._id, commentedModel: 'Submission',
                      creationTime: '2023-05-05T00:29:04.296Z', numLikes: 1,
                      postId: submission1._id, text: 'comment1' };
 
