@@ -7,10 +7,10 @@ import * as constants from '../definitions/constants';
 mongoose.connect('mongodb://127.0.0.1:27017/' + constants._mongoDatabaseName);
 
 /* Mongoose schemas.  */
-import { Battle } from '../definitions/schemas/battle';
-import { Comment } from '../definitions/schemas/comment';
-import { Submission } from '../definitions/schemas/submission';
-import { User } from '../definitions/schemas/user';
+import { Battle } from '../definitions/schemas/mongoose/battle';
+import { Comment } from '../definitions/schemas/mongoose/comment';
+import { Submission } from '../definitions/schemas/mongoose/submission';
+import { User } from '../definitions/schemas/mongoose/user';
 
 /* Dummy data.  */
 import { dummyDataFunc } from './dummyData';

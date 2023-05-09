@@ -2,7 +2,7 @@
 
 import express = require('express');
 import { checkSchema, validationResult } from 'express-validator';
-import { User } from '../../definitions/schemas/user';
+import { User } from '../../definitions/schemas/mongoose/user';
 import { UpdateUser } from '../../definitions/schemas/validation/updateUser';
 
 const userRouter = express.Router();

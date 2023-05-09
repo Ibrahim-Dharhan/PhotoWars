@@ -3,7 +3,7 @@
 import express = require('express');
 import { checkSchema, validationResult } from 'express-validator';
 import { NewUser } from '../../definitions/schemas/validation/newUser';
-import { User } from '../../definitions/schemas/user';
+import { User } from '../../definitions/schemas/mongoose/user';
 
 const accountRouter = express.Router();
 

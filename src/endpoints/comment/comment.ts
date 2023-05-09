@@ -1,7 +1,7 @@
 "use strict"
 
 import express = require('express');
-import { Comment } from '../../definitions/schemas/comment';
+import { Comment } from '../../definitions/schemas/mongoose/comment';
 
 const commentRouter = express.Router();
 

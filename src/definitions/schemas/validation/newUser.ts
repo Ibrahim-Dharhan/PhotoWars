@@ -1,6 +1,6 @@
 "use strict"
 
-import { User } from '../user';
+import { User } from '../mongoose/user';
 
 const NewUser = {
   displayName: {

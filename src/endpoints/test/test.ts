@@ -2,7 +2,7 @@
 
 import express = require('express');
 
-import { Kitten } from '../../definitions/schemas/kitten';
+import { Kitten } from '../../definitions/schemas/mongoose/kitten';
 
 const testRouter = express.Router();
 

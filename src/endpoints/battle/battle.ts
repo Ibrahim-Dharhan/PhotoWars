@@ -1,7 +1,7 @@
 'use strict';
 
 import express = require('express');
-import { Battle } from '../../definitions/schemas/battle';
+import { Battle } from '../../definitions/schemas/mongoose/battle';
 import { upload } from '../../server';
 
 const battleRouter = express.Router();
