@@ -27,16 +27,13 @@ import { Submission } from './submission';
  *           format: date-time
  *         filename:
  *           type: string
- *         numLikes:
- *           type: number 
  */
 const battleSchema = new mongoose.Schema({
   authorId: { type: mongoose.Schema.Types.ObjectId, ref: 'User' },
   caption: String,
   creationTime: { type: Date, default: Date.now },
   deadline: Date,
-  filename: String,
-  numLikes: Number,
+  filename: String
 });
 
 /* Middleware to delete or update Battle-related documents before deletion.  */
