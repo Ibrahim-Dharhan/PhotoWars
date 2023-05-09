@@ -37,14 +37,14 @@ import mongoose = require('mongoose');
  *             type: string
  */
 const battleSchema = new mongoose.Schema({
-  authorId: mongoose.Schema.Types.ObjectId,
+  authorId: { type: mongoose.Schema.Types.ObjectId, ref: 'User' },
   caption: String,
-  creationTime: {type: Date, default: Date.now},
-  commentIds: [mongoose.Schema.Types.ObjectId],
+  creationTime: { type: Date, default: Date.now },
+  commentIds: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Comment' }],
   deadline: Date,
   filename: String,
   numLikes: Number,
-  submissionIds: [mongoose.Schema.Types.ObjectId]
+  submissionIds: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Submission' }]
 });
 
 const Battle = mongoose.model('Battle', battleSchema);

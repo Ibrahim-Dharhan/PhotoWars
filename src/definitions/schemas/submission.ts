@@ -32,9 +32,9 @@ import mongoose = require('mongoose');
  *           type: number 
  */
 const submissionSchema = new mongoose.Schema({
-  authorId: mongoose.Schema.Types.ObjectId,
+  authorId: { type: mongoose.Schema.Types.ObjectId, ref: 'User' },
   caption: String,
-  commentIds: [mongoose.Schema.Types.ObjectId],
+  commentIds: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Comment' }],
   creationTime: {type: Date, default: Date.now},
   filename: String,
   numVotes: Number

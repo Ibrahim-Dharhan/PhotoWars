@@ -2,8 +2,11 @@
 
 import express = require('express');
 import { checkSchema, validationResult } from 'express-validator';
-import { UpdateUser } from '../../definitions/schemas/validation/updateUser';
+import { Battle } from '../../definitions/schemas/battle';
+import { Comment } from '../../definitions/schemas/comment';
+import { Submission } from '../../definitions/schemas/submission';
 import { User } from '../../definitions/schemas/user';
+import { UpdateUser } from '../../definitions/schemas/validation/updateUser';
 
 const userRouter = express.Router();
 
@@ -101,6 +104,43 @@ userRouter.put('/', checkSchema(UpdateUser), async (req, res) => {
     res.status(500).send('Internal server error.');
     console.error(err);
   }
+});
+
+/**
+ * @openapi
+ * /user:
+ *   delete:
+ *     summary: Delete user.
+ *     responses:
+ *       200:
+ *         description: Successfully deleted user.
+ *       401:
+ *         $ref: '#/components/responses/401NotLoggedIn'
+ *       500:
+ *         $ref: '#/components/responses/500'
+ */
+userRouter.delete('/', async (req, res) => {
+  if (!req.session.loggedIn) {
+    res.status(401).send('User not logged in.');
+    return;
+  }
+
+  /* Delete user.  */
+  const query = User.findOneAndDelete({ _id: req.session.userId });
+  try {
+    const userObj = await query.lean().exec();
+    if (!userObj) {
+      res.status(500).send('Failed to find user.');
+      console.error('Failed to find user.');
+    } else {
+      res.status(200).send('Successfully deleted user.');
+    }
+  } catch (err) {
+    res.status(500).send('Internal server error.');
+    console.error(err);
+  }
+
+  /* Delete */
 });
 
 export { userRouter };

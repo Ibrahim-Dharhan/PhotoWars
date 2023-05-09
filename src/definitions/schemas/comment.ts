@@ -24,7 +24,7 @@ import mongoose = require('mongoose');
  *           type: string
  */
 const commentSchema = new mongoose.Schema({
-  authorId: mongoose.Schema.Types.ObjectId,
+  authorId: { type: mongoose.Schema.Types.ObjectId, ref: 'User' },
   creationTime: {type: Date, default: Date.now},
   numLikes: Number,
   text: String
