@@ -38,4 +38,59 @@ submissionRouter.get('/:id', async (req, res) => {
   }
 });
 
+/**
+ * @openapi
+ * /submission/{id}:
+ *   put:
+ *     summary: Update submission information if user is the creator.
+ *     parameters:
+ *       - $ref: '#/components/parameters/idParam'
+ *     responses:
+ *       200:
+ *         description: Successfully commented on submission.
+ *       401:
+ *         $ref: '#/components/responses/401NotLoggedIn'
+ *       404:
+ *         $ref: '#/components/responses/404'
+ *       500:
+ *         $ref: '#/components/responses/500'
+ */ 
+submissionRouter.put('/:id', async (req, res) => {
+  try {
+    const submissionId = req.params.id;
+    const query = Submission.findById(submissionId);
+    const result = await query.exec();
+    if (result) {
+      /* Found submission matching submissionId. */
+      if (!req.session.loggedIn) {
+        res.status(401).send('Not logged in');
+      } else if (result.authorId.toString() !== req.session.userId) {
+        res.status(403).send('Access to that resource is forbidden');
+      } else {
+        const caption =
+          req.body.caption !== null ? req.body.caption : result.caption;
+        console.log(caption);
+        await Submission.updateOne(
+          { _id: submissionId },
+          {
+            $set: {
+              caption: caption,
+            },
+          }
+        );
+        const updatedSubmission = await Submission.findById(
+          submissionId
+        ).exec();
+        res.status(200).json(updatedSubmission);
+      }
+    } else {
+      /* Did not find a submission with matching submissionId. */
+      res.status(404).send('Invalid submission id.');
+    }
+  } catch (err) {
+    res.status(500).send('Internal server error.');
+    console.error(err);
+  }
+});
+
 export { submissionRouter };

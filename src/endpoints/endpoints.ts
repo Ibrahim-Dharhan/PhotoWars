@@ -79,19 +79,6 @@
 /**
  * @openapi
  * /submission/{id}:
- *   put:
- *     summary: Update submission information if user is the creator.
- *     parameters:
- *       - $ref: '#/components/parameters/idParam'
- *     responses:
- *       200:
- *         description: Successfully commented on submission.
- *       401:
- *         $ref: '#/components/responses/401NotLoggedIn'
- *       404:
- *         $ref: '#/components/responses/404'
- *       500:
- *         $ref: '#/components/responses/500'
  *   delete:
  *     summary: Delete submission if user is the comment owner.
  *     parameters:
