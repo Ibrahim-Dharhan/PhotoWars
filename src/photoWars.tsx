@@ -18,21 +18,11 @@ const PhotoWars = () => {
   return (
     <React.StrictMode>
       <Router>
-        <Grid container spacing={7}>
-          <Grid item xs={4}>
-            <Sidebar />
-          </Grid>
-          <Grid item xs={4}>
-            <Routes>
-              <Route path='/' element={<Home />} />
-              <Route path='/create' element={<Create />} />
-              <Route path='/battle' element={<Battle />} />
-            </Routes>
-          </Grid>
-          <Grid item xs={4}>
-            <Rightbar />
-          </Grid>
-        </Grid>
+        <Routes>
+          <Route path='/' element={<Home />} />
+          <Route path='/create' element={<Create />} />
+          <Route path='/battle' element={<Battle />} />
+        </Routes>
       </Router>
     </React.StrictMode>
   );

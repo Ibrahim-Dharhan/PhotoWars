@@ -5,6 +5,12 @@ import TextField from '@mui/material/TextField';
 import Input from '@mui/material/Input';
 import Box from '@mui/material/Box';
 import "./create.css";
+import axios from "axios";
+
+interface FormData {
+  title: string;
+  pic: string;
+}
 
 const Create = () => {
   const [title, setTitle] = useState('');
@@ -12,8 +18,16 @@ const Create = () => {
 
   function handleSubmit(event) {
     event.preventDefault();
-    console.log('Title:', title);
-    console.log('pic:', image);
+    axios.post(`/battle/${id}/submit:`, {
+      title: title,
+      image: image
+    })
+    .then(response => {
+      console.log(response.data);
+    })
+    .catch(error => {
+      console.error(error);
+    });
   }
 
   function handleTitleChange(event) {
