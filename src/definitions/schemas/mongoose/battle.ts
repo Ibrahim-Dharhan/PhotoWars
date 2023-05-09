@@ -3,6 +3,7 @@
 import mongoose = require('mongoose');
 import { Comment } from './comment';
 import { Submission } from './submission';
+import { Vote } from './vote';
 
 /**
  * @openapi
@@ -40,6 +41,11 @@ const battleSchema = new mongoose.Schema({
 battleSchema.pre(['deleteMany'], async function() {
   const results = await Battle.find(this.getQuery(), '_id');
   const _ids = results.map(battle => battle._id);
+  /* Delete all votes on Battle.  */
+  await Vote.deleteMany({
+    votedModel: 'Battle',
+    postId: { $in: _ids }
+  });
   /* Delete all comments in Battle.  */
   await Comment.deleteMany({
     commentedModel: 'Battle',
