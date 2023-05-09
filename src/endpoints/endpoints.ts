@@ -21,6 +21,8 @@
  *       description: User is not the owner of this resource.
  *     404:
  *       description: Resource not found.
+ *     404ResourceNotFound:
+ *       description: Resource not found.
  *     500:
  *       description: Internal server error.
  */
