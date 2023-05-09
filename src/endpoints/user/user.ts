@@ -126,14 +126,16 @@ userRouter.delete('/', async (req, res) => {
   }
 
   /* Delete user.  */
-  const query = User.findOneAndDelete({ _id: req.session.userId });
+  // const query = User.findOneAndDelete({ _id: req.session.userId });
+  const query = User.findOne({ _id: req.session.userId });
   try {
     const userObj = await query.lean().exec();
     if (!userObj) {
       res.status(500).send('Failed to find user.');
       console.error('Failed to find user.');
     } else {
-      res.status(200).send('Successfully deleted user.');
+      // res.status(200).send('Successfully deleted user.');
+      res.status(501).send('Not implemented.');
     }
   } catch (err) {
     res.status(500).send('Internal server error.');
