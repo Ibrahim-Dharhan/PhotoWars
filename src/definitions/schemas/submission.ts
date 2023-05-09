@@ -17,10 +17,6 @@ import mongoose = require('mongoose');
  *           type: string
  *         caption:
  *           type: string
- *         commentIds:
- *           type: array
- *           items:
- *             type: string
  *         creationTime:
  *           type: string
  *           format: date-time
@@ -33,8 +29,8 @@ import mongoose = require('mongoose');
  */
 const submissionSchema = new mongoose.Schema({
   authorId: { type: mongoose.Schema.Types.ObjectId, ref: 'User' },
+  battleId: { type: mongoose.Schema.Types.ObjectId, ref: 'Battle' },
   caption: String,
-  commentIds: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Comment' }],
   creationTime: {type: Date, default: Date.now},
   filename: String,
   numVotes: Number

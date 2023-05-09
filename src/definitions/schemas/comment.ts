@@ -15,18 +15,28 @@ import mongoose = require('mongoose');
  *           type: number 
  *         authorId:
  *           type: string
+ *         commentedModel:
+ *           type: string
  *         creationTime:
  *           type: string
  *           format: date-time
  *         numLikes:
  *           type: number
+ *         postId:
+ *           type: string
  *         text:
  *           type: string
  */
 const commentSchema = new mongoose.Schema({
   authorId: { type: mongoose.Schema.Types.ObjectId, ref: 'User' },
+  commentedModel: {
+    type: String,
+    enum: ['Battle', 'Submission']
+  },
   creationTime: {type: Date, default: Date.now},
   numLikes: Number,
+  postId: { type: mongoose.Schema.Types.ObjectId,
+            refPath: 'commentedModel' },
   text: String
 });
 
