@@ -2,7 +2,8 @@
 
 import express = require('express');
 import { checkSchema, validationResult } from 'express-validator';
-import { User, newUserSchema } from '../../definitions/schemas/user';
+import { NewUser } from '../../definitions/schemas/validation/newUser';
+import { User } from '../../definitions/schemas/user';
 
 const accountRouter = express.Router();
 
@@ -113,7 +114,7 @@ accountRouter.post('/logout', (req, res) => {
  *       500:
  *         $ref: '#/components/responses/500'
  */
-accountRouter.post('/new', checkSchema(newUserSchema), async (req, res) => {
+accountRouter.post('/new', checkSchema(NewUser), async (req, res) => {
   const errors = validationResult(req);
   if (!errors.isEmpty()) {
     res.status(400).json({
