@@ -1,6 +1,9 @@
 "use strict"
 
 import mongoose = require('mongoose');
+import { Battle } from './battle';
+import { Comment } from './comment';
+import { Submission } from './submission';
 
 /**
  * @openapi
@@ -36,6 +39,17 @@ const userSchema = new mongoose.Schema({
   lastName: String,
   loginName: String,
   loginPassword: String
+});
+
+/* Middleware to delete or update User-related documents before deletion.  */
+userSchema.pre(['findOneAndDelete'], async function() {
+  const _id = this.getQuery()._id;
+  /* Delete user-owned Comments.  */
+  await Comment.deleteMany({ authorId: _id });
+  /* Delete user-owned Submissions.  */
+  await Submission.deleteMany({ authorId: _id });
+  /* Delete user-owned Battles.  */
+  await Battle.deleteMany({ authorId: _id });
 });
 
 const User = mongoose.model('User', userSchema);
