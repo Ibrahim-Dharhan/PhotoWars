@@ -1,6 +1,7 @@
 "use strict"
 
 import mongoose = require('mongoose');
+import { Vote } from './vote';
 
 /**
  * @openapi
@@ -35,6 +36,16 @@ const commentSchema = new mongoose.Schema({
   postId: { type: mongoose.Schema.Types.ObjectId,
             refPath: 'commentedModel' },
   text: String
+});
+
+commentSchema.pre(['deleteMany'], async function() {
+  const results = await Comment.find(this.getQuery(), '_id');
+  const _ids = results.map(comment => comment._id);
+  /* Delete all votes on Comment.  */
+  await Vote.deleteMany({
+    votedModel: 'Comment',
+    postId: { $in: _ids }
+  });
 });
 
 const Comment = mongoose.model('Comment', commentSchema);
