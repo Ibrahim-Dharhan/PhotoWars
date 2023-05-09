@@ -8,9 +8,10 @@ import session = require('express-session');
 
 import * as constants from './definitions/constants';
 
+const IMAGEDIR = process.env.IMAGEDIR || constants._imageDir;
 const storage = multer.diskStorage({
   destination: function (req, file, cb) {
-    cb(null, './public/images');
+    cb(null, IMAGEDIR);
   },
   filename: function (req, file, cb) {
     cb(null, `${Date.now()}-${file.originalname}`);
@@ -28,7 +29,7 @@ app.use(
     cookie: {},
     resave: false,
     saveUninitialized: false,
-    secret: 'CS194 Photo Wars',
+    secret: process.env.SESSIONSECRET || constants._sessionSecret,
   })
 );
 
@@ -61,14 +62,16 @@ app.get('/', function(request: express.Request, response: express.Response) {
 */
 
 async function initServer() {
-  mongoose.connect('mongodb://127.0.0.1:27017/' + constants._mongoDatabaseName);
+  const MONGODB_URI = process.env.MONGODB_URL || 'mongodb://127.0.0.1:27017/';
+  mongoose.connect(MONGODB_URI + constants._mongoDatabaseName);
 
-  if (!fs.existsSync(constants._imageDir)){
-    fs.mkdirSync(constants._imageDir, { recursive: true });
+  if (!fs.existsSync(IMAGEDIR)){
+    fs.mkdirSync(IMAGEDIR, { recursive: true });
   }
 
-  app.listen(constants._portNum, function() {
-    console.log('Listening at http://127.0.0.1:' + constants._portNum
+  const PORT = process.env.PORT || constants._portNum;
+  app.listen(PORT, function() {
+    console.log('Listening at http://127.0.0.1:' + PORT
                 + ' exporting the directory ' + __dirname + '.');
   });
 }

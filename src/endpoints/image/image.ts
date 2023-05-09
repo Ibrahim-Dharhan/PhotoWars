@@ -5,6 +5,7 @@ import path = require('path');
 
 import * as constants from '../../definitions/constants';
 
+const IMAGEDIR = process.env.IMAGEDIR || constants._imageDir;
 const imageRouter = express.Router();
 
 /**
@@ -23,7 +24,7 @@ const imageRouter = express.Router();
  */
 imageRouter.get('/:filename', (req, res) => {
   const options = {
-    root: path.join('.', constants._imageDir),
+    root: path.join('.', IMAGEDIR),
     dotfiles: 'deny',
     headers: {
       'x-timestamp': Date.now(),
