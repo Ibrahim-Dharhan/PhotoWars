@@ -1,4 +1,5 @@
 .DS_Store
 compiled/
+dist/
 node_modules/
 public/
