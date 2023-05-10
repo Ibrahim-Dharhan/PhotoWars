@@ -4,7 +4,10 @@ import mongoose = require('mongoose');
 
 import * as constants from '../definitions/constants';
 
-mongoose.connect('mongodb://127.0.0.1:27017/' + constants._mongoDatabaseName);
+const MONGODB_URI = process.env.MONGODB_URL
+                    || 'mongodb://127.0.0.1:27017/'
+                       + constants._mongoDatabaseName;
+mongoose.connect(MONGODB_URI);
 
 /* Mongoose schemas.  */
 import { Battle } from '../definitions/schemas/mongoose/battle';
