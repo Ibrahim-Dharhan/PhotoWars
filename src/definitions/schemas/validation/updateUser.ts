@@ -5,12 +5,7 @@ import { User } from '../mongoose/user';
 const UpdateUser = {
   description: {},
   displayName: {
-    isLength: {
-      options: {
-        min: 8
-      },
-      errorMessage: 'Must be at least 8 characters.'
-    },
+    notEmpty: true,
     displayNameNotInUse: {
       custom: async (displayName) => {
         const query = User.findOne({ 
