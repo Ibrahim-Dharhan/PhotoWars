@@ -30,7 +30,7 @@ const commentSchema = new mongoose.Schema({
   authorId: { type: mongoose.Schema.Types.ObjectId, ref: 'User' },
   commentedModel: {
     type: String,
-    enum: ['Battle', 'Submission']
+    enum: ['Battle', 'Comment', 'Submission']
   },
   creationTime: {type: Date, default: Date.now},
   postId: { type: mongoose.Schema.Types.ObjectId,
@@ -44,6 +44,12 @@ commentSchema.pre(['deleteMany', 'findOneAndDelete'], async function() {
   /* Delete all votes on Comment.  */
   await Vote.deleteMany({
     votedModel: 'Comment',
+    postId: { $in: _ids }
+  });
+
+  /* Delete all replies to this comment.  */
+  await Comment.deleteMany({
+    commentedModel: 'Comment',
     postId: { $in: _ids }
   });
 });
