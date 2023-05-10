@@ -14,6 +14,8 @@ import Box from '@mui/material/Box';
 import Avatar from '@mui/material/Avatar';
 import IconButton from '@mui/material/IconButton';
 
+import catJpeg from './images/cat.jpeg';
+
 const PhotoCard = () => {
   return (
     <Card variant="outlined">
@@ -38,7 +40,7 @@ const PhotoCard = () => {
         </CardContent>
         <CardMedia
           component="img"
-          image="components/images/cat.jpeg"
+          image={ catJpeg }
         />
         <CardActions disableSpacing>
           <IconButton aria-label="add to favorites">
