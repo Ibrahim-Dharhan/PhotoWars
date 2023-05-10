@@ -146,14 +146,14 @@ commentRouter.put('/:id', async (req, res) => {
 
 /**
  * @openapi
- * /comment/{id}/like:
+ * /comment/{id}/vote:
  *   put:
- *     summary: Like a comment.
+ *     summary: Vote on a comment.
  *     parameters:
  *       - $ref: '#/components/parameters/idParam'
  *     responses:
  *       200:
- *         description: Successfully liked the comment.
+ *         description: Successfully voted on the comment.
  *       401:
  *         $ref: '#/components/responses/401NotLoggedIn'
  *       404:
@@ -161,7 +161,7 @@ commentRouter.put('/:id', async (req, res) => {
  *       500:
  *         $ref: '#/components/responses/500'
  */
-commentRouter.put('/:id/like', async (req, res) => {
+commentRouter.put('/:id/vote', async (req, res) => {
   if (!req.session.loggedIn) {
     res.status(401).send('Must be logged in to perform this action.');
     return;
@@ -177,7 +177,7 @@ commentRouter.put('/:id/like', async (req, res) => {
     }
 
     await voteOn('Comment', commentId, req.session.userId);
-    res.status(200).send('Successfully liked comment.');
+    res.status(200).send('Successfully voted on comment.');
 
   } catch (err) {
     res.status(500).send('Internal server error.');
