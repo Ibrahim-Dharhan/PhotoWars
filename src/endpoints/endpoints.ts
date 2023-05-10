@@ -128,22 +128,6 @@
 
 /**
  * @openapi
- * /comment/{id}/unlike:
- *   post:
- *     summary: Unlike a comment.
- *     parameters:
- *       - $ref: '#/components/parameters/idParam'
- *     responses:
- *       200:
- *         description: Successfully unliked the comment.
- *       401:
- *         $ref: '#/components/responses/401NotLoggedIn'
- *       500:
- *         $ref: '#/components/responses/500'
- */
-
-/**
- * @openapi
  * /submission/{id}:
  *   get:
  *     summary: Return information about a submission.
