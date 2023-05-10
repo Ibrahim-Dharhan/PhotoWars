@@ -175,13 +175,17 @@ commentRouter.put('/:id/like', async (req, res) => {
       res.status(404).send('Resource not found.');
       return;
     }
-    
-    await Vote.create({
+
+    const voteObj = {
       postId: commentId,
       userId: req.session.userId,
       votedModel: 'Comment'
-    });
-
+    };
+    await Vote.findOneAndUpdate(voteObj,
+                                voteObj,
+                                { upsert: true })
+              .lean()
+              .exec();
     res.status(200).send('Successfully liked comment.');
 
   } catch (err) {
