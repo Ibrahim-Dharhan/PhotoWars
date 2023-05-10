@@ -52,12 +52,6 @@ commentSchema.pre(['deleteMany', 'findOneAndDelete'], async function() {
     votedModel: 'Comment',
     postId: { $in: _ids }
   });
-
-  /* Delete all replies to this comment.  */
-  await Comment.deleteMany({
-    commentedModel: 'Comment',
-    postId: { $in: _ids }
-  });
 });
 
 const Comment = mongoose.model('Comment', commentSchema);
