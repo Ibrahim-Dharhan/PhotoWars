@@ -34,6 +34,12 @@ const voteSchema = new mongoose.Schema({
   },
 });
 
+/* Enforce that each Vote is unique.  */
+voteSchema.index(
+  { postId: 1, userId: 1, votedModel: 1 },
+  { unique: true }
+);
+
 const Vote = mongoose.model('Vote', voteSchema);
 
 const voteOn = async (modelName: String, id: String, userId: String) => {
