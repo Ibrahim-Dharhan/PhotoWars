@@ -19,7 +19,7 @@ const testRouter = express.Router();
  *             schema:
  *               $ref: '#/components/schemas/Kitten'
  *       500:
- *         description: Internal server error.
+ *         $ref: '#/components/responses/500'
  *
  */
 testRouter.get('/kitten', (req, res) => {
