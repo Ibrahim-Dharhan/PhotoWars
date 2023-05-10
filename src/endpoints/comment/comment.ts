@@ -2,7 +2,7 @@
 
 import express = require('express');
 import { Comment } from '../../definitions/schemas/mongoose/comment';
-import { Vote } from '../../definitions/schemas/mongoose/vote';
+import { Vote, voteOn } from '../../definitions/schemas/mongoose/vote';
 
 const commentRouter = express.Router();
 
@@ -176,16 +176,7 @@ commentRouter.put('/:id/like', async (req, res) => {
       return;
     }
 
-    const voteObj = {
-      postId: commentId,
-      userId: req.session.userId,
-      votedModel: 'Comment'
-    };
-    await Vote.findOneAndUpdate(voteObj,
-                                voteObj,
-                                { upsert: true })
-              .lean()
-              .exec();
+    await voteOn('Comment', commentId, req.session.userId);
     res.status(200).send('Successfully liked comment.');
 
   } catch (err) {

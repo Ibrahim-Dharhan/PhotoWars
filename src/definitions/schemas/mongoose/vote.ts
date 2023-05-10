@@ -34,7 +34,19 @@ const voteSchema = new mongoose.Schema({
   },
 });
 
-
 const Vote = mongoose.model('Vote', voteSchema);
 
-export { Vote };
+const voteOn = async (modelName: String, id: String, userId: String) => {
+  const vote = {
+    postId: id,
+    userId: userId,
+    votedModel: modelName
+  };
+  try {
+    await Vote.findOneAndUpdate(vote, vote, { upsert: true }).lean().exec();
+  } catch (err) {
+    console.log(err);
+  }
+};
+
+export { Vote, voteOn };
