@@ -62,8 +62,10 @@ app.get('/', function(request: express.Request, response: express.Response) {
 */
 
 async function initServer() {
-  const MONGODB_URI = process.env.MONGODB_URL || 'mongodb://127.0.0.1:27017/';
-  mongoose.connect(MONGODB_URI + constants._mongoDatabaseName);
+  const MONGODB_URI = process.env.MONGODB_URL
+                      || 'mongodb://127.0.0.1:27017/'
+                         + constants._mongoDatabaseName;
+  mongoose.connect(MONGODB_URI);
 
   if (!fs.existsSync(IMAGEDIR)){
     fs.mkdirSync(IMAGEDIR, { recursive: true });
