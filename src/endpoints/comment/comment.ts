@@ -2,7 +2,7 @@
 
 import express = require('express');
 import { Comment } from '../../definitions/schemas/mongoose/comment';
-import { Vote, voteOn, unvoteOn } from '../../definitions/schemas/mongoose/vote';
+import { voteOn, unvoteOn } from '../../definitions/schemas/mongoose/vote';
 
 const commentRouter = express.Router();
 

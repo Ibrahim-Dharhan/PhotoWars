@@ -42,7 +42,7 @@ voteSchema.index(
 
 const Vote = mongoose.model('Vote', voteSchema);
 
-const voteOn = async (modelName: String, id: String, userId: String) => {
+const voteOn = async (modelName: string, id: string, userId: string) => {
   const vote = {
     postId: id,
     userId: userId,
@@ -55,7 +55,7 @@ const voteOn = async (modelName: String, id: String, userId: String) => {
   }
 };
 
-const unvoteOn = async (modelName: String, id: String, userId: String) => {
+const unvoteOn = async (modelName: string, id: string, userId: string) => {
   const vote = {
     postId: id,
     userId: userId,
