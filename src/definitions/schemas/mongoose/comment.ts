@@ -38,6 +38,12 @@ const commentSchema = new mongoose.Schema({
   text: String
 });
 
+/* Enforce that each Comment is unique.  */
+commentSchema.index(
+  { authorId: 1, commentedModel: 1, postId: 1 },
+  { unique: true }
+);
+
 commentSchema.pre(['deleteMany', 'findOneAndDelete'], async function() {
   const results = await Comment.find(this.getQuery(), '_id');
   const _ids = results.map(comment => comment._id);

@@ -2,6 +2,7 @@
 
 import express = require('express');
 import { Comment } from '../../definitions/schemas/mongoose/comment';
+import { Vote, voteOn, unvoteOn } from '../../definitions/schemas/mongoose/vote';
 
 const commentRouter = express.Router();
 
@@ -140,6 +141,88 @@ commentRouter.put('/:id', async (req, res) => {
     }
   } catch (err) {
     res.status(500).send('Internal server error.');
+  }
+});
+
+/**
+ * @openapi
+ * /comment/{id}/vote:
+ *   put:
+ *     summary: Vote on a comment.
+ *     parameters:
+ *       - $ref: '#/components/parameters/idParam'
+ *     responses:
+ *       200:
+ *         description: Successfully voted on the comment.
+ *       401:
+ *         $ref: '#/components/responses/401NotLoggedIn'
+ *       404:
+ *         $ref: '#/components/responses/404ResourceNotFound'
+ *       500:
+ *         $ref: '#/components/responses/500'
+ */
+commentRouter.put('/:id/vote', async (req, res) => {
+  if (!req.session.loggedIn) {
+    res.status(401).send('Must be logged in to perform this action.');
+    return;
+  }
+
+  const commentId = req.params.id;
+  const query = Comment.findOne({ _id: commentId });
+  try {
+    const result = await query.lean().exec();
+    if (!result) {
+      res.status(404).send('Resource not found.');
+      return;
+    }
+
+    await voteOn('Comment', commentId, req.session.userId);
+    res.status(200).send('Successfully voted on comment.');
+
+  } catch (err) {
+    res.status(500).send('Internal server error.');
+    console.error(err);
+  }
+});
+
+/**
+ * @openapi
+ * /comment/{id}/unvote:
+ *   put:
+ *     summary: Unvote a comment.
+ *     parameters:
+ *       - $ref: '#/components/parameters/idParam'
+ *     responses:
+ *       200:
+ *         description: Successfully unvoted the comment.
+ *       401:
+ *         $ref: '#/components/responses/401NotLoggedIn'
+ *       404:
+ *         $ref: '#/components/responses/404ResourceNotFound'
+ *       500:
+ *         $ref: '#/components/responses/500'
+ */
+commentRouter.put('/:id/unvote', async (req, res) => {
+  if (!req.session.loggedIn) {
+    res.status(401).send('Must be logged in to perform this action.');
+    return;
+  }
+
+  const commentId = req.params.id;
+  const query = Comment.findOne({ _id: commentId });
+  try {
+    const result = await query.lean().exec();
+    if (!result) {
+      res.status(404).send('Resource not found.');
+      return;
+    }
+
+    await unvoteOn('Comment', commentId, req.session.userId);
+    res.status(200).send('Successfully unvoted comment.');
+
+  } catch (err) {
+    res.status(500).send('Internal server error.');
+    console.error(err);
   }
 });
 
