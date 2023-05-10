@@ -2,6 +2,7 @@
 
 import express = require('express');
 import { Comment } from '../../definitions/schemas/mongoose/comment';
+import { Vote } from '../../definitions/schemas/mongoose/vote';
 
 const commentRouter = express.Router();
 
@@ -140,6 +141,52 @@ commentRouter.put('/:id', async (req, res) => {
     }
   } catch (err) {
     res.status(500).send('Internal server error.');
+  }
+});
+
+/**
+ * @openapi
+ * /comment/{id}/like:
+ *   put:
+ *     summary: Like a comment.
+ *     parameters:
+ *       - $ref: '#/components/parameters/idParam'
+ *     responses:
+ *       200:
+ *         description: Successfully liked the comment.
+ *       401:
+ *         $ref: '#/components/responses/401NotLoggedIn'
+ *       404:
+ *         $ref: '#/components/responses/404ResourceNotFound'
+ *       500:
+ *         $ref: '#/components/responses/500'
+ */
+commentRouter.put('/:id/like', async (req, res) => {
+  if (!req.session.loggedIn) {
+    res.status(401).send('Must be logged in to perform this action.');
+    return;
+  }
+
+  const commentId = req.params.id;
+  const query = Comment.findOne({ _id: commentId });
+  try {
+    const result = await query.lean().exec();
+    if (!result) {
+      res.status(404).send('Resource not found.');
+      return;
+    }
+    
+    await Vote.create({
+      postId: commentId,
+      userId: req.session.userId,
+      votedModel: 'Comment'
+    });
+
+    res.status(200).send('Successfully liked comment.');
+
+  } catch (err) {
+    res.status(500).send('Internal server error.');
+    console.error(err);
   }
 });
 
