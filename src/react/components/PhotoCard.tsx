@@ -1,18 +1,21 @@
 import React from 'react'
-import Card from '@mui/material/Card';
-import CardActions from '@mui/material/CardActions';
-import CardContent from '@mui/material/CardContent';
-import CardMedia from '@mui/material/CardMedia';
-import CardHeader from '@mui/material/CardHeader';
-import Button from '@mui/material/Button';
-import Typography from '@mui/material/Typography';
+import Avatar from '@mui/material/Avatar';
+import {
+  Box,
+  Button,
+  Card,
+  CardActionArea,
+  CardActions,
+  CardContent,
+  CardMedia,
+  CardHeader,
+  IconButton,
+  Typography
+} from '@mui/material'
+
 import FavoriteIcon from '@mui/icons-material/Favorite';
 import MoreVertIcon from '@mui/icons-material/MoreVert';
-import { CardActionArea } from '@mui/material';
 import ImageIcon from '@mui/icons-material/Image';
-import Box from '@mui/material/Box';
-import Avatar from '@mui/material/Avatar';
-import IconButton from '@mui/material/IconButton';
 
 import catJpeg from './images/cat.jpeg';
 
@@ -31,7 +34,14 @@ const PhotoCard = () => {
             </Avatar>
           }
           action={
-            <IconButton aria-label="settings">
+            <IconButton
+              onMouseDown={ (event) => event.stopPropagation()}
+              onClick={ (event) => {
+                event.stopPropagation();
+                event.preventDefault();
+                console.log("Clicked settings");
+              }}
+            >
               <MoreVertIcon />
             </IconButton>
           }
