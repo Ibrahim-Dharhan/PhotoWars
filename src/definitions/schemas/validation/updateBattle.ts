@@ -1,7 +1,5 @@
 "use strict"
 
-import { Battle } from '../mongoose/battle';
-
 const UpdateBattle = {
   caption: {
     optional: {

@@ -5,7 +5,7 @@ import path = require('path');
 
 import * as constants from '../../definitions/constants';
 
-const IMAGEDIR = process.env.IMAGEDIR || constants._imageDir;
+const IMAGE_DIR = process.env.IMAGE_DIR || constants._imageDir;
 const imageRouter = express.Router();
 
 /**
@@ -24,7 +24,7 @@ const imageRouter = express.Router();
  */
 imageRouter.get('/:filename', (req, res) => {
   const options = {
-    root: path.join('.', IMAGEDIR),
+    root: path.join('.', IMAGE_DIR),
     dotfiles: 'deny',
     headers: {
       'x-timestamp': Date.now(),
@@ -36,7 +36,7 @@ imageRouter.get('/:filename', (req, res) => {
   res.sendFile(filename, options, (err) => {
     if (err) {
       console.error('Failed to send file.', err);
-      res.status(404).send('Image does not exist');
+      res.status(404).send('Image does not exist.');
     } else {
       console.log(`Sent: ${filename}`);
     }

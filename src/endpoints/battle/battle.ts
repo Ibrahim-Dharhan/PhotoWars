@@ -1,11 +1,16 @@
 'use strict';
 
 import express = require('express');
+import fs = require('fs');
+import path = require('path');
 import { Battle } from '../../definitions/schemas/mongoose/battle';
 import { checkSchema, matchedData, validationResult } from 'express-validator';
+import { NewBattle } from '../../definitions/schemas/validation/newBattle';
 import { UpdateBattle } from '../../definitions/schemas/validation/updateBattle';
 import { upload } from '../../server';
 
+import * as constants from '../../definitions/constants';
+const IMAGE_DIR = process.env.IMAGE_DIR || constants._imageDir;
 const battleRouter = express.Router();
 
 /**
@@ -149,30 +154,39 @@ battleRouter.put('/:id', checkSchema(UpdateBattle), async (req, res) => {
  *       200:
  *         description: Successfully created new battle.
  *       400:
- *         description: Missing information to create a new battle.
+ *         description: Missing or invalid information to create a new battle.
  *       401:
  *         $ref: '#/components/responses/401NotLoggedIn'
  *       500:
  *         $ref: '#/components/responses/500'
  */
-battleRouter.post('/new', upload.single('file'), async (req, res) => {
+battleRouter.post('/new', upload.single('file'), checkSchema(NewBattle), async (req, res) => {
+  const errors = validationResult(req);
+  if (!errors.isEmpty()) {
+    await fs.promises.unlink(path.join('.', IMAGE_DIR, req.file.filename));
+    res.status(400).json({
+      errors: errors.array()
+    });
+    return;
+  }
+
+  if (!req.session.loggedIn) {
+    await fs.promises.unlink(path.join('.', IMAGE_DIR, req.file.filename));
+    res.status(401).send('Not logged in.');
+    return;
+  }
+
   try {
-    if (req.session.loggedIn) {
-      // TODO: Ensure all params are valid
-      const newBattleObj = await Battle.create({
+    const newBattleObj = await Battle.create({
+      ...{ 
         authorId: req.session.userId,
-        caption: req.body.caption,
-        deadline: req.body.deadline,
-        filename: req.file.filename,
-        numLikes: 1,
-        numSubmissions: 1,
-      });
-      await newBattleObj.save();
-      res.status(200).json(newBattleObj);
-    } else {
-      res.status(401).send('Not logged in');
-    }
+        filename: req.file.filename
+      },
+      ...matchedData(req)
+    });
+    res.status(200).json(newBattleObj);
   } catch (err) {
+    await fs.promises.unlink(path.join('.', IMAGE_DIR, req.file.filename));
     res.status(500).send('Internal server error.');
     console.error(err);
   }
