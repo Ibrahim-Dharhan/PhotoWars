@@ -1,6 +1,7 @@
 "use strict"
 
 import path = require('path');
+import HtmlWebpackPlugin = require('html-webpack-plugin');
 import NodemonPlugin = require('nodemon-webpack-plugin');
 
 module.exports = {
@@ -24,6 +25,12 @@ module.exports = {
       {
         test: /\.(png|jpeg|jpg|gif)$/i,
         type: 'asset'
+      },
+      {
+        test: /\.html$/,
+        use: {
+          loader: 'html-loader'
+        }
       }
     ]
   },
@@ -47,6 +54,10 @@ module.exports = {
     },
   },
   plugins: [
+    new HtmlWebpackPlugin({
+      template: './index.html',
+      filename: './index.html'
+    }),
     new NodemonPlugin({
       script: './server.ts',
       watch: [
