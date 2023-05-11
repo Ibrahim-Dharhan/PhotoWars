@@ -10,8 +10,7 @@
     "start": "nodemon server.ts",
     "watch": "webpack serve --config webpack.config.ts",
     "load": "ts-node ./development/loadDatabase.ts",
-    "clear": "ts-node ./development/clearDatabase.ts",
-    "postinstall": "npm run build"
+    "clear": "ts-node ./development/clearDatabase.ts"
   },
   "author": "",
   "license": "ISC",
