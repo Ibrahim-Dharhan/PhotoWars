@@ -10,8 +10,7 @@
     "start": "nodemon server.ts",
     "watch": "webpack serve --config webpack.config.ts",
     "load": "ts-node ./development/loadDatabase.ts",
-    "clear": "ts-node ./development/clearDatabase.ts",
-    "postinstall": "npm run build"
+    "clear": "ts-node ./development/clearDatabase.ts"
   },
   "author": "",
   "license": "ISC",
@@ -28,6 +27,8 @@
     "babel-loader": "^9.1.2",
     "css-loader": "^6.7.3",
     "eslint": "^8.39.0",
+    "html-loader": "^4.2.0",
+    "html-webpack-plugin": "^5.5.1",
     "nodemon-webpack-plugin": "^4.8.1",
     "style-loader": "^3.3.2",
     "ts-node": "^10.9.1",

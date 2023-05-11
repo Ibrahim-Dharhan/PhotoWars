@@ -4,6 +4,7 @@ import express = require('express');
 import fs = require('fs');
 import mongoose = require('mongoose');
 import multer = require('multer');
+import path = require('path');
 import session = require('express-session');
 
 import * as constants from './definitions/constants';
@@ -23,7 +24,7 @@ const app = express();
 /* Allowing express to use middlewares. */
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
-app.use(express.static(__dirname));
+app.use(express.static(path.join(__dirname, 'dist')));
 app.use(
   session({
     cookie: {},
