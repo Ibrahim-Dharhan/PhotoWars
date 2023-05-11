@@ -77,7 +77,11 @@ commentRouter.delete('/:id', async (req, res) => {
       /* User requesting change is not the comment's author.  */
       res.status(403).send('User is not the comment author.');
     } else {
-      await Comment.findByIdAndDelete(commentId);
+      await Comment.findByIdAndUpdate(commentId,
+                                      {
+                                        authorId: '000000000000000000000000',
+                                        text: ''
+                                      });
       res.status(200).send('Successfully deleted comment text.');
     }
   } catch (err) {

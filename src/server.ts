@@ -9,10 +9,10 @@ import session = require('express-session');
 
 import * as constants from './definitions/constants';
 
-const IMAGEDIR = process.env.IMAGEDIR || constants._imageDir;
+const IMAGE_DIR = process.env.IMAGE_DIR || constants._imageDir;
 const storage = multer.diskStorage({
   destination: function (req, file, cb) {
-    cb(null, IMAGEDIR);
+    cb(null, IMAGE_DIR);
   },
   filename: function (req, file, cb) {
     cb(null, `${Date.now()}-${file.originalname}`);
@@ -63,13 +63,13 @@ app.get('/', function(request: express.Request, response: express.Response) {
 */
 
 async function initServer() {
-  const MONGODB_URI = process.env.MONGODB_URL
+  const MONGODB_URI = process.env.MONGODB_URI
                       || 'mongodb://127.0.0.1:27017/'
                          + constants._mongoDatabaseName;
   mongoose.connect(MONGODB_URI);
 
-  if (!fs.existsSync(IMAGEDIR)){
-    fs.mkdirSync(IMAGEDIR, { recursive: true });
+  if (!fs.existsSync(IMAGE_DIR)){
+    fs.mkdirSync(IMAGE_DIR, { recursive: true });
   }
 
   const PORT = process.env.PORT || constants._portNum;
