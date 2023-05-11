@@ -13,8 +13,8 @@ const PhotoWars = () => {
     <React.StrictMode>
       <Router>
         <Routes>
-        <Route path='/' element={<Home />} />
-        <Route path='/create' element={<Create />} />
+          <Route path='/' element={<Home />} />
+          <Route path='/create' element={<Create />} />
         </Routes>
       </Router>
     </React.StrictMode>
