@@ -7,16 +7,16 @@ import Grid from '@mui/material/Grid';
 const Home = () => {
   return (
     <Grid container spacing={7}>
-    <Grid item xs={4}>
-      <SideBar />
+      <Grid item xs={4}>
+        <SideBar />
+      </Grid>
+      <Grid item xs={4}>
+        <Feed />
+      </Grid>
+      <Grid item xs={4}>
+        <Rightbar />
+      </Grid>
     </Grid>
-    <Grid item xs={4}>
-    <Feed />
-    </Grid>
-    <Grid item xs={4}>
-    <Rightbar />
-    </Grid>
-  </Grid>
   );
 };
 

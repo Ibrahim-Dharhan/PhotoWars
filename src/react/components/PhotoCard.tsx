@@ -19,7 +19,11 @@ import catJpeg from './images/cat.jpeg';
 const PhotoCard = () => {
   return (
     <Card variant="outlined">
-      <CardActionArea>
+      <CardActionArea
+        component="a"
+        href="create"
+        onClick={() => console.log('Opening post')}
+      >
         <CardHeader
           avatar={
             <Avatar sx={{ width: 24, height: 24 }} aria-label="recipe">
