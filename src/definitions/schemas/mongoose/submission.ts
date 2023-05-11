@@ -34,7 +34,7 @@ const submissionSchema = new mongoose.Schema({
 });
 
 /* Middleware to delete or update Submission-related documents before deletion.  */
-submissionSchema.pre('remove', async function() {
+submissionSchema.pre(['deleteMany'], async function() {
   const results = await Submission.find(this.getQuery(), '_id');
   const _ids = results.map(submission => submission._id);
   /* Delete all votes on Submission.  */
