@@ -6,12 +6,18 @@ import EmojiEventsOutlinedIcon from '@mui/icons-material/EmojiEventsOutlined';
 import NotificationsOutlinedIcon from '@mui/icons-material/NotificationsOutlined';
 import SearchOutlinedIcon from '@mui/icons-material/SearchOutlined';
 import AccountCircleOutlinedIcon from '@mui/icons-material/AccountCircleOutlined';
-
+import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
+import { useNavigate } from 'react-router-dom';
 
 const SideBar = () => {
+  const navigate = useNavigate();
+  const createBattleClick = () => {
+    navigate('/create');
+  };
+
   return (
   <ProSidebarProvider>
-    <div id="app" style={({ height: "100vh", display: "flex" })}>
+    <div style={({ height: "100vh", display: "flex" })}>
       <Sidebar style={{ height: "100vh" }}>
       <Menu>
         <MenuItem>
@@ -24,6 +30,7 @@ const SideBar = () => {
         <MenuItem icon={<NotificationsOutlinedIcon />}>Notifications</MenuItem>
         <MenuItem icon={<SearchOutlinedIcon />}>Search</MenuItem>
         <MenuItem icon={<AccountCircleOutlinedIcon />}>Profile</MenuItem>
+        <MenuItem icon={<AddCircleOutlineIcon/>} onClick={createBattleClick}>Create Battle</MenuItem>
       </Menu>
       </Sidebar>
       <main>
