@@ -1,5 +1,6 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import axios from 'axios';
+import { updateDeadline } from './timer';
 import {
   Avatar,
   Box,
@@ -22,26 +23,26 @@ const BattleCard = ({
 }) => {
   const [caption, setCaption] = useState('');
   const [displayName, setDisplayName] = useState('');
-  const [deadline, setDeadline] = useState(new Date());
   const [filename, setFilename] = useState('');
+  const [timeRemaining, setTimeRemaining] = useState('--:--:--');
+  const _deadline = useRef(null);
+  const _timerEvent = useRef(null);
 
-  const getImageUrl = (filename) => {
-    const imageEndpoint = `/image/${filename}`;
-    return imageEndpoint;
-  };
+  useEffect(() => {
+    updateDeadline(_deadline.current, _timerEvent, setTimeRemaining);
+  }, [_deadline.current]);
 
   useEffect(() => {
     let shouldUpdate = true;
     const setBattleInformation = async() => {
       const path = `/battle/${battleId}`;
       const res = await axios.get(path);
-      console.log(res.data);
       const battle = res.data;
 
       if (shouldUpdate) {
         setCaption(battle.caption);
         setDisplayName(battle.author.displayName);
-        setDeadline(battle.deadline);
+        _deadline.current = new Date(battle.deadline);
         setFilename(battle.filename);
       }
     };
@@ -58,7 +59,7 @@ const BattleCard = ({
         <CardHeader
           avatar={
             <Avatar sx={{ width: 24, height: 24 }} aria-label="recipe">
-              { displayName[0] }
+              {displayName[0]}
             </Avatar>
           }
           action={
@@ -82,7 +83,7 @@ const BattleCard = ({
         </CardContent>
         <CardMedia
           component="img"
-          image={ getImageUrl(filename) }
+          image={`/image/${filename}`}
           loading="lazy"
         />
         <CardActions disableSpacing>
@@ -100,7 +101,7 @@ const BattleCard = ({
           </IconButton>
           <Box display="flex" marginLeft="auto" alignItems="center">
             <Typography sx={{ pr: 2 }}>
-              2 hours left
+              {timeRemaining}
             </Typography>
             <Button variant="outlined" size="small" color="primary">
               Enter
