@@ -62,7 +62,7 @@ app.get('/', function(request: express.Request, response: express.Response) {
 */
 
 async function initServer() {
-  const MONGODB_URI = process.env.MONGODB_URL
+  const MONGODB_URI = process.env.MONGODB_URI
                       || 'mongodb://127.0.0.1:27017/'
                          + constants._mongoDatabaseName;
   mongoose.connect(MONGODB_URI);
