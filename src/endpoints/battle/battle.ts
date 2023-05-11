@@ -2,6 +2,7 @@
 
 import express = require('express');
 import { Battle } from '../../definitions/schemas/mongoose/battle';
+import { UpdateBattle } from '../../definitions/schemas/validation/updateBattle';
 import { upload } from '../../server';
 
 const battleRouter = express.Router();
@@ -74,7 +75,15 @@ battleRouter.get('/:id', async (req, res) => {
  *       500:
  *         $ref: '#/components/responses/500'
  */
-battleRouter.put('/:id', async (req, res) => {
+battleRouter.put('/:id', checkSchema(UpdateBattle), async (req, res) => {
+  const errors = validationResult(req);
+  if (!errors.isEmpty()) {
+    res.status(400).json({
+      errors: errors.array()
+    });
+    return;
+  }
+
   try {
     const battleId = req.params.id;
     const query = Battle.findById(battleId);
