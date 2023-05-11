@@ -31,12 +31,12 @@ module.exports = {
     extensions: ["*", ".js", ".jsx", ".ts", ".tsx"]
   },
   output: {
-    path: path.resolve(__dirname, 'compiled/'),
-    publicPath: '/compiled/',
+    path: path.resolve(__dirname, 'dist/'),
+    publicPath: '/dist/',
     filename: '[name].bundle.js',
   },
   devServer: {
-    static: path.resolve(__dirname, 'compiled/'),
+    static: path.resolve(__dirname, 'dist/'),
     hot: true,
     port: 3000,
     proxy: {
