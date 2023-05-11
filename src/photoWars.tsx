@@ -5,8 +5,8 @@ import {
 } from 'react-router-dom';
 
 /* Importing Components */
-import { Home } from './pages/home/Home';
-import { Create } from './pages/create/Create';
+import { Home } from './react/pages/home/Home';
+import { Create } from './react/pages/create/Create';
 
 const PhotoWars = () => {
   return (
