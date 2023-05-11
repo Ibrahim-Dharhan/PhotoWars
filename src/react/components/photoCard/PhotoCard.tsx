@@ -1,6 +1,7 @@
-import React from 'react'
-import Avatar from '@mui/material/Avatar';
+import React, { useEffect, useState } from 'react';
+import axios from 'axios';
 import {
+  Avatar,
   Box,
   Button,
   Card,
@@ -12,25 +13,54 @@ import {
   IconButton,
   Typography
 } from '@mui/material'
-
 import FavoriteIcon from '@mui/icons-material/Favorite';
 import MoreVertIcon from '@mui/icons-material/MoreVert';
 import ImageIcon from '@mui/icons-material/Image';
 
 import catJpeg from '../../../public/images/cat.jpeg';
 
-const PhotoCard = () => {
+const PhotoCard = ({
+  battleId
+}) => {
+  const [caption, setCaption] = useState('');
+  const [displayName, setDisplayName] = useState('');
+  const [deadline, setDeadline] = useState(new Date());
+  const [filename, setFilename] = useState('');
+
+  const getImageUrl = (filename) => {
+    const imageEndpoint = `/image/${filename}`;
+    return imageEndpoint;
+  };
+
+  useEffect(() => {
+    let shouldUpdate = true;
+    const setBattleInformation = async() => {
+      const path = `/battle/${battleId}`;
+      const res = await axios.get(path);
+      console.log(res.data);
+      const battle = res.data;
+
+      if (shouldUpdate) {
+        setCaption(battle.caption);
+        setDisplayName(battle.author.displayName);
+        setDeadline(battle.deadline);
+        setFilename(battle.filename);
+      }
+    };
+    setBattleInformation();
+    return () => { shouldUpdate = false };
+  }, [battleId]);
+
   return (
     <Card variant="outlined">
       <CardActionArea
         component="a"
-        href="create"
         onClick={() => console.log('Opening post')}
       >
         <CardHeader
           avatar={
             <Avatar sx={{ width: 24, height: 24 }} aria-label="recipe">
-              R
+              { displayName[0] }
             </Avatar>
           }
           action={
@@ -39,22 +69,22 @@ const PhotoCard = () => {
               onClick={ (event) => {
                 event.stopPropagation();
                 event.preventDefault();
-                console.log("Clicked settings");
+                console.log('Clicked settings');
               }}
             >
               <MoreVertIcon />
             </IconButton>
           }
-          title="user_name"
+          title={displayName}
         />
         <CardContent sx={{ mt: -3 }}>
           <Typography variant="h6">
-            Incredibly Fast Cat
+            {caption}
           </Typography>
         </CardContent>
         <CardMedia
           component="img"
-          image={ catJpeg }
+          image={ getImageUrl(filename) }
         />
         <CardActions disableSpacing>
           <IconButton aria-label="add to favorites">

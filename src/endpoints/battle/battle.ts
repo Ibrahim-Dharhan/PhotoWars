@@ -34,12 +34,12 @@ battleRouter.get('/:id', async (req, res) => {
   const battleId = req.params.id;
   const query = Battle.findById(battleId);
   try {
-    const result = await query.lean().exec();
+    const result = await query.populate('author').lean().exec();
     if (result) {
-      /* Found battle matching battleId.  */
+      /* Found battle matching battle id.  */
       res.status(200).json(result);
     } else {
-      /* Did not find a battle with matching battleId.  */
+      /* Did not find a battle with matching battle id.  */
       res.status(404).send('Invalid battle id.');
     }
   } catch (err) {
@@ -102,12 +102,12 @@ battleRouter.put('/:id', checkSchema(UpdateBattle), async (req, res) => {
   try {
     const result = await query.exec();
     if (!result) {
-      /* Did not find a battle with matching battleId. */
+      /* Did not find a battle with matching battle id. */
       res.status(404).send('Invalid battle id.');
       return;
     }
 
-    if (result.authorId.toString() !== req.session.userId) {
+    if (result.author.toString() !== req.session.userId) {
       /* User is not the owner of the resource.  */
       res.status(403).send('Access to that resource is forbidden.');
       return;
@@ -185,7 +185,7 @@ battleRouter.post('/new', upload.single('file'), checkSchema(NewBattle), async (
   try {
     const newBattleObj = await Battle.create({
       ...{ 
-        authorId: req.session.userId,
+        author: req.session.userId,
         filename: req.file.filename
       },
       ...matchedData(req)
@@ -264,7 +264,7 @@ battleRouter.post('/:id/submit', upload.single('file'), checkSchema(NewSubmissio
     }
     const newSubmissionObj = await Submission.create({
       ...{
-        authorId: req.session.userId,
+        author: req.session.userId,
         filename: req.file.filename
       },
       ...matchedData(req)

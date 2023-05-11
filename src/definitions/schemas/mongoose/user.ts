@@ -46,13 +46,13 @@ const userSchema = new mongoose.Schema({
 userSchema.pre(['findOneAndDelete'], async function() {
   const _id = this.getQuery()._id;
   /* Delete user Votes.  */
-  await Vote.deleteMany({ userId: _id });
+  await Vote.deleteMany({ user: _id });
   /* Delete user-owned Comments.  */
-  await Comment.deleteMany({ authorId: _id });
+  await Comment.deleteMany({ author: _id });
   /* Delete user-owned Submissions.  */
-  await Submission.deleteMany({ authorId: _id });
+  await Submission.deleteMany({ author: _id });
   /* Delete user-owned Battles.  */
-  await Battle.deleteMany({ authorId: _id });
+  await Battle.deleteMany({ author: _id });
 });
 
 const User = mongoose.model('User', userSchema);

@@ -40,8 +40,7 @@ const dummyData = dummyDataFunc();
   const battleModels = dummyData.battles();
   try {
     await Promise.all(battleModels.map(async (battle) => {
-      const battleObj = await Battle.create(battle);
-      await battleObj.save();
+      await Battle.create(battle);
       console.log(`Added battle "${battle.caption}" to database.`);
     }));
   } catch (err) {
@@ -52,8 +51,7 @@ const dummyData = dummyDataFunc();
   const commentModels = dummyData.comments();
   try {
     await Promise.all(commentModels.map(async (comment) => {
-      const commentObj = await Comment.create(comment);
-      await commentObj.save();
+      await Comment.create(comment);
       console.log(`Added comment "${comment.text}" to database.`);
     }));
   } catch (err) {
@@ -64,8 +62,7 @@ const dummyData = dummyDataFunc();
   const submissionModels = dummyData.submissions();
   try {
     await Promise.all(submissionModels.map(async (submission) => {
-      const submissionObj = await Submission.create(submission);
-      await submissionObj.save();
+      await Submission.create(submission);
       console.log(`Added submission "${submission.caption}" to database.`);
     }));
   } catch (err) {
@@ -76,8 +73,7 @@ const dummyData = dummyDataFunc();
   const userModels = dummyData.users();
   try {
     await Promise.all(userModels.map(async (user) => {
-      const userObj = await User.create(user);
-      await userObj.save();
+      await User.create(user);
       console.log(`Added user ${user.firstName} ${user.lastName} to database.`);
     }));
   } catch (err) {
@@ -88,8 +84,7 @@ const dummyData = dummyDataFunc();
   const voteModels = dummyData.votes();
   try {
     await Promise.all(voteModels.map(async (vote) => {
-      const voteObj = await Vote.create(vote);
-      await voteObj.save();
+      await Vote.create(vote);
       console.log(`Added vote to database.`);
     }));
   } catch (err) {

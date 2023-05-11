@@ -5,7 +5,7 @@ import Grid from '@mui/material/Grid';
 const Feed = () => {
   return (
     <Grid>
-      <PhotoCard />
+      <PhotoCard battleId={'64544bf83f9238e774994e00'} />
     </Grid>
   );
 };
