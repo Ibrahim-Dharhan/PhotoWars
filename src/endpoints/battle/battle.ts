@@ -2,6 +2,7 @@
 
 import express = require('express');
 import { Battle } from '../../definitions/schemas/mongoose/battle';
+import { checkSchema, matchedData, validationResult } from 'express-validator';
 import { UpdateBattle } from '../../definitions/schemas/validation/updateBattle';
 import { upload } from '../../server';
 
@@ -84,37 +85,35 @@ battleRouter.put('/:id', checkSchema(UpdateBattle), async (req, res) => {
     return;
   }
 
+  if (!req.session.loggedIn) {
+    res.status(401).send('Not logged in.');
+    return;
+  }
+
+  const battleId = req.params.id;
+  const query = Battle.findById(battleId);
   try {
-    const battleId = req.params.id;
-    const query = Battle.findById(battleId);
     const result = await query.exec();
-    if (result) {
-      /* Found battle matching battleId. */
-      if (!req.session.loggedIn) {
-        res.status(401).send('Not logged in');
-      } else if (result.authorId.toString() !== req.session.userId) {
-        res.status(403).send('Access to that resource is forbidden');
-      } else {
-        const caption =
-          req.body.caption !== null ? req.body.caption : result.caption;
-        const deadline =
-          req.body.deadline !== null ? req.body.deadline : result.deadline;
-        await Battle.updateOne(
-          { _id: battleId },
-          {
-            $set: {
-              caption: caption,
-              deadline: deadline,
-            },
-          }
-        );
-        const updatedBattle = await Battle.findById(battleId).exec();
-        res.status(200).json(updatedBattle);
-      }
-    } else {
+    if (!result) {
       /* Did not find a battle with matching battleId. */
       res.status(404).send('Invalid battle id.');
+      return;
     }
+
+    if (result.authorId.toString() !== req.session.userId) {
+      /* User is not the owner of the resource.  */
+      res.status(403).send('Access to that resource is forbidden.');
+      return;
+    }
+
+    const body = matchedData(req);
+    const updatedBattle = await Battle.findByIdAndUpdate(
+                                  battleId,
+                                  { $set: body },
+                                  { new: true }
+                                ).exec();
+
+    res.status(200).json(updatedBattle);
   } catch (err) {
     res.status(500).send('Internal server error.');
     console.error(err);
