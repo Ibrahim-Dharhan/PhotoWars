@@ -6,6 +6,8 @@ import path = require('path');
 import { Battle } from '../../definitions/schemas/mongoose/battle';
 import { checkSchema, matchedData, validationResult } from 'express-validator';
 import { NewBattle } from '../../definitions/schemas/validation/newBattle';
+import { NewSubmission } from '../../definitions/schemas/validation/newSubmission';
+import { Submission } from '../../definitions/schemas/mongoose/submission';
 import { UpdateBattle } from '../../definitions/schemas/validation/updateBattle';
 import { upload } from '../../server';
 
@@ -161,6 +163,10 @@ battleRouter.put('/:id', checkSchema(UpdateBattle), async (req, res) => {
  *         $ref: '#/components/responses/500'
  */
 battleRouter.post('/new', upload.single('file'), checkSchema(NewBattle), async (req, res) => {
+  if (!req.file) {
+    res.status(400).send('Invalid file.');
+    return;
+  }
   const errors = validationResult(req);
   if (!errors.isEmpty()) {
     await fs.promises.unlink(path.join('.', IMAGE_DIR, req.file.filename));
@@ -186,9 +192,87 @@ battleRouter.post('/new', upload.single('file'), checkSchema(NewBattle), async (
     });
     res.status(200).json(newBattleObj);
   } catch (err) {
+    res.status(500).send('Internal server error.');
+    await fs.promises.unlink(path.join('.', IMAGE_DIR, req.file.filename));
+    console.error(err);
+  }
+});
+
+/**
+ * @openapi
+ * /battle/{id}/submit:
+ *   post:
+ *     summary: Creating a new submission to a battle by a user.
+ *     parameters:
+ *       - $ref: '#/components/parameters/idParam'
+ *     requestBody:
+ *       description: Submission object.
+ *       required: true
+ *       content:
+ *         multipart/form-data:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               caption:
+ *                 type: string
+ *               file:
+ *                 type: string
+ *                 format: binary
+ *             required:
+ *               - caption
+ *               - file
+ *     responses:
+ *       200:
+ *         description: Successfully created new submission.
+ *       400:
+ *         description: Missing information to create a new submission.
+ *       401:
+ *         $ref: '#/components/responses/401NotLoggedIn'
+ *       404:
+ *         $ref: '#/components/responses/404ResourceNotFound'
+ *       500:
+ *         $ref: '#/components/responses/500'
+ */
+battleRouter.post('/:id/submit', upload.single('file'), checkSchema(NewSubmission), async (req, res) => {
+  if (!req.file) {
+    res.status(400).send('Invalid file.');
+    return;
+  }
+  const errors = validationResult(req);
+  if (!errors.isEmpty()) {
+    await fs.promises.unlink(path.join('.', IMAGE_DIR, req.file.filename));
+    res.status(400).json({
+      errors: errors.array()
+    });
+    return;
+  }
+
+  if (!req.session.loggedIn) {
+    await fs.promises.unlink(path.join('.', IMAGE_DIR, req.file.filename));
+    res.status(401).send('Not logged in.');
+    return;
+  }
+
+  const battleId = req.params.id;
+  try {
+    const battleObj = await Battle.findById(battleId).lean().exec();
+    if (!battleObj) {
+      /* Battle does not exist.  */
+      await fs.promises.unlink(path.join('.', IMAGE_DIR, req.file.filename));
+      res.status(404).send('Battle does not exist.');
+      return;
+    }
+    const newSubmissionObj = await Submission.create({
+      ...{
+        authorId: req.session.userId,
+        filename: req.file.filename
+      },
+      ...matchedData(req)
+    });
+    res.status(200).json(newSubmissionObj);
+  } catch (err) {
     await fs.promises.unlink(path.join('.', IMAGE_DIR, req.file.filename));
     res.status(500).send('Internal server error.');
-    console.error(err);
   }
 });
 
