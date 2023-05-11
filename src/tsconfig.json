@@ -1,0 +1,10 @@
+{
+  "ts-node": {
+    "files": true
+  },
+  "compilerOptions": {
+    "typeRoots": ["./node_modules/@types", "./types"],
+    "jsx": "react",
+    "allowSyntheticDefaultImports": true
+  }
+}

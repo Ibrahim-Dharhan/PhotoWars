@@ -2,7 +2,7 @@
 
 import express = require('express');
 
-import { Kitten } from '../../schemas/kitten';
+import { Kitten } from '../../definitions/schemas/mongoose/kitten';
 
 const testRouter = express.Router();
 
@@ -19,24 +19,40 @@ const testRouter = express.Router();
  *             schema:
  *               $ref: '#/components/schemas/Kitten'
  *       500:
- *         description: Internal server error.
+ *         $ref: '#/components/responses/500'
  *
  */
 testRouter.get('/kitten', (req, res) => {
-  Kitten.deleteMany({}).then(() => {
-    Kitten.create({
-      name: 'Silence'
-    }).then((kittyObj) => {
-      kittyObj.save().then(() => {
-        Kitten.findOne().then((kitten) => {
-          res.status(200).json(kitten);
-          Kitten.collection.drop();
-        }).catch(() => {
-          res.status(500).send("Internal Server Error");
-        });
+  Kitten.create({
+    name: 'Silence'
+  }).then((kittyObj) => {
+    kittyObj.save().then(() => {
+      Kitten.findOne().then((kitten) => {
+        res.status(200).json(kitten);
+        Kitten.collection.drop();
+      }).catch(() => {
+        res.status(500).send("Internal Server Error");
       });
     });
   });
+});
+
+/**
+ * @openapi
+ * /test/ping:
+ *   get:
+ *     summary: Returns a 200 response on successful ping.
+ *     responses:
+ *       200:
+ *         description: Returns 'Pong' text.
+ *         content:
+ *           text/plain:
+ *            schema:
+ *              type: string
+ *              example: Pong
+ */
+testRouter.get('/ping', (req, res) => {
+  res.status(200).send("Pong");
 });
 
 export { testRouter };

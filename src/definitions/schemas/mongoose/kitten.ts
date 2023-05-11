@@ -1,6 +1,6 @@
 "use strict"
 
-import mongoose from 'mongoose';
+import mongoose = require('mongoose');
 
 /**
  * @openapi
@@ -9,15 +9,19 @@ import mongoose from 'mongoose';
  *     Kitten:
  *       type: object
  *       properties:
- *         id:
- *           type: string
- *         name:
+ *         _id:
  *           type: string
  *         __v:
- *           type: integer
+ *           type: number
+ *         name:
+ *           type: string
+ *         creation_time:
+ *           type: string
+ *           format: date-time
  */
 const kittenSchema = new mongoose.Schema({
-  name: String
+  name: String,
+  creation_time: { type: Date, default: Date.now }
 });
 
 const Kitten = mongoose.model('Kitten', kittenSchema);
