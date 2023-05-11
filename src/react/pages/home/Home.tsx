@@ -1,6 +1,6 @@
 import React from 'react';
 import { Feed } from '../../components/feed/Feed';
-import { Rightbar } from '../../components/rightbar/Rightbar';
+import { RightBar } from '../../components/rightBar/RightBar';
 import { SideBar } from '../../components/sideBar/SideBar';
 import Grid from '@mui/material/Grid';
 
@@ -14,7 +14,7 @@ const Home = () => {
         <Feed />
       </Grid>
       <Grid item xs={4}>
-        <Rightbar />
+        <RightBar />
       </Grid>
     </Grid>
   );

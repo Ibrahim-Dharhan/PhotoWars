@@ -1,11 +1,11 @@
 import React from 'react';
 
-const Rightbar = () => {
+const RightBar = () => {
   return (
     <div>
-      Right bar
+      Right Bar
     </div>
   );
 };
 
-export { Rightbar };
+export { RightBar };

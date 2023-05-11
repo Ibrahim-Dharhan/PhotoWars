@@ -17,7 +17,7 @@ import FavoriteIcon from '@mui/icons-material/Favorite';
 import MoreVertIcon from '@mui/icons-material/MoreVert';
 import ImageIcon from '@mui/icons-material/Image';
 
-import catJpeg from './images/cat.jpeg';
+import catJpeg from '../../../public/images/cat.jpeg';
 
 const PhotoCard = () => {
   return (
