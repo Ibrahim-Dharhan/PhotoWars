@@ -17,9 +17,7 @@ import FavoriteIcon from '@mui/icons-material/Favorite';
 import MoreVertIcon from '@mui/icons-material/MoreVert';
 import ImageIcon from '@mui/icons-material/Image';
 
-import catJpeg from '../../../public/images/cat.jpeg';
-
-const PhotoCard = ({
+const BattleCard = ({
   battleId
 }) => {
   const [caption, setCaption] = useState('');
@@ -85,6 +83,7 @@ const PhotoCard = ({
         <CardMedia
           component="img"
           image={ getImageUrl(filename) }
+          loading="lazy"
         />
         <CardActions disableSpacing>
           <IconButton aria-label="add to favorites">
@@ -113,4 +112,4 @@ const PhotoCard = ({
   );
 };
 
-export { PhotoCard };
+export { BattleCard };
