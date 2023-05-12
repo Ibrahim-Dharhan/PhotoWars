@@ -26,6 +26,7 @@ const BattleCard = ({
   const [caption, setCaption] = useState('');
   const [displayName, setDisplayName] = useState('');
   const [filename, setFilename] = useState('');
+  const [numVotes, setNumVotes] = useState(0);
   const [timeRemaining, setTimeRemaining] = useState('--:--:--');
   const _battle = useRef(null);
   const _deadline = useRef(null);
@@ -53,6 +54,10 @@ const BattleCard = ({
     setBattleInformation();
     return () => { shouldUpdate = false };
   }, [battleId]);
+
+  const vote = async () => {
+    console.log("Voting on battle");
+  };
 
   return (
     <Card variant="outlined">
@@ -84,7 +89,9 @@ const BattleCard = ({
               }}
               underline="hover"
               color="black"
-            >{displayName}</Link>
+            >
+              {displayName}
+            </Link>
           }
           action={
             <IconButton
@@ -116,10 +123,18 @@ const BattleCard = ({
               328
             </Typography>
           </IconButton>
-          <IconButton aria-label="share">
+          <IconButton
+            onMouseDown={ (event) => event.stopPropagation()}
+            onClick={ (event) => {
+              event.stopPropagation();
+              event.preventDefault();
+              console.log('Voting on post');
+            }}
+            aria-label="vote"
+          >
             <FavoriteIcon sx={{ pr: 1 }} />
             <Typography>
-              73
+              {numVotes}
             </Typography>
           </IconButton>
           <Box display="flex" marginLeft="auto" alignItems="center">
