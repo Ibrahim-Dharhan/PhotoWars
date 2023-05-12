@@ -57,7 +57,7 @@ const BattleCard = ({
         component="div"
         onClick={() => console.log('Opening post')}
       >
-      <Card
+        <CardHeader
           avatar={
             <Avatar sx={{ width: 24, height: 24 }}>
               {displayName[0]}
