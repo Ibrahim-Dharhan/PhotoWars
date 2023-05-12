@@ -15,7 +15,7 @@ import { Vote } from './vote';
  *           type: string
  *         __v:
  *           type: number 
- *         authorId:
+ *         author:
  *           type: string
  *         caption:
  *           type: string
@@ -26,8 +26,8 @@ import { Vote } from './vote';
  *           type: string
  */
 const submissionSchema = new mongoose.Schema({
-  authorId: { type: mongoose.Schema.Types.ObjectId, ref: 'User' },
-  battleId: { type: mongoose.Schema.Types.ObjectId, ref: 'Battle' },
+  author: { type: mongoose.Schema.Types.ObjectId, ref: 'User' },
+  battle: { type: mongoose.Schema.Types.ObjectId, ref: 'Battle' },
   caption: String,
   creationTime: {type: Date, default: Date.now},
   filename: String
@@ -40,12 +40,12 @@ submissionSchema.pre(['deleteMany'], async function() {
   /* Delete all votes on Submission.  */
   await Vote.deleteMany({
     votedModel: 'Submission',
-    postId: { $in: _ids }
+    post: { $in: _ids }
   });
   /* Delete comments on Submission.  */
   await Comment.deleteMany({
     commentedModel: 'Submission',
-    postId: { $in: _ids }
+    post: { $in: _ids }
   });
 });
 

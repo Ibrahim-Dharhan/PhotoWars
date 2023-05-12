@@ -73,13 +73,13 @@ commentRouter.delete('/:id', async (req, res) => {
     if (!result) {
       /* Did not find comment with id.  */
       res.status(404).send(`Comment with ID ${commentId} not found.`);
-    } else if (req.session.userId !== result.authorId.toString()) {
+    } else if (req.session.userId !== result.author.toString()) {
       /* User requesting change is not the comment's author.  */
       res.status(403).send('User is not the comment author.');
     } else {
       await Comment.findByIdAndUpdate(commentId,
                                       {
-                                        authorId: '000000000000000000000000',
+                                        author: '000000000000000000000000',
                                         text: ''
                                       });
       res.status(200).send('Successfully deleted comment text.');
@@ -135,7 +135,7 @@ commentRouter.put('/:id', async (req, res) => {
     if (!result) {
       /* Did not find comment with id.  */
       res.status(404).send(`Comment with ID ${commentId} not found.`);
-    } else if (req.session.userId !== result.authorId.toString()) {
+    } else if (req.session.userId !== result.author.toString()) {
       /* User requesting change is not the comment's author.  */
       res.status(403).send('User is not the comment author.');
     } else {

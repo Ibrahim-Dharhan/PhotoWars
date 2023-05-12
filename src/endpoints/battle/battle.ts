@@ -10,6 +10,7 @@ import { NewSubmission } from '../../definitions/schemas/validation/newSubmissio
 import { Submission } from '../../definitions/schemas/mongoose/submission';
 import { UpdateBattle } from '../../definitions/schemas/validation/updateBattle';
 import { upload } from '../../server';
+import { voteOn, unvoteOn } from '../../definitions/schemas/mongoose/vote';
 
 import * as constants from '../../definitions/constants';
 const IMAGE_DIR = process.env.IMAGE_DIR || constants._imageDir;
@@ -34,12 +35,12 @@ battleRouter.get('/:id', async (req, res) => {
   const battleId = req.params.id;
   const query = Battle.findById(battleId);
   try {
-    const result = await query.lean().exec();
+    const result = await query.populate('author').lean().exec();
     if (result) {
-      /* Found battle matching battleId.  */
+      /* Found battle matching battle id.  */
       res.status(200).json(result);
     } else {
-      /* Did not find a battle with matching battleId.  */
+      /* Did not find a battle with matching battle id.  */
       res.status(404).send('Invalid battle id.');
     }
   } catch (err) {
@@ -102,12 +103,12 @@ battleRouter.put('/:id', checkSchema(UpdateBattle), async (req, res) => {
   try {
     const result = await query.exec();
     if (!result) {
-      /* Did not find a battle with matching battleId. */
+      /* Did not find a battle with matching battle id. */
       res.status(404).send('Invalid battle id.');
       return;
     }
 
-    if (result.authorId.toString() !== req.session.userId) {
+    if (result.author.toString() !== req.session.userId) {
       /* User is not the owner of the resource.  */
       res.status(403).send('Access to that resource is forbidden.');
       return;
@@ -185,7 +186,7 @@ battleRouter.post('/new', upload.single('file'), checkSchema(NewBattle), async (
   try {
     const newBattleObj = await Battle.create({
       ...{ 
-        authorId: req.session.userId,
+        author: req.session.userId,
         filename: req.file.filename
       },
       ...matchedData(req)
@@ -264,7 +265,7 @@ battleRouter.post('/:id/submit', upload.single('file'), checkSchema(NewSubmissio
     }
     const newSubmissionObj = await Submission.create({
       ...{
-        authorId: req.session.userId,
+        author: req.session.userId,
         filename: req.file.filename
       },
       ...matchedData(req)
@@ -273,6 +274,88 @@ battleRouter.post('/:id/submit', upload.single('file'), checkSchema(NewSubmissio
   } catch (err) {
     await fs.promises.unlink(path.join('.', IMAGE_DIR, req.file.filename));
     res.status(500).send('Internal server error.');
+  }
+});
+
+/**
+ * @openapi
+ * /battle/{id}/vote:
+ *   put:
+ *     summary: Vote on a battle.
+ *     parameters:
+ *       - $ref: '#/components/parameters/idParam'
+ *     responses:
+ *       200:
+ *         description: Successfully vote on battle.
+ *       401:
+ *         $ref: '#/components/responses/401NotLoggedIn'
+ *       404:
+ *         $ref: '#/components/responses/404ResourceNotFound'
+ *       500:
+ *         $ref: '#/components/responses/500'
+ */
+battleRouter.put('/:id/vote', async (req, res) => {
+  if (!req.session.loggedIn) {
+    res.status(401).send('Must be logged in to perform this action.');
+    return;
+  }
+
+  const battleId = req.params.id;
+  const query = Battle.findOne({ _id: battleId });
+  try {
+    const result = await query.lean().exec();
+    if (!result) {
+      res.status(404).send('Resource not found.');
+      return;
+    }
+
+    await voteOn('Battle', battleId, req.session.userId);
+    res.status(200).send('Successfully voted on battle.');
+
+  } catch (err) {
+    res.status(500).send('Internal server error.');
+    console.error(err);
+  }
+});
+
+/**
+ * @openapi
+ * /battle/{id}/unvote:
+ *   put:
+ *     summary: Unvote a battle.
+ *     parameters:
+ *       - $ref: '#/components/parameters/idParam'
+ *     responses:
+ *       200:
+ *         description: Successfully unvoted battle.
+ *       401:
+ *         $ref: '#/components/responses/401NotLoggedIn'
+ *       404:
+ *         $ref: '#/components/responses/404ResourceNotFound'
+ *       500:
+ *         $ref: '#/components/responses/500'
+ */
+battleRouter.put('/:id/unvote', async (req, res) => {
+  if (!req.session.loggedIn) {
+    res.status(401).send('Must be logged in to perform this action.');
+    return;
+  }
+
+  const battleId = req.params.id;
+  const query = Battle.findOne({ _id: battleId });
+  try {
+    const result = await query.lean().exec();
+    if (!result) {
+      res.status(404).send('Resource not found.');
+      return;
+    }
+
+    await unvoteOn('Battle', battleId, req.session.userId);
+    res.status(200).send('Successfully unvoted battle.');
+
+  } catch (err) {
+    res.status(500).send('Internal server error.');
+    console.error(err);
   }
 });
 

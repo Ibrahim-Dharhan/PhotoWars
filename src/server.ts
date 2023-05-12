@@ -55,12 +55,9 @@ app.use('/test', testRouter);
 import { userRouter } from './endpoints/user/user';
 app.use('/user', userRouter);
 
-/*
- * Not called on because index.html is served instead, as expected.
-app.get('/', function(request: express.Request, response: express.Response) {
-  response.send('Simple web server of files from ' + __dirname);
+app.get('*', (req, res) => {
+  res.sendFile(path.join(__dirname, 'dist/index.html'));
 });
-*/
 
 async function initServer() {
   const MONGODB_URI = process.env.MONGODB_URI

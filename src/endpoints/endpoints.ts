@@ -78,56 +78,6 @@
 
 /**
  * @openapi
- * /battle/{id}/like:
- *   post:
- *     summary: Like a battle.
- *     parameters:
- *       - $ref: '#/components/parameters/idParam'
- *     responses:
- *       200:
- *         description: Successfully liked the battle.
- *       401:
- *         $ref: '#/components/responses/401NotLoggedIn'
- *       500:
- *         $ref: '#/components/responses/500'
- */
-
-/**
- * @openapi
- * /battle/{id}/submit:
- *   post:
- *     summary: Creating a new submission to a battle by a user.
- *     parameters:
- *       - $ref: '#/components/parameters/idParam'
- *     responses:
- *       200:
- *         description: Successfully created new submission.
- *       400:
- *         description: Missing information to create a new submission.
- *       401:
- *         $ref: '#/components/responses/401NotLoggedIn'
- *       500:
- *         $ref: '#/components/responses/500'
- */
-
-/**
- * @openapi
- * /battle/{id}/unlike:
- *   post:
- *     summary: Unlike a battle.
- *     parameters:
- *       - $ref: '#/components/parameters/idParam'
- *     responses:
- *       200:
- *         description: Successfully unliked the battle.
- *       401:
- *         $ref: '#/components/responses/401NotLoggedIn'
- *       500:
- *         $ref: '#/components/responses/500'
- */
-
-/**
- * @openapi
  * /submission/{id}:
  *   get:
  *     summary: Return information about a submission.
@@ -201,14 +151,14 @@
 
 /**
  * @openapi
- * /submission/{id}/like:
+ * /submission/{id}/vote:
  *   post:
  *     summary: Like a submission.
  *     parameters:
  *       - $ref: '#/components/parameters/idParam'
  *     responses:
  *       200:
- *         description: Successfully liked the submission.
+ *         description: Successfully voted on the submission.
  *       401:
  *         $ref: '#/components/responses/401NotLoggedIn'
  *       500:
@@ -217,14 +167,14 @@
 
 /**
  * @openapi
- * /submission/{id}/unlike:
+ * /submission/{id}/unvote:
  *   post:
- *     summary: Unlike a submission.
+ *     summary: Unvote a submission.
  *     parameters:
  *       - $ref: '#/components/parameters/idParam'
  *     responses:
  *       200:
- *         description: Successfully unliked the submission.
+ *         description: Successfully unvoted the submission.
  *       401:
  *         $ref: '#/components/responses/401NotLoggedIn'
  *       500:

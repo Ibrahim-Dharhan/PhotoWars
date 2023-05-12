@@ -9,7 +9,7 @@
     "build": "webpack --config webpack.config.ts",
     "start": "nodemon server.ts",
     "watch": "webpack serve --config webpack.config.ts",
-    "load": "ts-node ./development/loadDatabase.ts",
+    "load": "ts-node ./development/loadDatabase.ts && mkdir -p public/images && cp development/images/* public/images/",
     "clear": "ts-node ./development/clearDatabase.ts"
   },
   "author": "",

@@ -16,18 +16,18 @@ import mongoose = require('mongoose');
  *         creationTime:
  *           type: string
  *           format: date-time
- *         postId:
+ *         post:
  *           type: string
- *         userId:
+ *         user:
  *           type: string
  *         votedModel:
  *           type: string
  */
 const voteSchema = new mongoose.Schema({
   creationTime: {type: Date, default: Date.now},
-  postId: { type: mongoose.Schema.Types.ObjectId,
+  post: { type: mongoose.Schema.Types.ObjectId,
             refPath: 'votedModel' },
-  userId: mongoose.Schema.Types.ObjectId,
+  user: mongoose.Schema.Types.ObjectId,
   votedModel: {
     type: String,
     enum: ['Battle', 'Comment', 'Submission']
@@ -36,16 +36,16 @@ const voteSchema = new mongoose.Schema({
 
 /* Enforce that each Vote is unique.  */
 voteSchema.index(
-  { postId: 1, userId: 1, votedModel: 1 },
+  { post: 1, user: 1, votedModel: 1 },
   { unique: true }
 );
 
 const Vote = mongoose.model('Vote', voteSchema);
 
-const voteOn = async (modelName: string, id: string, userId: string) => {
+const voteOn = async (modelName: string, id: string, user: string) => {
   const vote = {
-    postId: id,
-    userId: userId,
+    post: id,
+    user: user,
     votedModel: modelName
   };
   try {
@@ -55,10 +55,10 @@ const voteOn = async (modelName: string, id: string, userId: string) => {
   }
 };
 
-const unvoteOn = async (modelName: string, id: string, userId: string) => {
+const unvoteOn = async (modelName: string, id: string, user: string) => {
   const vote = {
-    postId: id,
-    userId: userId,
+    post: id,
+    user: user,
     votedModel: modelName
   };
   try {

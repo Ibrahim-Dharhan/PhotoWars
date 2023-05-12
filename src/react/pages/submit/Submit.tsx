@@ -3,9 +3,9 @@ import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
 import TextField from '@mui/material/TextField';
 import Box from '@mui/material/Box';
-import './create.css';
+import './submit.css';
 
-const Create = () => {
+const Submit = () => {
   const [title, setTitle] = useState('');
   const [image, setImage] = useState(null);
 
@@ -33,7 +33,7 @@ const Create = () => {
   return (
     <div>
       <Typography variant="h6">
-        Create a war
+        Enter a submission
       </Typography>
       <form onSubmit={handleSubmit}>
         <TextField
@@ -89,4 +89,4 @@ const Create = () => {
   );
 };
 
-export { Create };
+export { Submit };

@@ -16,7 +16,7 @@ import { Vote } from './vote';
  *           type: string
  *         __v:
  *           type: number 
- *         authorId:
+ *         author:
  *           type: string
  *         caption:
  *           type: string
@@ -30,7 +30,7 @@ import { Vote } from './vote';
  *           type: string
  */
 const battleSchema = new mongoose.Schema({
-  authorId: { type: mongoose.Schema.Types.ObjectId, ref: 'User' },
+  author: { type: mongoose.Schema.Types.ObjectId, ref: 'User' },
   caption: String,
   creationTime: { type: Date, default: Date.now },
   deadline: Date,
@@ -44,16 +44,16 @@ battleSchema.pre(['deleteMany'], async function() {
   /* Delete all votes on Battle.  */
   await Vote.deleteMany({
     votedModel: 'Battle',
-    postId: { $in: _ids }
+    post: { $in: _ids }
   });
   /* Delete all comments in Battle.  */
   await Comment.deleteMany({
     commentedModel: 'Battle',
-    postId: { $in: _ids }
+    post: { $in: _ids }
   });
   /* Delete all submissions to Battle.  */
   await Submission.deleteMany({
-    battleId: { $in: _ids }
+    battle: { $in: _ids }
   });
 });
 
