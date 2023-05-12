@@ -16,8 +16,9 @@ import {
   Typography
 } from '@mui/material'
 import FavoriteIcon from '@mui/icons-material/Favorite';
-import MoreVertIcon from '@mui/icons-material/MoreVert';
 import ImageIcon from '@mui/icons-material/Image';
+import MoreVertIcon from '@mui/icons-material/MoreVert';
+import { pink } from '@mui/material/colors';
 import './battleCard.css';
 
 const BattleCard = ({
@@ -27,6 +28,7 @@ const BattleCard = ({
   const [displayName, setDisplayName] = useState('');
   const [filename, setFilename] = useState('');
   const [numVotes, setNumVotes] = useState(0);
+  const [voted, setVoted] = useState(false);
   const [timeRemaining, setTimeRemaining] = useState('--:--:--');
   const _battle = useRef(null);
   const _deadline = useRef(null);
@@ -42,13 +44,13 @@ const BattleCard = ({
       const path = `/battle/${battleId}`;
       const res = await axios.get(path);
       const battle = res.data;
-      _battle.current = battle;
 
       if (shouldUpdate) {
         setCaption(battle.caption);
         setDisplayName(battle.author.displayName);
-        _deadline.current = new Date(battle.deadline);
         setFilename(battle.filename);
+        _battle.current = battle;
+        _deadline.current = new Date(battle.deadline);
       }
     };
     setBattleInformation();
@@ -56,7 +58,9 @@ const BattleCard = ({
   }, [battleId]);
 
   const vote = async () => {
-    console.log("Voting on battle");
+    const path = `/battle/${battleId}/${voted ? 'unvote' : 'vote'}`;
+    // const res = await axios.put(path);
+    setVoted(!voted);
   };
 
   return (
@@ -75,7 +79,8 @@ const BattleCard = ({
                 console.log(`Go to profile page at /user/${_battle.current._id}`);
               }}
               underline="hover"
-              sx={{ width: 24, height: 24 }}>
+              sx={{ width: 24, height: 24 }}
+            >
               {displayName[0]}
             </Avatar>
           }
@@ -129,10 +134,13 @@ const BattleCard = ({
               event.stopPropagation();
               event.preventDefault();
               console.log('Voting on post');
+              vote();
             }}
             aria-label="vote"
           >
-            <FavoriteIcon sx={{ pr: 1 }} />
+            <FavoriteIcon
+              sx={{ pr: 1, color: (voted ? pink[500]: undefined) }}
+            />
             <Typography>
               {numVotes}
             </Typography>

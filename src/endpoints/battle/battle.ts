@@ -10,6 +10,7 @@ import { NewSubmission } from '../../definitions/schemas/validation/newSubmissio
 import { Submission } from '../../definitions/schemas/mongoose/submission';
 import { UpdateBattle } from '../../definitions/schemas/validation/updateBattle';
 import { upload } from '../../server';
+import { voteOn, unvoteOn } from '../../definitions/schemas/mongoose/vote';
 
 import * as constants from '../../definitions/constants';
 const IMAGE_DIR = process.env.IMAGE_DIR || constants._imageDir;
@@ -273,6 +274,88 @@ battleRouter.post('/:id/submit', upload.single('file'), checkSchema(NewSubmissio
   } catch (err) {
     await fs.promises.unlink(path.join('.', IMAGE_DIR, req.file.filename));
     res.status(500).send('Internal server error.');
+  }
+});
+
+/**
+ * @openapi
+ * /battle/{id}/vote:
+ *   put:
+ *     summary: Vote on a battle.
+ *     parameters:
+ *       - $ref: '#/components/parameters/idParam'
+ *     responses:
+ *       200:
+ *         description: Successfully vote on battle.
+ *       401:
+ *         $ref: '#/components/responses/401NotLoggedIn'
+ *       404:
+ *         $ref: '#/components/responses/404ResourceNotFound'
+ *       500:
+ *         $ref: '#/components/responses/500'
+ */
+battleRouter.put('/:id/vote', async (req, res) => {
+  if (!req.session.loggedIn) {
+    res.status(401).send('Must be logged in to perform this action.');
+    return;
+  }
+
+  const battleId = req.params.id;
+  const query = Battle.findOne({ _id: battleId });
+  try {
+    const result = await query.lean().exec();
+    if (!result) {
+      res.status(404).send('Resource not found.');
+      return;
+    }
+
+    await voteOn('Battle', battleId, req.session.userId);
+    res.status(200).send('Successfully voted on battle.');
+
+  } catch (err) {
+    res.status(500).send('Internal server error.');
+    console.error(err);
+  }
+});
+
+/**
+ * @openapi
+ * /battle/{id}/unvote:
+ *   put:
+ *     summary: Unvote a battle.
+ *     parameters:
+ *       - $ref: '#/components/parameters/idParam'
+ *     responses:
+ *       200:
+ *         description: Successfully unvoted battle.
+ *       401:
+ *         $ref: '#/components/responses/401NotLoggedIn'
+ *       404:
+ *         $ref: '#/components/responses/404ResourceNotFound'
+ *       500:
+ *         $ref: '#/components/responses/500'
+ */
+battleRouter.put('/:id/unvote', async (req, res) => {
+  if (!req.session.loggedIn) {
+    res.status(401).send('Must be logged in to perform this action.');
+    return;
+  }
+
+  const battleId = req.params.id;
+  const query = Battle.findOne({ _id: battleId });
+  try {
+    const result = await query.lean().exec();
+    if (!result) {
+      res.status(404).send('Resource not found.');
+      return;
+    }
+
+    await unvoteOn('Battle', battleId, req.session.userId);
+    res.status(200).send('Successfully unvoted battle.');
+
+  } catch (err) {
+    res.status(500).send('Internal server error.');
+    console.error(err);
   }
 });
 
