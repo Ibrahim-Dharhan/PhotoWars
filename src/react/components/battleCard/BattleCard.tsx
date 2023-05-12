@@ -15,9 +15,9 @@ import {
   Link,
   Typography
 } from '@mui/material'
+import DownloadIcon from '@mui/icons-material/Download';
 import FavoriteIcon from '@mui/icons-material/Favorite';
 import ImageIcon from '@mui/icons-material/Image';
-import MoreVertIcon from '@mui/icons-material/MoreVert';
 import { pink } from '@mui/material/colors';
 import './battleCard.css';
 
@@ -104,10 +104,10 @@ const BattleCard = ({
               onClick={ (event) => {
                 event.stopPropagation();
                 event.preventDefault();
-                console.log('Clicked settings');
+                console.log('Clicked download');
               }}
             >
-              <MoreVertIcon />
+              <DownloadIcon />
             </IconButton>
           }
         />
