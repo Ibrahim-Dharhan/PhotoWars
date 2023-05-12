@@ -7,6 +7,7 @@ import MenuOutlinedIcon from '@mui/icons-material/MenuOutlined';
 import NotificationsOutlinedIcon from '@mui/icons-material/NotificationsOutlined';
 import PeopleOutlinedIcon from "@mui/icons-material/PeopleOutlined";
 import SearchOutlinedIcon from '@mui/icons-material/SearchOutlined';
+import { Typography } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
 import {
   Menu,
@@ -33,10 +34,8 @@ const SideBar = () => {
           }}
           style={{textAlign: "center" }}
         >
-         {" "}
-          <h2>PhotoWars</h2>
+          <Typography variant="h5">PhotoWars</Typography>
         </MenuItem>
-  
         <MenuItem icon={<ExploreOutlinedIcon />}>Explore</MenuItem>
         <MenuItem icon={<PeopleOutlinedIcon />}>Open Competitions</MenuItem>
         <MenuItem icon={<EmojiEventsOutlinedIcon />}>Winners</MenuItem>
