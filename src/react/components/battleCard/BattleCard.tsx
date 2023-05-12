@@ -1,7 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react';
 import axios from 'axios';
 import { updateDeadline } from './timerLogic';
-import { Link } from 'react-router-dom';
 import {
   Avatar,
   Box,
@@ -13,11 +12,13 @@ import {
   CardMedia,
   CardHeader,
   IconButton,
+  Link,
   Typography
 } from '@mui/material'
 import FavoriteIcon from '@mui/icons-material/Favorite';
 import MoreVertIcon from '@mui/icons-material/MoreVert';
 import ImageIcon from '@mui/icons-material/Image';
+import './battleCard.css';
 
 const BattleCard = ({
   battleId
@@ -26,6 +27,7 @@ const BattleCard = ({
   const [displayName, setDisplayName] = useState('');
   const [filename, setFilename] = useState('');
   const [timeRemaining, setTimeRemaining] = useState('--:--:--');
+  const _battle = useRef(null);
   const _deadline = useRef(null);
   const _timerEvent = useRef(null);
 
@@ -39,6 +41,7 @@ const BattleCard = ({
       const path = `/battle/${battleId}`;
       const res = await axios.get(path);
       const battle = res.data;
+      _battle.current = battle;
 
       if (shouldUpdate) {
         setCaption(battle.caption);
@@ -59,13 +62,29 @@ const BattleCard = ({
       >
         <CardHeader
           avatar={
-            <Avatar sx={{ width: 24, height: 24 }}>
+            <Avatar
+              onMouseDown={ (event) => event.stopPropagation()}
+              onClick={ (event) => {
+                event.stopPropagation();
+                event.preventDefault();
+                console.log(`Go to profile page at /user/${_battle.current._id}`);
+              }}
+              underline="hover"
+              sx={{ width: 24, height: 24 }}>
               {displayName[0]}
             </Avatar>
           }
           title={
-            
-            displayName
+            <Link
+              onMouseDown={ (event) => event.stopPropagation()}
+              onClick={ (event) => {
+                event.stopPropagation();
+                event.preventDefault();
+                console.log(`Go to profile page at /user/${_battle.current._id}`);
+              }}
+              underline="hover"
+              color="black"
+            >{displayName}</Link>
           }
           action={
             <IconButton
