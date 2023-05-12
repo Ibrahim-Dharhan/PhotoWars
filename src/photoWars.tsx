@@ -25,9 +25,8 @@ const PhotoWars = () => {
         <Route path="/" element={<Home />} >
           <Route path="battles" element={<Feed />} />
           <Route
-            path="battle/:id"
+            path="battles/:id"
             element={<Battle />}
-
           />
           <Route index element={<Feed />} />
         </Route>

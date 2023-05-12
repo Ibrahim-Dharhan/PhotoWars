@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Feed } from '../../components/feed/Feed';
 import { ProSidebarProvider } from 'react-pro-sidebar';
 import { RightBar } from '../../components/rightBar/RightBar';
