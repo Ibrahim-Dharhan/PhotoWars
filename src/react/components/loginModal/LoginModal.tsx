@@ -12,6 +12,7 @@ import {
   TextField,
   Typography
 } from '@mui/material';
+import { Form } from 'react-router-dom';
 
 const style = {
   position: 'absolute' as 'absolute',
@@ -53,53 +54,53 @@ const LoginModal = ({
     >
       <Fade in={loginOpen}>
         <Box sx={style}>
-          <form>
-          <Grid
-            container
-            direction="column"
-            alignItems="center"
-            rowSpacing={2}
-          >
-            <Grid item>
-              <Typography variant="h4">Photo Wars</Typography>
-            </Grid>
-            <Grid item>
-              <TextField
-                name="username"
-                label="Username"
-                variant="outlined"
-              />
-            </Grid>
-            <Grid item>
-              <TextField
-                name="password"
-                label="Password"
-                type="password"
-                variant="outlined"
-              />
-            </Grid>
-            <Grid item>
-              <Button
-                onClick={handleLogin}
-                type="submit"
-                variant="outlined"
-              >
-                Login
-              </Button>
-            </Grid>
-            <Grid item>
-              <Typography>
-                {"Don't have an account? "}
-                <Link
-                  style={{ cursor: 'pointer'}}
-                  onClick={() => console.log("Open registerModal")}
+          <Form method="post" action="/account/login">
+            <Grid
+              container
+              direction="column"
+              alignItems="center"
+              rowSpacing={2}
+            >
+              <Grid item>
+                <Typography variant="h4">Photo Wars</Typography>
+              </Grid>
+              <Grid item>
+                <TextField
+                  name="username"
+                  label="Username"
+                  variant="outlined"
+                />
+              </Grid>
+              <Grid item>
+                <TextField
+                  name="password"
+                  label="Password"
+                  type="password"
+                  variant="outlined"
+                />
+              </Grid>
+              <Grid item>
+                <Button
+                  onClick={handleLogin}
+                  type="submit"
+                  variant="outlined"
                 >
-                  Register here.
-                </Link>
-              </Typography>
+                  Login
+                </Button>
+              </Grid>
+              <Grid item>
+                <Typography>
+                  {"Don't have an account? "}
+                  <Link
+                    style={{ cursor: 'pointer'}}
+                    onClick={() => console.log("Open registerModal")}
+                  >
+                    Register here.
+                  </Link>
+                </Typography>
+              </Grid>
             </Grid>
-          </Grid>
-          </form>
+          </Form>
         </Box>
       </Fade>
     </Modal>

@@ -9,7 +9,7 @@ import NotificationsOutlinedIcon from '@mui/icons-material/NotificationsOutlined
 import PeopleOutlinedIcon from "@mui/icons-material/PeopleOutlined";
 import SearchOutlinedIcon from '@mui/icons-material/SearchOutlined';
 import { Button, Grid, Typography } from '@mui/material';
-import { useNavigate } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import {
   Menu,
   MenuItem,
@@ -20,11 +20,6 @@ import {
 const SideBar = () => {
   const [loginOpen, setLoginOpen] = useState(false);
   const [registerOpen, setRegisterOpen] = useState(false);
-
-  const navigate = useNavigate();
-  const createBattleClick = () => {
-    navigate('/create');
-  };
 
   const { collapseSidebar } = useProSidebar();
 
@@ -46,9 +41,9 @@ const SideBar = () => {
         <MenuItem icon={<NotificationsOutlinedIcon />}>Notifications</MenuItem>
         <MenuItem icon={<SearchOutlinedIcon />}>Search</MenuItem>
         <MenuItem icon={<AccountCircleOutlinedIcon />}>Profile</MenuItem>
-        <MenuItem>
-          <Button
-            onClick={createBattleClick}
+        <MenuItem component="div" style={{ cursor: 'default'}}>
+          <Button component={Link}
+            to="/create"
             startIcon={<AddCircleOutlineIcon/>}
             variant="outlined"
           >

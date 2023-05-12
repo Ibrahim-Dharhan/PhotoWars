@@ -1,6 +1,9 @@
 import React from 'react';
-import { BattleCard } from '../battleCard/BattleCard';
+import { BattleCard } from '../../components/battleCard/BattleCard';
 import Grid from '@mui/material/Grid';
+import {
+  Outlet
+} from 'react-router-dom';
 
 const Feed = () => {
   return (
@@ -11,3 +14,4 @@ const Feed = () => {
 };
 
 export { Feed };
+
