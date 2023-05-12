@@ -1,8 +1,12 @@
 import React from 'react';
 import { createRoot } from 'react-dom/client';
+import { CssBaseline } from '@mui/material';
 import {
-  BrowserRouter as Router, Route, Routes
+  BrowserRouter as Router,
+  Route,
+  Routes
 } from 'react-router-dom';
+
 
 /* Importing Components */
 import { Create } from './react/pages/create/Create';
@@ -12,6 +16,7 @@ import { Submit } from './react/pages/submit/Submit';
 const PhotoWars = () => {
   return (
     <React.StrictMode>
+    <CssBaseline />
       <Router>
         <Routes>
           <Route path='/' element={<Home />} />
