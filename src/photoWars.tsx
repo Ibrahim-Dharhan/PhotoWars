@@ -5,8 +5,9 @@ import {
 } from 'react-router-dom';
 
 /* Importing Components */
-import { Home } from './react/pages/home/Home';
 import { Create } from './react/pages/create/Create';
+import { Home } from './react/pages/home/Home';
+import { Submit } from './react/pages/submit/Submit';
 
 const PhotoWars = () => {
   return (
@@ -15,6 +16,7 @@ const PhotoWars = () => {
         <Routes>
           <Route path='/' element={<Home />} />
           <Route path='/create' element={<Create />} />
+          <Route path='/submit' element={<Submit />} />
         </Routes>
       </Router>
     </React.StrictMode>

@@ -1,6 +1,7 @@
 import React, { useEffect, useRef, useState } from 'react';
 import axios from 'axios';
-import { updateDeadline } from './timer';
+import { updateDeadline } from './timerLogic';
+import { Link } from 'react-router-dom';
 import {
   Avatar,
   Box,
@@ -53,14 +54,18 @@ const BattleCard = ({
   return (
     <Card variant="outlined">
       <CardActionArea
-        component="a"
+        component="div"
         onClick={() => console.log('Opening post')}
       >
-        <CardHeader
+      <Card
           avatar={
-            <Avatar sx={{ width: 24, height: 24 }} aria-label="recipe">
+            <Avatar sx={{ width: 24, height: 24 }}>
               {displayName[0]}
             </Avatar>
+          }
+          title={
+            
+            displayName
           }
           action={
             <IconButton
@@ -74,7 +79,6 @@ const BattleCard = ({
               <MoreVertIcon />
             </IconButton>
           }
-          title={displayName}
         />
         <CardContent sx={{ mt: -3 }}>
           <Typography variant="h6">
@@ -103,7 +107,17 @@ const BattleCard = ({
             <Typography sx={{ pr: 2 }}>
               {timeRemaining}
             </Typography>
-            <Button variant="outlined" size="small" color="primary">
+            <Button
+              onMouseDown={ (event) => event.stopPropagation()}
+              onClick={ (event) => {
+                event.stopPropagation();
+                event.preventDefault();
+                console.log('Open submit page');
+              }}
+              variant="outlined"
+              size="small"
+              color="primary"
+            >
               Enter
             </Button>
           </Box>
