@@ -8,34 +8,29 @@ import {
 
 const Feed = () => {
   const [battleIds, setBattleIds] = useState([]);
+
   useEffect(() => {
     let shouldUpdate = true;
-    const setBattleIds = async() => {
+    const getBattleIds = async () => {
       const path = '/battle/ids';
       const res = await axios.get(path);
-      const battleIdsList = res.data;
-
+      const battleIdsData = res.data;
       if (shouldUpdate) {
-        // setBattleIds(battleIdsList);
-        // setBattleIds(['64544bf83f9238e774994e00']);
-        console.log(battleIdsList);
+        setBattleIds(battleIdsData);
       }
-    };
+    }
     try {
-      setBattleIds();
+      getBattleIds();
     } catch (err) {
-      console.error(err.data);
+      console.error(err);
     }
     return () => { shouldUpdate = false; };
-  }, [])
+  }, [battleIds]);
 
   return (
-    battleIds.length === 0 ?
-      <div />
-    :
-      <>
-        {battleIds.map((battleId) => <BattleCard battleId={battleId} /> )}
-      </>
+    <>
+      {battleIds.map((battleId) => <BattleCard battleId={battleId} key={battleId}/> )}
+    </>
   );
 };
 
