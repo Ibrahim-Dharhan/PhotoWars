@@ -1,4 +1,5 @@
-import * as React from 'react';
+import React, { useState} from 'react';
+import { LoginModal } from '../../components/loginModal/LoginModal';
 import AccountCircleOutlinedIcon from '@mui/icons-material/AccountCircleOutlined';
 import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
 import EmojiEventsOutlinedIcon from '@mui/icons-material/EmojiEventsOutlined';
@@ -17,6 +18,9 @@ import {
 } from "react-pro-sidebar";
 
 const SideBar = () => {
+  const [loginOpen, setLoginOpen] = useState(false);
+  const [registerOpen, setRegisterOpen] = useState(false);
+
   const navigate = useNavigate();
   const createBattleClick = () => {
     navigate('/create');
@@ -34,7 +38,7 @@ const SideBar = () => {
           }}
           style={{textAlign: "center" }}
         >
-          <Typography variant="h5">PhotoWars</Typography>
+          <Typography variant="h5">Photo Wars</Typography>
         </MenuItem>
         <MenuItem icon={<ExploreOutlinedIcon />}>Explore</MenuItem>
         <MenuItem icon={<PeopleOutlinedIcon />}>Open Competitions</MenuItem>
@@ -54,7 +58,10 @@ const SideBar = () => {
         <MenuItem>
           <Grid container wrap="nowrap" spacing={1}>
             <Grid item>
-              <Button variant="outlined">Login</Button>
+              <Button
+                onClick={() => setLoginOpen(true)}
+                variant="outlined"
+              >Login</Button>
             </Grid>
             <Grid item>
               <Button variant="outlined">Register</Button>
@@ -62,6 +69,7 @@ const SideBar = () => {
           </Grid>
         </MenuItem>
       </Menu>
+      <LoginModal loginOpen={loginOpen} setLoginOpen={setLoginOpen} />
       </Sidebar>
   );
 }

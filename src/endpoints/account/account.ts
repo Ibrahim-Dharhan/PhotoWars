@@ -36,6 +36,7 @@ const accountRouter = express.Router();
  *         $ref: '#/components/responses/500'
  */
 accountRouter.post('/login', async (req, res) => {
+  console.log("Serverside login");
   const loginName = req.body.loginName;
   const loginPassword = req.body.loginPassword;
   const query = User.findOne({ loginName: loginName,
