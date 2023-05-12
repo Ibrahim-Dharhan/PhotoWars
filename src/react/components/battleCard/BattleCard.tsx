@@ -37,7 +37,7 @@ const BattleCard = ({
 
   useEffect(() => {
     updateDeadline(_deadline.current, _timerEvent, setTimeRemaining);
-  }, [_deadline.current]);
+  }, []);
 
   useEffect(() => {
     let shouldUpdate = true;
@@ -54,8 +54,12 @@ const BattleCard = ({
         _deadline.current = new Date(battle.deadline);
       }
     };
-    setBattleInformation();
-    return () => { shouldUpdate = false };
+    try {
+      setBattleInformation();
+    } catch (err) {
+      console.error(err.data);
+    }
+    return () => { shouldUpdate = false; };
   }, [battleId]);
 
   const vote = async () => {
