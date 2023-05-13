@@ -15,11 +15,11 @@ const Feed = () => {
   const battleIds = useLoaderData();
 
   return (
-    <>
+    <React.Fragment>
       {battleIds.map((battleId) => {
         return (<BattleCard battleId={battleId} key={battleId}/>);
       })}
-    </>
+    </React.Fragment>
   );
 };
 

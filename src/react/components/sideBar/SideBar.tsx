@@ -1,5 +1,5 @@
 import React, { useContext, useState } from 'react';
-import { LoginModal } from '../../components/loginModal/LoginModal';
+import axios from 'axios';
 import AccountCircleOutlinedIcon from '@mui/icons-material/AccountCircleOutlined';
 import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
 import EmojiEventsOutlinedIcon from '@mui/icons-material/EmojiEventsOutlined';
@@ -15,14 +15,32 @@ import {
   Sidebar,
   useProSidebar
 } from 'react-pro-sidebar';
+import { LoginModal } from '../../components/loginModal/LoginModal';
 import { UserContext } from '../../contexts/UserContext';
 
 const SideBar = () => {
-  const { displayName, userId } = useContext(UserContext);
+  const {
+    displayName,
+    setDisplayName,
+    userId,
+    setUserId
+  } = useContext(UserContext);
   const [loginOpen, setLoginOpen] = useState(false);
   const {
     broken,
   } = useProSidebar();
+
+  const handleLogOut = async () => {
+    const path = '/account/logout';
+    try {
+      const res = await axios.post(path);
+      setDisplayName('');
+      setUserId('');
+      localStorage.removeItem('user');
+    } catch (err) {
+      console.error(err);
+    }
+  }
 
   return (
     <Sidebar
@@ -47,29 +65,36 @@ const SideBar = () => {
       <MenuItem icon={<SearchOutlinedIcon />}>Search</MenuItem>
       <MenuItem icon={<AccountCircleOutlinedIcon />}>Profile</MenuItem>
       { userId === null ? <div /> : userId !== '' ?
-        <MenuItem component="div" style={{ cursor: 'default'}}>
-          <Button component={Link}
-            to="/create"
-            startIcon={<AddCircleOutlineIcon/>}
-            variant="outlined"
-          >
-            Create Battle
-          </Button>
-        </MenuItem>
+          <React.Fragment>
+          <MenuItem component="div" style={{ cursor: 'default'}}>
+            <Button component={Link}
+              to="/create"
+              startIcon={<AddCircleOutlineIcon/>}
+              variant="outlined"
+            >
+              Create Battle
+            </Button>
+          </MenuItem>
+          <MenuItem component="div" style={{ cursor: 'default'}}>
+            <Button onClick={handleLogOut} variant="outlined">
+              Log Out
+            </Button>
+          </MenuItem>
+          </React.Fragment>
         :
-        <MenuItem>
-          <Grid container wrap="nowrap" spacing={1}>
-            <Grid item>
-              <Button
-                onClick={() => setLoginOpen(true)}
-                variant="outlined"
-              >Login</Button>
+          <MenuItem>
+            <Grid container wrap="nowrap" spacing={1}>
+              <Grid item>
+                <Button
+                  onClick={() => setLoginOpen(true)}
+                  variant="outlined"
+                >Login</Button>
+              </Grid>
+              <Grid item>
+                <Button variant="outlined">Register</Button>
+              </Grid>
             </Grid>
-            <Grid item>
-              <Button variant="outlined">Register</Button>
-            </Grid>
-          </Grid>
-        </MenuItem>
+          </MenuItem>
       }
     </Menu>
     <LoginModal loginOpen={loginOpen} setLoginOpen={setLoginOpen} />
