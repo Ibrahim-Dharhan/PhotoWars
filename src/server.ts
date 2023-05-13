@@ -3,6 +3,7 @@
 import express = require('express');
 import fs = require('fs');
 import mongoose = require('mongoose');
+import MongoStore = require('connect-mongo');
 import multer = require('multer');
 import path = require('path');
 import session = require('express-session');
@@ -10,6 +11,9 @@ import session = require('express-session');
 import * as constants from './definitions/constants';
 
 const IMAGE_DIR = process.env.IMAGE_DIR || constants._imageDir;
+const MONGODB_URI = process.env.MONGODB_URI
+                    || 'mongodb://127.0.0.1:27017/'
+                       + constants._mongoDatabaseName;
 const storage = multer.diskStorage({
   destination: function (req, file, cb) {
     cb(null, IMAGE_DIR);
@@ -31,6 +35,7 @@ app.use(
     resave: false,
     saveUninitialized: false,
     secret: process.env.SESSIONSECRET || constants._sessionSecret,
+    store: MongoStore.create({ mongoUrl: MONGODB_URI })
   })
 );
 
@@ -60,9 +65,6 @@ app.get('*', (req, res) => {
 });
 
 async function initServer() {
-  const MONGODB_URI = process.env.MONGODB_URI
-                      || 'mongodb://127.0.0.1:27017/'
-                         + constants._mongoDatabaseName;
   mongoose.connect(MONGODB_URI);
 
   if (!fs.existsSync(IMAGE_DIR)){
