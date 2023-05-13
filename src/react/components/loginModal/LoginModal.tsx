@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useContext, useState } from 'react';
 import axios from 'axios';
 import {
   Box,
@@ -7,11 +7,11 @@ import {
   Grid,
   Link,
   Modal,
-  TextField,
   Typography
 } from '@mui/material';
 import PropTypes from 'prop-types';
 import { useForm, FormContainer, TextFieldElement } from 'react-hook-form-mui';
+import { UserContext } from '../../contexts/UserContext';
 
 const style = {
   position: 'absolute',
@@ -31,16 +31,21 @@ const LoginModal = ({
   loginOpen,
   setLoginOpen
 }) => {
+  const { setDisplayName, setUserId } = useContext(UserContext);
+  const [failedLogin, setFailedLogin] = useState(false);
+
   const formContext = useForm();
   const { handleSubmit, reset: clearLoginForm } = formContext;
-  const [failedLogin, setFailedLogin] = useState(false);
+
   const handleLogin = async (data) => {
     try {
       const res = await axios.post('/account/login', data);
-      console.log(res.data);
+      const user = res.data;
       clearLoginForm();
       setLoginOpen(false);
       setFailedLogin(false);
+      setDisplayName(user.displayName);
+      setUserId(user._id);
     } catch (err) {
       if (err.response.status === 401) {
         setFailedLogin(true);
@@ -90,7 +95,7 @@ const LoginModal = ({
               required
             />
           </Grid>
-          { failedLogin && <Typography variant="error">Invalid credentials.</Typography> }
+          { failedLogin && <Typography>Invalid credentials.</Typography> }
           <Grid item>
             <Button
               type="submit"

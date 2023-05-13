@@ -1,4 +1,4 @@
-import React, { useState} from 'react';
+import React, { useContext, useState } from 'react';
 import { LoginModal } from '../../components/loginModal/LoginModal';
 import AccountCircleOutlinedIcon from '@mui/icons-material/AccountCircleOutlined';
 import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
@@ -15,8 +15,10 @@ import {
   Sidebar,
   useProSidebar
 } from 'react-pro-sidebar';
+import { UserContext } from '../../contexts/UserContext';
 
 const SideBar = () => {
+  const { displayName, userId } = useContext(UserContext);
   const [loginOpen, setLoginOpen] = useState(false);
   const {
     broken,
@@ -25,7 +27,7 @@ const SideBar = () => {
   return (
     <Sidebar
       style={{
-        ...broken && {
+        ...!broken && {
           position: '-webkit-sticky',
           position: 'sticky',
           top: 0
@@ -44,28 +46,31 @@ const SideBar = () => {
       <MenuItem icon={<NotificationsOutlinedIcon />}>Notifications</MenuItem>
       <MenuItem icon={<SearchOutlinedIcon />}>Search</MenuItem>
       <MenuItem icon={<AccountCircleOutlinedIcon />}>Profile</MenuItem>
-      <MenuItem component="div" style={{ cursor: 'default'}}>
-        <Button component={Link}
-          to="/create"
-          startIcon={<AddCircleOutlineIcon/>}
-          variant="outlined"
-        >
-          Create Battle
-        </Button>
-      </MenuItem>
-      <MenuItem>
-        <Grid container wrap="nowrap" spacing={1}>
-          <Grid item>
-            <Button
-              onClick={() => setLoginOpen(true)}
-              variant="outlined"
-            >Login</Button>
+      { userId !== '' ?
+        <MenuItem component="div" style={{ cursor: 'default'}}>
+          <Button component={Link}
+            to="/create"
+            startIcon={<AddCircleOutlineIcon/>}
+            variant="outlined"
+          >
+            Create Battle
+          </Button>
+        </MenuItem>
+        :
+        <MenuItem>
+          <Grid container wrap="nowrap" spacing={1}>
+            <Grid item>
+              <Button
+                onClick={() => setLoginOpen(true)}
+                variant="outlined"
+              >Login</Button>
+            </Grid>
+            <Grid item>
+              <Button variant="outlined">Register</Button>
+            </Grid>
           </Grid>
-          <Grid item>
-            <Button variant="outlined">Register</Button>
-          </Grid>
-        </Grid>
-      </MenuItem>
+        </MenuItem>
+      }
     </Menu>
     <LoginModal loginOpen={loginOpen} setLoginOpen={setLoginOpen} />
     </Sidebar>
