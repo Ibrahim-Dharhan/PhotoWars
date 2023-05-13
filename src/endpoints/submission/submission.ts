@@ -70,7 +70,6 @@ submissionRouter.put('/:id', async (req, res) => {
       } else {
         const caption =
           req.body.caption !== null ? req.body.caption : result.caption;
-        console.log(caption);
         await Submission.updateOne(
           { _id: submissionId },
           {
@@ -153,7 +152,6 @@ submissionRouter.post('/:id/comment', async (req, res) => {
     res.status(401).send('Not logged in.');
     return;
   }
-  console.log(req.body.comment);
   try {
     const newCommentObj = await Comment.create({
       author: req.session.userId,
