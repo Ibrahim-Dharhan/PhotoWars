@@ -9,6 +9,9 @@ import {
   Modal,
   Typography
 } from '@mui/material';
+import {
+  MenuItem
+} from 'react-pro-sidebar';
 import PropTypes from 'prop-types';
 import { useForm, FormContainer, TextFieldElement } from 'react-hook-form-mui';
 import { UserContext } from '../../contexts/UserContext';
@@ -27,11 +30,9 @@ const style = {
   flexGrow: 1
 };
 
-const LoginModal = ({
-  loginOpen,
-  setLoginOpen
-}) => {
+const LoginModal = () => {
   const { setDisplayName, setUserId } = useContext(UserContext);
+  const [open, setOpen] = useState(false);
   const [failedLogin, setFailedLogin] = useState(false);
 
   const formContext = useForm();
@@ -42,7 +43,7 @@ const LoginModal = ({
       const res = await axios.post('/account/login', data);
       const user = res.data;
       clearLoginForm();
-      setLoginOpen(false);
+      setOpen(false);
       setFailedLogin(false);
       setDisplayName(user.displayName);
       setUserId(user._id);
@@ -57,14 +58,28 @@ const LoginModal = ({
   };
 
   return (
+    <React.Fragment>
+    <MenuItem>
+      <Grid container wrap="nowrap" spacing={1}>
+        <Grid item>
+          <Button
+            onClick={() => setOpen(true)}
+            variant="outlined"
+          >Login</Button>
+        </Grid>
+        <Grid item>
+          <Button variant="outlined">Register</Button>
+        </Grid>
+      </Grid>
+    </MenuItem>
     <Modal 
-      open={loginOpen}
+      open={open}
       onClose={() => {
-        setLoginOpen(false)
+        setOpen(false)
         setFailedLogin(false);
       }}
     >
-      <Fade in={loginOpen} onExited={clearLoginForm}>
+      <Fade in={open} onExited={clearLoginForm}>
       <Box sx={style}>
       <FormContainer
         formContext={formContext}
@@ -121,12 +136,8 @@ const LoginModal = ({
       </Box>
       </Fade>
     </Modal>
+    </React.Fragment>
   );
 }
-
-LoginModal.propTypes = {
-  loginOpen: PropTypes.bool,
-  setLoginOpen: PropTypes.func
-};
 
 export { LoginModal };

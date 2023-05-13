@@ -82,22 +82,9 @@ const SideBar = () => {
           </MenuItem>
           </React.Fragment>
         :
-          <MenuItem>
-            <Grid container wrap="nowrap" spacing={1}>
-              <Grid item>
-                <Button
-                  onClick={() => setLoginOpen(true)}
-                  variant="outlined"
-                >Login</Button>
-              </Grid>
-              <Grid item>
-                <Button variant="outlined">Register</Button>
-              </Grid>
-            </Grid>
-          </MenuItem>
+          <LoginModal />
       }
     </Menu>
-    <LoginModal loginOpen={loginOpen} setLoginOpen={setLoginOpen} />
     </Sidebar>
   );
 }
