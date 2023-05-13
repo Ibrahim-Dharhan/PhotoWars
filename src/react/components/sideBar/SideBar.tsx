@@ -4,7 +4,6 @@ import AccountCircleOutlinedIcon from '@mui/icons-material/AccountCircleOutlined
 import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
 import EmojiEventsOutlinedIcon from '@mui/icons-material/EmojiEventsOutlined';
 import ExploreOutlinedIcon from '@mui/icons-material/ExploreOutlined';
-// import MenuOutlinedIcon from '@mui/icons-material/MenuOutlined';
 import NotificationsOutlinedIcon from '@mui/icons-material/NotificationsOutlined';
 import PeopleOutlinedIcon from "@mui/icons-material/PeopleOutlined";
 import SearchOutlinedIcon from '@mui/icons-material/SearchOutlined';
@@ -19,11 +18,8 @@ import {
 
 const SideBar = () => {
   const [loginOpen, setLoginOpen] = useState(false);
-  // const [registerOpen, setRegisterOpen] = useState(false);
   const {
     broken,
-    // collapseSidebar,
-    // collapsed,
   } = useProSidebar();
 
   return (
@@ -39,15 +35,6 @@ const SideBar = () => {
       breakPoint="md"
     >
     <Menu>
-      { /*
-      <MenuItem
-        icon={<MenuOutlinedIcon />}
-        onClick={() => {
-          collapseSidebar();
-        }}
-        style={{textAlign: "center" }}
-      >
-      */}
       <MenuItem>
         <Typography variant="h5">Photo Wars</Typography>
       </MenuItem>

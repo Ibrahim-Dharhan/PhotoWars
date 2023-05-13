@@ -10,8 +10,8 @@ import {
   TextField,
   Typography
 } from '@mui/material';
-import { Form } from 'react-router-dom';
 import PropTypes from 'prop-types';
+import { useForm, FormContainer, TextFieldElement } from 'react-hook-form-mui';
 
 const style = {
   position: 'absolute',
@@ -31,19 +31,16 @@ const LoginModal = ({
   loginOpen,
   setLoginOpen
 }) => {
-  const handleLogin = async (e) => {
-    e.preventDefault();
-    const username = event.target.form.username.value;
-    const password = event.target.form.password.value;
+  const formContext = useForm();
+  const { handleSubmit, reset: clearLoginForm } = formContext;
+  const handleLogin = async (data) => {
     try {
-      const res = await axios.post('/account/login', {
-        loginName: username,
-        loginPassword: password
-      });
-      console.log(res);
+      const res = await axios.post('/account/login', data);
+      console.log(res.data);
     } catch (err) {
       console.error(err.response.data);
     }
+    clearLoginForm();
   };
 
   return (
@@ -51,9 +48,12 @@ const LoginModal = ({
       open={loginOpen}
       onClose={() => setLoginOpen(false)}
     >
-      <Fade in={loginOpen}>
+      <Fade in={loginOpen} onExited={clearLoginForm}>
       <Box sx={style}>
-      <Form method="post" action="/account/login">
+      <FormContainer
+        formContext={formContext}
+        handleSubmit={handleSubmit(handleLogin)}
+      >
         <Grid
           container
           direction="column"
@@ -64,23 +64,24 @@ const LoginModal = ({
             <Typography variant="h4">Photo Wars</Typography>
           </Grid>
           <Grid item>
-            <TextField
-              name="username"
-              label="Username"
-              variant="outlined"
+            <TextFieldElement
+              name={'loginName'}
+              label={'Username'}
+              variant={'outlined'}
+              required
             />
           </Grid>
           <Grid item>
-            <TextField
-              name="password"
-              label="Password"
-              type="password"
-              variant="outlined"
+            <TextFieldElement
+              name={'loginPassword'}
+              label={'Password'}
+              type={'password'}
+              variant={'outlined'}
+              required
             />
           </Grid>
           <Grid item>
             <Button
-              onClick={handleLogin}
               type="submit"
               variant="outlined"
             >
@@ -99,7 +100,7 @@ const LoginModal = ({
             </Typography>
           </Grid>
         </Grid>
-      </Form>
+      </FormContainer>
       </Box>
       </Fade>
     </Modal>

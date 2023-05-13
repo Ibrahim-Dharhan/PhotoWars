@@ -23,12 +23,6 @@ const PhotoWars = () => {
       <Route path="/" element={<Layout />}>
         <Route path="/" element={<Home />} >
           <Route
-            path="battles"
-            element={<Feed />}
-            loader={feedLoader}
-            errorElement={<div>Error fetching battles</div>}
-          />
-          <Route
             path="battles/:id"
             element={<Battle />}
           />
