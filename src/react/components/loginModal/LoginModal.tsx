@@ -1,4 +1,4 @@
-import React, { useContext, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import axios from 'axios';
 import {
   Box,
@@ -7,50 +7,60 @@ import {
   Grid,
   Link,
   Modal,
+  Stack,
   Typography
 } from '@mui/material';
 import {
   MenuItem
 } from 'react-pro-sidebar';
 import PropTypes from 'prop-types';
-import { useForm, FormContainer, TextFieldElement } from 'react-hook-form-mui';
+import {
+  FormContainer,
+  PasswordElement,
+  PasswordRepeatElement,
+  TextFieldElement,
+  useForm
+} from 'react-hook-form-mui';
 import { UserContext } from '../../contexts/UserContext';
 
 const style = {
   position: 'absolute',
-  top: '40%',
+  top: '50%',
   left: '50%',
   transform: 'translate(-50%, -50%)',
-  height: 400,
   width: 400,
   bgcolor: 'background.paper',
   boxShadow: 24,
   borderRadius: '2px',
-  p: 2,
-  flexGrow: 1
+  p: 2
 };
 
 const LoginModal = () => {
   const { setDisplayName, setUserId } = useContext(UserContext);
   const [open, setOpen] = useState(false);
-  const [failedLogin, setFailedLogin] = useState(false);
+  const [resCode, setResCode] = useState(200);
+  // false for login form, true for register form
+  const [formType, setFormType] = useState(false);
 
   const formContext = useForm();
-  const { handleSubmit, reset: clearLoginForm } = formContext;
+  const { handleSubmit, reset: clearForm } = formContext;
 
-  const handleLogin = async (data) => {
+  const handleFormSubmit = async (data) => {
     try {
-      const res = await axios.post('/account/login', data);
+      const path = formType ? '/account/new' : '/account/login';
+      const res = await axios.post(path, data);
       const user = res.data;
-      clearLoginForm();
+      clearForm();
       setOpen(false);
-      setFailedLogin(false);
+      setResCode(res.status);
       setDisplayName(user.displayName);
       setUserId(user._id);
       localStorage.setItem('user', JSON.stringify(user));
     } catch (err) {
       if (err.response.status === 401) {
-        setFailedLogin(true);
+        setResCode(err.response.status);
+      } else if (err.response.status === 409) {
+        setResCode(err.response.status)
       } else {
         console.error(err.response.data);
       }
@@ -63,12 +73,25 @@ const LoginModal = () => {
       <Grid container wrap="nowrap" spacing={1}>
         <Grid item>
           <Button
-            onClick={() => setOpen(true)}
+            onClick={() => {
+              setOpen(true);
+              setFormType(false);
+            }}
             variant="outlined"
-          >Login</Button>
+          >
+            Login
+          </Button>
         </Grid>
         <Grid item>
-          <Button variant="outlined">Register</Button>
+          <Button
+            onClick={() => {
+              setOpen(true);
+              setFormType(true);
+            }}
+            variant="outlined"
+          >
+            Register
+          </Button>
         </Grid>
       </Grid>
     </MenuItem>
@@ -76,62 +99,86 @@ const LoginModal = () => {
       open={open}
       onClose={() => {
         setOpen(false)
-        setFailedLogin(false);
+        setResCode(200);
       }}
     >
-      <Fade in={open} onExited={clearLoginForm}>
-      <Box sx={style}>
+      <Fade in={open} onExited={clearForm}>
+      <Box>
       <FormContainer
         formContext={formContext}
-        handleSubmit={handleSubmit(handleLogin)}
+        handleSubmit={handleSubmit(handleFormSubmit)}
       >
-        <Grid
-          container
+        <Stack
+          sx={style}
           direction="column"
           alignItems="center"
-          rowSpacing={2}
+          wrap="nowrap"
+          spacing={2}
         >
-          <Grid item>
-            <Typography variant="h4">Photo Wars</Typography>
-          </Grid>
-          <Grid item>
-            <TextFieldElement
-              name={'loginName'}
-              label={'Username'}
+          <Typography variant="h4">Photo Wars</Typography>
+          {
+            formType && <TextFieldElement
+              name={'displayName'}
+              label={'Display Name'}
               variant={'outlined'}
               required
             />
-          </Grid>
-          <Grid item>
-            <TextFieldElement
-              name={'loginPassword'}
-              label={'Password'}
-              type={'password'}
+          }
+          <TextFieldElement
+            name={'loginName'}
+            label={'Username'}
+            variant={'outlined'}
+            required
+          />
+          <PasswordElement
+            name={'loginPassword'}
+            label={'Password'}
+            variant={'outlined'}
+            required
+          />
+          {
+            formType && <PasswordRepeatElement
+              passwordFieldName={'loginPassword'}
+              name={'loginPasswordRepeat'}
+              label={'Repeat Password'}
               variant={'outlined'}
               required
             />
-          </Grid>
-          { failedLogin && <Typography>Invalid credentials.</Typography> }
-          <Grid item>
-            <Button
-              type="submit"
-              variant="outlined"
-            >
-              Login
-            </Button>
-          </Grid>
-          <Grid item>
-            <Typography>
-              {"Don't have an account? "}
-              <Link
-                style={{ cursor: 'pointer'}}
-                onClick={() => console.log("Open registerModal")}
-              >
-                Register here.
-              </Link>
-            </Typography>
-          </Grid>
-        </Grid>
+          }
+          { resCode === 401 && <Typography>Invalid credentials.</Typography> }
+          { resCode === 409 && <Typography>User already exists.</Typography> }
+          <Button type="submit" variant="outlined">
+            { formType ? 'Register' : 'Login' }
+          </Button>
+          {
+            formType ?
+              <Typography>
+                {"Already have an account? "}
+                <Link
+                  style={{ cursor: 'pointer'}}
+                  onClick={() => {
+                    setFormType(false);
+                    clearForm();
+                  }}
+                >
+                  Login here.
+                </Link>
+              </Typography>
+            :
+              <Typography>
+                {"Don't have an account? "}
+                <Link
+                  style={{ cursor: 'pointer'}}
+                  onClick={() => {
+                    setFormType(true);
+                    clearForm();
+                  }}
+                >
+                  Register here.
+                </Link>
+              </Typography>
+          }
+        </Stack>
       </FormContainer>
       </Box>
       </Fade>

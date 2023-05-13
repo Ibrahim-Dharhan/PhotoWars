@@ -124,6 +124,7 @@ accountRouter.post('/new', checkSchema(NewUser), async (req, res) => {
     });
     return;
   }
+  console.log(`Creating user ${req.body.displayName}`);
   const userObj = await User.create(req.body);
   res.status(200).json(userObj.toObject());
 });
