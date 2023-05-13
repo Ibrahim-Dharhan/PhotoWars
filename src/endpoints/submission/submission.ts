@@ -274,7 +274,7 @@ submissionRouter.delete('/:id', async (req, res) => {
   try {
     const submissionObj = await query.lean().exec();
     if (!submissionObj) {
-      res.status(500).send('Failed to find submission.');
+      res.status(404).send('Failed to find submission.');
       console.error('Failed to find submission.');
     } else {
       res.status(200).send('Successfully deleted submission.');

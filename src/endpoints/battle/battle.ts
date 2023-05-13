@@ -508,7 +508,7 @@ battleRouter.delete('/:id', async (req, res) => {
   try {
     const battleObj = await query.lean().exec();
     if (!battleObj) {
-      res.status(500).send('Failed to find battle.');
+      res.status(404).send('Failed to find battle.');
       console.error('Failed to find battle.');
     } else {
       res.status(200).send('Successfully deleted battle.');
