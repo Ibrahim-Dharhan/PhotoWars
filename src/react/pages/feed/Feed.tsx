@@ -3,36 +3,27 @@ import axios from 'axios';
 import { BattleCard } from '../../components/battleCard/BattleCard';
 import Grid from '@mui/material/Grid';
 import {
-  Outlet
+  Outlet,
+  useLoaderData
 } from 'react-router-dom';
 
-const Feed = () => {
-  const [battleIds, setBattleIds] = useState([]);
+const feedLoader = async () => {
+  const path = '/battle/ids';
+  const res = await axios.get(path);
+  return res.data;
+}
 
-  useEffect(() => {
-    let shouldUpdate = true;
-    const getBattleIds = async () => {
-      const path = '/battle/ids';
-      const res = await axios.get(path);
-      const battleIdsData = res.data;
-      if (shouldUpdate) {
-        setBattleIds(battleIdsData);
-      }
-    }
-    try {
-      getBattleIds();
-    } catch (err) {
-      console.error(err);
-    }
-    return () => { shouldUpdate = false; };
-  }, [battleIds]);
+const Feed = () => {
+  const battleIds = useLoaderData();
 
   return (
     <>
-      {battleIds.map((battleId) => <BattleCard battleId={battleId} key={battleId}/> )}
+      {battleIds.map((battleId) => {
+        return (<BattleCard battleId={battleId} key={battleId}/>);
+      })}
     </>
   );
 };
 
-export { Feed };
+export { Feed, feedLoader };
 
