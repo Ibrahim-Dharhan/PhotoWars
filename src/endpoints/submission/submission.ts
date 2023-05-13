@@ -1,7 +1,7 @@
 'use strict';
 
 import express = require('express');
-import { Submission } from '../../definitions/schemas/submission';
+import { Submission } from '../../definitions/schemas/mongoose/submission';
 
 const submissionRouter = express.Router();
 
@@ -64,7 +64,7 @@ submissionRouter.put('/:id', async (req, res) => {
       /* Found submission matching submissionId. */
       if (!req.session.loggedIn) {
         res.status(401).send('Not logged in');
-      } else if (result.authorId.toString() !== req.session.userId) {
+      } else if (result.author.toString() !== req.session.userId) {
         res.status(403).send('Access to that resource is forbidden');
       } else {
         const caption =
