@@ -475,4 +475,48 @@ battleRouter.post('/:id/comment', async (req, res) => {
   }
 });
 
+/**
+ * @openapi
+ * /battle/{id}:
+ *   delete:
+ *     summary: Delete battle if user is the battle creator.
+ *     parameters:
+ *       - $ref: '#/components/parameters/idParam'
+ *     responses:
+ *       200:
+ *         description: Successfully deleted battle.
+ *       401:
+ *         $ref: '#/components/responses/401NotLoggedIn'
+ *       403:
+ *         $ref: '#/components/responses/403'
+ *       404:
+ *         $ref: '#/components/responses/404'
+ *       500:
+ *         $ref: '#/components/responses/500'
+ */
+battleRouter.delete('/:id', async (req, res) => {
+  if (!req.session.loggedIn) {
+    res.status(401).send('User not logged in.');
+    return;
+  }
+  const battleId = req.params.id;
+  /* Delete submission.  */
+  const query = Battle.findOneAndDelete({
+    _id: battleId,
+    author: req.session.userId,
+  });
+  try {
+    const battleObj = await query.lean().exec();
+    if (!battleObj) {
+      res.status(500).send('Failed to find battle.');
+      console.error('Failed to find battle.');
+    } else {
+      res.status(200).send('Successfully deleted battle.');
+    }
+  } catch (err) {
+    res.status(500).send('Internal server error.');
+    console.error(err);
+  }
+});
+
 export { battleRouter };

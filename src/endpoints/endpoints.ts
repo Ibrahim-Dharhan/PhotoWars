@@ -26,23 +26,3 @@
  *     500:
  *       description: Internal server error.
  */
-
-/**
- * @openapi
- * /battle/{id}:
- *   delete:
- *     summary: Delete battle if user is the battle creator.
- *     parameters:
- *       - $ref: '#/components/parameters/idParam'
- *     responses:
- *       200:
- *         description: Successfully deleted battle.
- *       401:
- *         $ref: '#/components/responses/401NotLoggedIn'
- *       403:
- *         $ref: '#/components/responses/403'
- *       404:
- *         $ref: '#/components/responses/404'
- *       500:
- *         $ref: '#/components/responses/500'
- */

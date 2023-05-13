@@ -34,9 +34,8 @@ const submissionSchema = new mongoose.Schema({
 });
 
 /* Middleware to delete or update Submission-related documents before deletion.  */
-submissionSchema.pre(['deleteMany'], async function () {
+submissionSchema.pre(['deleteMany', 'findOneAndDelete'], async function () {
   const results = await Submission.find(this.getQuery(), '_id');
-  console.log(results);
   const _ids = results.map((submission) => submission._id);
   /* Delete all votes on Submission.  */
   await Vote.deleteMany({
@@ -47,23 +46,6 @@ submissionSchema.pre(['deleteMany'], async function () {
   await Comment.deleteMany({
     commentedModel: 'Submission',
     post: { $in: _ids },
-  });
-});
-
-submissionSchema.pre(['findOneAndDelete'], async function () {
-  const results = await Submission.findOne(this.getQuery(), '_id');
-  const _id = results.id;
-
-  /* Delete all votes on Comment.  */
-  await Vote.deleteMany({
-    votedModel: 'Submission',
-    post: { $eq: _id },
-  });
-
-  /* Delete all replies to Comment.  */
-  await Comment.deleteMany({
-    commentedModel: 'Submission',
-    post: { $eq: _id },
   });
 });
 
