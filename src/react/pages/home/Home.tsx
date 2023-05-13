@@ -9,7 +9,6 @@ import {
   Stack
 } from '@mui/material';
 import { ProSidebarProvider } from 'react-pro-sidebar';
-import './home.css';
 
 const Home = () => {
 
@@ -20,11 +19,11 @@ const Home = () => {
       </ProSidebarProvider>
 
       <Grid container spacing={7}>
-        <Grid item xs={1} md={2} />
-        <Grid item xs={7} s={6} md={6} lg={4} xl={5}>
+        <Grid item xs={1} s={2} md={2} lg={3} xl={4} />
+        <Grid item xs={7} s={6} md={7} lg={5} xl={4}>
           <Outlet />
         </Grid>
-        <Grid item xs={1} md={2} xl={4} />
+        <Grid item xs={1} s={2} md={2} lg={4} xl={4} />
       </Grid>
     </Stack>
   );
