@@ -417,7 +417,7 @@ battleRouter.get('/:id/comment', async (req, res) => {
   const battleId = req.params.id;
   const query = Comment.find({
     commentedModel: 'Battle',
-    post: { $eq: battleId },
+    post: battleId,
   });
   try {
     const result = await query.exec();
@@ -513,6 +513,41 @@ battleRouter.delete('/:id', async (req, res) => {
     } else {
       res.status(200).send('Successfully deleted battle.');
     }
+  } catch (err) {
+    res.status(500).send('Internal server error.');
+    console.error(err);
+  }
+});
+
+/**
+ * @openapi
+ * /battle/{id}/submission:
+ *   get:
+ *     summary: Retrieve submissions for battle.
+ *     parameters:
+ *       - $ref: '#/components/parameters/idParam'
+ *     responses:
+ *       200:
+ *         description: Successfully returned submissions.
+ *       404:
+ *         $ref: '#/components/responses/404'
+ *       500:
+ *         $ref: '#/components/responses/500'
+ */
+battleRouter.get('/:id/submission', async (req, res) => {
+  const battleId = req.params.id;
+  try {
+    const battleObj = await Battle.findById(battleId).lean().exec();
+    /* Did not find battle with matching battleId. */
+    if (!battleObj) {
+      res.status(404).send('Invalid battle id.');
+      return;
+    }
+    const result = await Submission.find({
+      battle: battleId,
+    }).exec();
+    /* Return submissions on battle. */
+    res.status(200).json(result);
   } catch (err) {
     res.status(500).send('Internal server error.');
     console.error(err);

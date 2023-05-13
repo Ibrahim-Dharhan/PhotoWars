@@ -188,7 +188,7 @@ submissionRouter.get('/:id/comment', async (req, res) => {
     const submissionId = req.params.id;
     const query = Comment.find({
       commentedModel: 'Submission',
-      post: { $eq: submissionId },
+      post: submissionId,
     });
     const result = await query.exec();
     if (result) {
