@@ -21,30 +21,34 @@ const SideBar = ({}) => {
   const [loginOpen, setLoginOpen] = useState(false);
   const [registerOpen, setRegisterOpen] = useState(false);
   const {
+    broken,
     collapseSidebar,
-    toggleSidebar,
     collapsed,
-    toggled
   } = useProSidebar();
 
   return (
     <Sidebar
       style={{
-        position: '-webkit-sticky',
-        position: 'sticky',
-        top: 0,
-        height: '100vh',
+        ...broken ? {} : {
+          position: '-webkit-sticky',
+          position: 'sticky',
+          top: 0
+        },
+        height: '100vh'
       }}
+      breakPoint="md"
     >
     <Menu>
+      { /*
       <MenuItem
         icon={<MenuOutlinedIcon />}
         onClick={() => {
           collapseSidebar();
-          toggleSidebar();
         }}
         style={{textAlign: "center" }}
       >
+      */}
+      <MenuItem>
         <Typography variant="h5">Photo Wars</Typography>
       </MenuItem>
       <MenuItem icon={<ExploreOutlinedIcon />}>Explore</MenuItem>
