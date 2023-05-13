@@ -98,38 +98,6 @@
 
 /**
  * @openapi
- * /submission/{id}/vote:
- *   post:
- *     summary: Like a submission.
- *     parameters:
- *       - $ref: '#/components/parameters/idParam'
- *     responses:
- *       200:
- *         description: Successfully voted on the submission.
- *       401:
- *         $ref: '#/components/responses/401NotLoggedIn'
- *       500:
- *         $ref: '#/components/responses/500'
- */
-
-/**
- * @openapi
- * /submission/{id}/unvote:
- *   post:
- *     summary: Unvote a submission.
- *     parameters:
- *       - $ref: '#/components/parameters/idParam'
- *     responses:
- *       200:
- *         description: Successfully unvoted the submission.
- *       401:
- *         $ref: '#/components/responses/401NotLoggedIn'
- *       500:
- *         $ref: '#/components/responses/500'
- */
-
-/**
- * @openapi
  * /user:
  *   delete:
  *     summary: Delete logged in user and all of their related content.

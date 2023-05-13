@@ -3,6 +3,7 @@
 import express = require('express');
 import { Submission } from '../../definitions/schemas/mongoose/submission';
 import { Comment } from '../../definitions/schemas/mongoose/comment';
+import { voteOn, unvoteOn } from '../../definitions/schemas/mongoose/vote';
 
 const submissionRouter = express.Router();
 
@@ -87,6 +88,80 @@ submissionRouter.put('/:id', async (req, res) => {
       /* Did not find a submission with matching submissionId. */
       res.status(404).send('Invalid submission id.');
     }
+  } catch (err) {
+    res.status(500).send('Internal server error.');
+    console.error(err);
+  }
+});
+
+/**
+ * @openapi
+ * /submission/{id}/vote:
+ *   post:
+ *     summary: Like a submission.
+ *     parameters:
+ *       - $ref: '#/components/parameters/idParam'
+ *     responses:
+ *       200:
+ *         description: Successfully voted on the submission.
+ *       401:
+ *         $ref: '#/components/responses/401NotLoggedIn'
+ *       500:
+ *         $ref: '#/components/responses/500'
+ */
+submissionRouter.post('/:id/vote', async (req, res) => {
+  if (!req.session.loggedIn) {
+    res.status(401).send('Must be logged in to perform this action.');
+    return;
+  }
+  const submissionId = req.params.id;
+  const query = Submission.findById(submissionId);
+  try {
+    const result = await query.lean().exec();
+    if (!result) {
+      res.status(404).send('Resource not found.');
+      return;
+    }
+
+    await voteOn('Submission', submissionId, req.session.userId);
+    res.status(200).send('Successfully voted on submission.');
+  } catch (err) {
+    res.status(500).send('Internal server error.');
+    console.error(err);
+  }
+});
+
+/**
+ * @openapi
+ * /submission/{id}/unvote:
+ *   post:
+ *     summary: Unvote a submission.
+ *     parameters:
+ *       - $ref: '#/components/parameters/idParam'
+ *     responses:
+ *       200:
+ *         description: Successfully unvoted the submission.
+ *       401:
+ *         $ref: '#/components/responses/401NotLoggedIn'
+ *       500:
+ *         $ref: '#/components/responses/500'
+ */
+submissionRouter.post('/:id/unvote', async (req, res) => {
+  if (!req.session.loggedIn) {
+    res.status(401).send('Must be logged in to perform this action.');
+    return;
+  }
+  const submissionId = req.params.id;
+  const query = Submission.findById(submissionId);
+  try {
+    const result = await query.lean().exec();
+    if (!result) {
+      res.status(404).send('Resource not found.');
+      return;
+    }
+
+    await unvoteOn('Submission', submissionId, req.session.userId);
+    res.status(200).send('Successfully unvoted on submission.');
   } catch (err) {
     res.status(500).send('Internal server error.');
     console.error(err);
