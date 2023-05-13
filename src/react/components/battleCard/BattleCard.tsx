@@ -27,7 +27,6 @@ const BattleCard = ({
   const [caption, setCaption] = useState('');
   const [displayName, setDisplayName] = useState('');
   const [filename, setFilename] = useState('');
-  const [numVotes, setNumVotes] = useState(0);
   const [voted, setVoted] = useState(false);
   const [timeRemaining, setTimeRemaining] = useState('--:--:--');
   const _battle = useRef(null);
@@ -63,7 +62,7 @@ const BattleCard = ({
   }, [battleId]);
 
   const vote = async () => {
-    const path = `/battle/${battleId}/${voted ? 'unvote' : 'vote'}`;
+    // const path = `/battle/${battleId}/${voted ? 'unvote' : 'vote'}`;
     // const res = await axios.put(path);
     setVoted(!voted);
   };
@@ -150,7 +149,7 @@ const BattleCard = ({
               sx={{ pr: 1, color: (voted ? pink[500]: undefined) }}
             />
             <Typography>
-              {numVotes}
+              {voted ? 1 : 0}
             </Typography>
           </IconButton>
           <Box display="flex" marginLeft="auto" alignItems="center">

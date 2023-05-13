@@ -1,8 +1,5 @@
-import React, { useState } from 'react';
-import { Feed } from '../../components/feed/Feed';
-import { RightBar } from '../../components/rightBar/RightBar';
+import React from 'react';
 import { SideBar } from '../../components/sideBar/SideBar';
-import { TopBar } from '../../components/topBar/TopBar';
 import { Outlet } from 'react-router-dom';
 import {
   Grid,

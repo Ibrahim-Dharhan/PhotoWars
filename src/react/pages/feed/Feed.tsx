@@ -1,9 +1,7 @@
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import axios from 'axios';
 import { BattleCard } from '../../components/battleCard/BattleCard';
-import Grid from '@mui/material/Grid';
 import {
-  Outlet,
   useLoaderData
 } from 'react-router-dom';
 

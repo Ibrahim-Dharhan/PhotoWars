@@ -4,18 +4,16 @@ import {
   Box,
   Button,
   Fade,
-  FormControl,
   Grid,
   Link,
   Modal,
-  Stack,
   TextField,
   Typography
 } from '@mui/material';
 import { Form } from 'react-router-dom';
 
 const style = {
-  position: 'absolute' as 'absolute',
+  position: 'absolute',
   top: '40%',
   left: '50%',
   transform: 'translate(-50%, -50%)',
@@ -53,55 +51,55 @@ const LoginModal = ({
       onClose={() => setLoginOpen(false)}
     >
       <Fade in={loginOpen}>
-        <Box sx={style}>
-          <Form method="post" action="/account/login">
-            <Grid
-              container
-              direction="column"
-              alignItems="center"
-              rowSpacing={2}
+      <Box sx={style}>
+      <Form method="post" action="/account/login">
+        <Grid
+          container
+          direction="column"
+          alignItems="center"
+          rowSpacing={2}
+        >
+          <Grid item>
+            <Typography variant="h4">Photo Wars</Typography>
+          </Grid>
+          <Grid item>
+            <TextField
+              name="username"
+              label="Username"
+              variant="outlined"
+            />
+          </Grid>
+          <Grid item>
+            <TextField
+              name="password"
+              label="Password"
+              type="password"
+              variant="outlined"
+            />
+          </Grid>
+          <Grid item>
+            <Button
+              onClick={handleLogin}
+              type="submit"
+              variant="outlined"
             >
-              <Grid item>
-                <Typography variant="h4">Photo Wars</Typography>
-              </Grid>
-              <Grid item>
-                <TextField
-                  name="username"
-                  label="Username"
-                  variant="outlined"
-                />
-              </Grid>
-              <Grid item>
-                <TextField
-                  name="password"
-                  label="Password"
-                  type="password"
-                  variant="outlined"
-                />
-              </Grid>
-              <Grid item>
-                <Button
-                  onClick={handleLogin}
-                  type="submit"
-                  variant="outlined"
-                >
-                  Login
-                </Button>
-              </Grid>
-              <Grid item>
-                <Typography>
-                  {"Don't have an account? "}
-                  <Link
-                    style={{ cursor: 'pointer'}}
-                    onClick={() => console.log("Open registerModal")}
-                  >
-                    Register here.
-                  </Link>
-                </Typography>
-              </Grid>
-            </Grid>
-          </Form>
-        </Box>
+              Login
+            </Button>
+          </Grid>
+          <Grid item>
+            <Typography>
+              {"Don't have an account? "}
+              <Link
+                style={{ cursor: 'pointer'}}
+                onClick={() => console.log("Open registerModal")}
+              >
+                Register here.
+              </Link>
+            </Typography>
+          </Grid>
+        </Grid>
+      </Form>
+      </Box>
       </Fade>
     </Modal>
   );
