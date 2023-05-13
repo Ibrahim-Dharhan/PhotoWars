@@ -7,8 +7,8 @@ const Layout = () => {
   const [userId, setUserId] = useState(null);
   const contextValue = { displayName, setDisplayName, userId, setUserId };
   useEffect(() => {
-    const name = '';
-    const id = '';
+    let name = '';
+    let id = '';
     const storedUser = localStorage.getItem('user');
     if (storedUser) {
       const user = JSON.parse(storedUser);
