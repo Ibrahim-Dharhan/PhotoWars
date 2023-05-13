@@ -18,6 +18,36 @@ const battleRouter = express.Router();
 
 /**
  * @openapi
+ * /battle/all:
+ *   get:
+ *     summary: Return information about a battle.
+ *     responses:
+ *       200:
+ *         description: Successfully returned information about battle.
+ *       404:
+ *         $ref: '#/components/responses/404ResourceNotFound'
+ *       500:
+ *         $ref: '#/components/responses/500'
+ */
+battleRouter.get('/ids', async (req, res) => {
+  const query = Battle.find();
+  try {
+    const result = await query.distinct('_id').exec();
+    if (result) {
+      /* Retrieved battle ids.  */
+      res.status(200).json(result);
+    } else {
+      /* Did not find a battles.  */
+      res.status(404).send('Invalid battle id.');
+    }
+  } catch (err) {
+    res.status(500).send('Internal server error.');
+    console.error(err);
+  }
+});
+
+/**
+ * @openapi
  * /battle/{id}:
  *   get:
  *     summary: Return information about a battle.
