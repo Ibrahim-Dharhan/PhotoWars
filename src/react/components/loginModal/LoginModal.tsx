@@ -11,6 +11,7 @@ import {
   Typography
 } from '@mui/material';
 import { Form } from 'react-router-dom';
+import PropTypes from 'prop-types';
 
 const style = {
   position: 'absolute',
@@ -104,5 +105,10 @@ const LoginModal = ({
     </Modal>
   );
 }
+
+LoginModal.propTypes = {
+  loginOpen: PropTypes.bool,
+  setLoginOpen: PropTypes.func
+};
 
 export { LoginModal };
