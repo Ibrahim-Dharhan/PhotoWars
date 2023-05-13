@@ -46,7 +46,7 @@ const SideBar = () => {
       <MenuItem icon={<NotificationsOutlinedIcon />}>Notifications</MenuItem>
       <MenuItem icon={<SearchOutlinedIcon />}>Search</MenuItem>
       <MenuItem icon={<AccountCircleOutlinedIcon />}>Profile</MenuItem>
-      { userId !== '' ?
+      { userId === null ? <div /> : userId !== '' ?
         <MenuItem component="div" style={{ cursor: 'default'}}>
           <Button component={Link}
             to="/create"

@@ -46,6 +46,7 @@ const LoginModal = ({
       setFailedLogin(false);
       setDisplayName(user.displayName);
       setUserId(user._id);
+      localStorage.setItem('user', JSON.stringify(user));
     } catch (err) {
       if (err.response.status === 401) {
         setFailedLogin(true);
