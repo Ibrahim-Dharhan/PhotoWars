@@ -98,24 +98,6 @@
 
 /**
  * @openapi
- * /submission/{id}/comment:
- *   post:
- *     summary: Creating new comment by a user on a submission.
- *     parameters:
- *       - $ref: '#/components/parameters/idParam'
- *     responses:
- *       200:
- *         description: Successfully commented on submission.
- *       401:
- *         $ref: '#/components/responses/401NotLoggedIn'
- *       404:
- *         $ref: '#/components/responses/404'
- *       500:
- *         $ref: '#/components/responses/500'
- */
-
-/**
- * @openapi
  * /submission/{id}/vote:
  *   post:
  *     summary: Like a submission.

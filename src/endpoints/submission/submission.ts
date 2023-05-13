@@ -130,4 +130,42 @@ submissionRouter.get('/:id/comment', async (req, res) => {
   }
 });
 
+/**
+ * @openapi
+ * /submission/{id}/comment:
+ *   post:
+ *     summary: Creating new comment by a user on a submission.
+ *     parameters:
+ *       - $ref: '#/components/parameters/idParam'
+ *     responses:
+ *       200:
+ *         description: Successfully commented on submission.
+ *       401:
+ *         $ref: '#/components/responses/401NotLoggedIn'
+ *       404:
+ *         $ref: '#/components/responses/404'
+ *       500:
+ *         $ref: '#/components/responses/500'
+ */
+submissionRouter.post('/:id/comment', async (req, res) => {
+  const submissionId = req.params.id;
+  if (!req.session.loggedIn) {
+    res.status(401).send('Not logged in.');
+    return;
+  }
+  console.log(req.body.comment);
+  try {
+    const newCommentObj = await Comment.create({
+      author: req.session.userId,
+      commentedModel: 'Submission',
+      post: submissionId,
+      text: req.body.comment,
+    });
+    res.status(200).json(newCommentObj);
+  } catch (err) {
+    res.status(500).send('Internal server error.');
+    console.error(err);
+  }
+});
+
 export { submissionRouter };
