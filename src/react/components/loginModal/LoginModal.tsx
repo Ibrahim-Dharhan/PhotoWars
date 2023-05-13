@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import axios from 'axios';
 import {
   Box,
@@ -33,20 +33,30 @@ const LoginModal = ({
 }) => {
   const formContext = useForm();
   const { handleSubmit, reset: clearLoginForm } = formContext;
+  const [failedLogin, setFailedLogin] = useState(false);
   const handleLogin = async (data) => {
     try {
       const res = await axios.post('/account/login', data);
       console.log(res.data);
+      clearLoginForm();
+      setLoginOpen(false);
+      setFailedLogin(false);
     } catch (err) {
-      console.error(err.response.data);
+      if (err.response.status === 401) {
+        setFailedLogin(true);
+      } else {
+        console.error(err.response.data);
+      }
     }
-    clearLoginForm();
   };
 
   return (
     <Modal 
       open={loginOpen}
-      onClose={() => setLoginOpen(false)}
+      onClose={() => {
+        setLoginOpen(false)
+        setFailedLogin(false);
+      }}
     >
       <Fade in={loginOpen} onExited={clearLoginForm}>
       <Box sx={style}>
@@ -80,6 +90,7 @@ const LoginModal = ({
               required
             />
           </Grid>
+          { failedLogin && <Typography variant="error">Invalid credentials.</Typography> }
           <Grid item>
             <Button
               type="submit"
