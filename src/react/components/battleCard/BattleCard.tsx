@@ -20,6 +20,7 @@ import ImageIcon from '@mui/icons-material/Image';
 import { pink } from '@mui/material/colors';
 import { Link, useNavigate } from 'react-router-dom';
 import './battleCard.css';
+import PropTypes from 'prop-types';
 
 const BattleCard = ({
   battleId
@@ -27,7 +28,6 @@ const BattleCard = ({
   const [caption, setCaption] = useState('');
   const [displayName, setDisplayName] = useState('');
   const [filename, setFilename] = useState('');
-  const [numVotes, setNumVotes] = useState(0);
   const [voted, setVoted] = useState(false);
   const [timeRemaining, setTimeRemaining] = useState('--:--:--');
   const _battle = useRef(null);
@@ -63,7 +63,7 @@ const BattleCard = ({
   }, [battleId]);
 
   const vote = async () => {
-    const path = `/battle/${battleId}/${voted ? 'unvote' : 'vote'}`;
+    // const path = `/battle/${battleId}/${voted ? 'unvote' : 'vote'}`;
     // const res = await axios.put(path);
     setVoted(!voted);
   };
@@ -79,21 +79,13 @@ const BattleCard = ({
       >
         <CardHeader
           avatar={
-            <Avatar
-              onMouseDown={ (event) => event.stopPropagation()}
-              onClick={ (event) => {
-                event.stopPropagation();
-                event.preventDefault();
-                console.log(`Go to profile page at /user/${_battle.current._id}`);
-              }}
-              underline="hover"
-              sx={{ width: 24, height: 24 }}
-            >
+            <Avatar sx={{ width: 24, height: 24 }}>
               {displayName[0]}
             </Avatar>
           }
           title={
             <Link
+              to=""
               onMouseDown={ (event) => event.stopPropagation()}
               onClick={ (event) => {
                 event.stopPropagation();
@@ -150,7 +142,7 @@ const BattleCard = ({
               sx={{ pr: 1, color: (voted ? pink[500]: undefined) }}
             />
             <Typography>
-              {numVotes}
+              {voted ? 1 : 0}
             </Typography>
           </IconButton>
           <Box display="flex" marginLeft="auto" alignItems="center">
@@ -175,6 +167,10 @@ const BattleCard = ({
       </CardActionArea>
     </Card>
   );
+};
+
+BattleCard.propTypes = {
+  battleId: PropTypes.string
 };
 
 export { BattleCard };

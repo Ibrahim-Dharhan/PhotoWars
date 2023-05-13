@@ -38,6 +38,7 @@ const accountRouter = express.Router();
 accountRouter.post('/login', async (req, res) => {
   const loginName = req.body.loginName;
   const loginPassword = req.body.loginPassword;
+  console.log(`Logging in as ${loginName} with password ${loginPassword}`);
   const query = User.findOne({ loginName: loginName,
                                loginPassword: loginPassword });
 
@@ -48,6 +49,7 @@ accountRouter.post('/login', async (req, res) => {
       req.session.loggedIn = true;
       req.session.userId = result._id.toString();
       // TODO: Change response message.
+      console.log("Successful login");
       res.status(200).json(result);
     } else {
       /* Did not find a user with credentials.  */
