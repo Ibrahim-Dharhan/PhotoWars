@@ -2,6 +2,7 @@
 
 import express = require('express');
 import { Submission } from '../../definitions/schemas/mongoose/submission';
+import { Comment } from '../../definitions/schemas/mongoose/comment';
 
 const submissionRouter = express.Router();
 
@@ -54,7 +55,7 @@ submissionRouter.get('/:id', async (req, res) => {
  *         $ref: '#/components/responses/404'
  *       500:
  *         $ref: '#/components/responses/500'
- */ 
+ */
 submissionRouter.put('/:id', async (req, res) => {
   try {
     const submissionId = req.params.id;
@@ -83,6 +84,42 @@ submissionRouter.put('/:id', async (req, res) => {
         ).exec();
         res.status(200).json(updatedSubmission);
       }
+    } else {
+      /* Did not find a submission with matching submissionId. */
+      res.status(404).send('Invalid submission id.');
+    }
+  } catch (err) {
+    res.status(500).send('Internal server error.');
+    console.error(err);
+  }
+});
+
+/**
+ * @openapi
+ * /submission/{id}/comment:
+ *   get:
+ *     summary: Retrieve comments for submission.
+ *     parameters:
+ *       - $ref: '#/components/parameters/idParam'
+ *     responses:
+ *       200:
+ *         description: Successfully returned comments.
+ *       404:
+ *         $ref: '#/components/responses/404'
+ *       500:
+ *         $ref: '#/components/responses/500'
+ */
+submissionRouter.get('/:id/comment', async (req, res) => {
+  try {
+    const submissionId = req.params.id;
+    const query = Comment.find({
+      commentedModel: 'Submission',
+      post: { $eq: submissionId },
+    });
+    const result = await query.exec();
+    if (result) {
+      /* Found comments on submission. */
+      res.status(200).json(result);
     } else {
       /* Did not find a submission with matching submissionId. */
       res.status(404).send('Invalid submission id.');

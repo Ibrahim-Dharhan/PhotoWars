@@ -99,17 +99,6 @@
 /**
  * @openapi
  * /submission/{id}/comment:
- *   get:
- *     summary: Retrieve comments for submission.
- *     parameters:
- *       - $ref: '#/components/parameters/idParam'
- *     responses:
- *       200:
- *         description: Successfully returned comments.
- *       404:
- *         $ref: '#/components/responses/404'
- *       500:
- *         $ref: '#/components/responses/500'
  *   post:
  *     summary: Creating new comment by a user on a submission.
  *     parameters:
