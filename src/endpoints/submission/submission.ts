@@ -222,11 +222,11 @@ submissionRouter.get('/:id/comment', async (req, res) => {
  *         $ref: '#/components/responses/500'
  */
 submissionRouter.post('/:id/comment', async (req, res) => {
-  const submissionId = req.params.id;
   if (!req.session.loggedIn) {
     res.status(401).send('Not logged in.');
     return;
   }
+  const submissionId = req.params.id;
   try {
     const newCommentObj = await Comment.create({
       author: req.session.userId,
@@ -235,6 +235,50 @@ submissionRouter.post('/:id/comment', async (req, res) => {
       text: req.body.comment,
     });
     res.status(200).json(newCommentObj);
+  } catch (err) {
+    res.status(500).send('Internal server error.');
+    console.error(err);
+  }
+});
+
+/**
+ * @openapi
+ * /submission/{id}:
+ *   delete:
+ *     summary: Delete submission if user is the submission owner.
+ *     parameters:
+ *       - $ref: '#/components/parameters/idParam'
+ *     responses:
+ *       200:
+ *         description: Successfully deleted submission.
+ *       401:
+ *         $ref: '#/components/responses/401NotLoggedIn'
+ *       403:
+ *         $ref: '#/components/responses/403'
+ *       404:
+ *         $ref: '#/components/responses/404'
+ *       500:
+ *         $ref: '#/components/responses/500'
+ */
+submissionRouter.delete('/:id', async (req, res) => {
+  if (!req.session.loggedIn) {
+    res.status(401).send('User not logged in.');
+    return;
+  }
+  const submissionId = req.params.id;
+  /* Delete submission.  */
+  const query = Submission.findOneAndDelete({
+    _id: submissionId,
+    author: req.session.userId,
+  });
+  try {
+    const submissionObj = await query.lean().exec();
+    if (!submissionObj) {
+      res.status(500).send('Failed to find submission.');
+      console.error('Failed to find submission.');
+    } else {
+      res.status(200).send('Successfully deleted submission.');
+    }
   } catch (err) {
     res.status(500).send('Internal server error.');
     console.error(err);

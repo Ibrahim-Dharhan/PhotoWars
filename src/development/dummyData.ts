@@ -111,7 +111,7 @@ function dummyDataFunc() {
     votedModel: 'Submission',
   };
 
-  const fakeVotes = [vote1, vote2, vote3];
+  const fakeVotes = [vote1, vote2, vote3, vote4];
 
   const battles = () => {
     return fakeBattles;

@@ -78,26 +78,6 @@
 
 /**
  * @openapi
- * /submission/{id}:
- *   delete:
- *     summary: Delete submission if user is the comment owner.
- *     parameters:
- *       - $ref: '#/components/parameters/idParam'
- *     responses:
- *       200:
- *         description: Successfully deleted submission.
- *       401:
- *         $ref: '#/components/responses/401NotLoggedIn'
- *       403:
- *         $ref: '#/components/responses/403'
- *       404:
- *         $ref: '#/components/responses/404'
- *       500:
- *         $ref: '#/components/responses/500'
- */
-
-/**
- * @openapi
  * /user:
  *   delete:
  *     summary: Delete logged in user and all of their related content.
