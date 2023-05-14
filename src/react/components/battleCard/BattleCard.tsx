@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useContext, useEffect, useRef, useState } from 'react';
 import axios from 'axios';
 import { updateDeadline } from './timerLogic';
 import {
@@ -21,10 +21,12 @@ import { pink } from '@mui/material/colors';
 import { Link, useNavigate } from 'react-router-dom';
 import './battleCard.css';
 import PropTypes from 'prop-types';
+import { UserContext } from '../../contexts/UserContext';
 
 const BattleCard = ({
   battleId
 }) => {
+  const { userId, setOpen } = useContext(UserContext);
   const [caption, setCaption] = useState('');
   const [displayName, setDisplayName] = useState('');
   const [filename, setFilename] = useState('');
@@ -63,9 +65,13 @@ const BattleCard = ({
   }, [battleId]);
 
   const vote = async () => {
-    // const path = `/battle/${battleId}/${voted ? 'unvote' : 'vote'}`;
-    // const res = await axios.put(path);
-    setVoted(!voted);
+    const path = `/battle/${battleId}/${voted ? 'unvote' : 'vote'}`;
+    try {
+      await axios.put(path);
+      setVoted(!voted);
+    } catch (err) {
+      console.error(err.response.data);
+    }
   };
 
   return (
@@ -133,10 +139,12 @@ const BattleCard = ({
             onClick={ (event) => {
               event.stopPropagation();
               event.preventDefault();
-              console.log('Voting on post');
-              vote();
+              if (userId !== '') {
+                vote();
+              } else {
+                setOpen(true);
+              }
             }}
-            aria-label="vote"
           >
             <FavoriteIcon
               sx={{ pr: 1, color: (voted ? pink[500]: undefined) }}

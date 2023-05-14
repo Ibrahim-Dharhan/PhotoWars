@@ -31,8 +31,7 @@ const style = {
 };
 
 const LoginModal = () => {
-  const { setDisplayName, setUserId } = useContext(UserContext);
-  const [open, setOpen] = useState(false);
+  const { open, setOpen, setDisplayName, setUserId } = useContext(UserContext);
   const [responseError, setResponseError] = useState('');
   const [registering, setRegistering] = useState(false);
 
@@ -175,7 +174,7 @@ const LoginModal = () => {
               )}
             />
           }
-          { responseError !== '' && <Typography error="true">{responseError}</Typography> }
+          { responseError !== '' && <Typography>{responseError}</Typography> }
           <Button type="submit" variant="outlined">
             { registering ? 'Register' : 'Login' }
           </Button>
