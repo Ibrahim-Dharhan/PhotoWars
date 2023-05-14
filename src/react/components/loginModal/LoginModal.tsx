@@ -8,19 +8,14 @@ import {
   Link,
   Modal,
   Stack,
+  TextField,
   Typography
 } from '@mui/material';
 import {
   MenuItem
 } from 'react-pro-sidebar';
 import PropTypes from 'prop-types';
-import {
-  FormContainer,
-  PasswordElement,
-  PasswordRepeatElement,
-  TextFieldElement,
-  useForm
-} from 'react-hook-form-mui';
+import { Controller, useForm } from 'react-hook-form';
 import { UserContext } from '../../contexts/UserContext';
 
 const style = {
@@ -40,14 +35,18 @@ const LoginModal = () => {
   const [open, setOpen] = useState(false);
   const [resCode, setResCode] = useState(200);
   // false for login form, true for register form
-  const [formType, setFormType] = useState(false);
+  const [registering, setRegistering] = useState(false);
 
-  const formContext = useForm();
-  const { handleSubmit, reset: clearForm } = formContext;
+  const { control,
+          getValues,
+          handleSubmit,
+          reset: clearForm
+  } = useForm({ mode: 'onChange' });
 
   const handleFormSubmit = async (data) => {
     try {
-      const path = formType ? '/account/new' : '/account/login';
+      console.log(data);
+      const path = registering ? '/account/new' : '/account/login';
       const res = await axios.post(path, data);
       const user = res.data;
       clearForm();
@@ -69,32 +68,6 @@ const LoginModal = () => {
 
   return (
     <React.Fragment>
-    <MenuItem>
-      <Grid container wrap="nowrap" spacing={1}>
-        <Grid item>
-          <Button
-            onClick={() => {
-              setOpen(true);
-              setFormType(false);
-            }}
-            variant="outlined"
-          >
-            Login
-          </Button>
-        </Grid>
-        <Grid item>
-          <Button
-            onClick={() => {
-              setOpen(true);
-              setFormType(true);
-            }}
-            variant="outlined"
-          >
-            Register
-          </Button>
-        </Grid>
-      </Grid>
-    </MenuItem>
     <Modal 
       open={open}
       onClose={() => {
@@ -104,10 +77,7 @@ const LoginModal = () => {
     >
       <Fade in={open} onExited={clearForm}>
       <Box>
-      <FormContainer
-        formContext={formContext}
-        handleSubmit={handleSubmit(handleFormSubmit)}
-      >
+      <form onSubmit={handleSubmit(handleFormSubmit)}>
         <Stack
           sx={style}
           direction="column"
@@ -117,47 +87,106 @@ const LoginModal = () => {
         >
           <Typography variant="h4">Photo Wars</Typography>
           {
-            formType && <TextFieldElement
-              name={'displayName'}
-              label={'Display Name'}
-              variant={'outlined'}
-              required
+            registering && <Controller
+              name="displayName"
+              control={control}
+              defaultValue=""
+              rules={{
+                required: 'Display name required',
+                minLength: {
+                  value: registering ? 1 : 0,
+                  message: 'Must be at least 1 character long.'
+                }
+              }}
+              render={({ field, fieldState: { error } }) => (
+                <TextField
+                  error={!!error}
+                  helperText={error ? error.message : null}
+                  label="Display name"
+                  variant="outlined"
+                  {...field}
+                />
+              )}
             />
           }
-          <TextFieldElement
-            name={'loginName'}
-            label={'Username'}
-            variant={'outlined'}
-            required
+          <Controller
+            name="loginName"
+            control={control}
+            defaultValue=""
+            rules={{
+              required: 'Username required',
+              minLength: {
+                value: registering ? 6 : 0,
+                message: 'Must be at least 6 characters long.'
+              }
+            }}
+            render={({ field, fieldState: { error } }) => (
+              <TextField
+                error={!!error}
+                helperText={error ? error.message : null}
+                label="Username"
+                variant="outlined"
+                {...field}
+              />
+            )}
           />
-          <PasswordElement
-            name={'loginPassword'}
-            label={'Password'}
-            variant={'outlined'}
-            required
+          <Controller
+            name="loginPassword"
+            control={control}
+            defaultValue=""
+            rules={{
+              required: 'Password required.',
+              minLength: {
+                value: registering ? 8 : 0,
+                message: 'Must be at least 8 characters long'
+              }
+            }}
+            render={({ field, fieldState: { error } }) => (
+              <TextField
+                error={!!error}
+                helperText={error ? error.message : null}
+                label="Password"
+                type="Password"
+                variant="outlined"
+                {...field}
+              />
+            )}
           />
           {
-            formType && <PasswordRepeatElement
-              passwordFieldName={'loginPassword'}
-              name={'loginPasswordRepeat'}
-              label={'Repeat Password'}
-              variant={'outlined'}
-              required
+            registering && <Controller
+              name="loginPasswordRepeat"
+              control={control}
+              defaultValue=""
+              rules={{
+                validate: {
+                  passwordsMatch: value => value === getValues('loginPassword') || 'Passwords must match.'
+                }
+              }}
+              render={({ field, fieldState: { error } }) => (
+                <TextField
+                  error={!!error}
+                  helperText={error ? error.message : null}
+                  label="Repeat password"
+                  type="password"
+                  variant="outlined"
+                  {...field}
+                />
+              )}
             />
           }
           { resCode === 401 && <Typography>Invalid credentials.</Typography> }
-          { resCode === 409 && <Typography>User already exists.</Typography> }
+          { resCode === 409 && <Typography>User with username or display name already exists.</Typography> }
           <Button type="submit" variant="outlined">
-            { formType ? 'Register' : 'Login' }
+            { registering ? 'Register' : 'Login' }
           </Button>
           {
-            formType ?
+            registering ?
               <Typography>
                 {"Already have an account? "}
                 <Link
                   style={{ cursor: 'pointer'}}
                   onClick={() => {
-                    setFormType(false);
+                    setRegistering(false);
                     clearForm();
                   }}
                 >
@@ -170,7 +199,7 @@ const LoginModal = () => {
                 <Link
                   style={{ cursor: 'pointer'}}
                   onClick={() => {
-                    setFormType(true);
+                    setRegistering(true);
                     clearForm();
                   }}
                 >
@@ -179,10 +208,36 @@ const LoginModal = () => {
               </Typography>
           }
         </Stack>
-      </FormContainer>
+      </form>
       </Box>
       </Fade>
     </Modal>
+    <MenuItem>
+      <Grid container wrap="nowrap" spacing={1}>
+        <Grid item>
+          <Button
+            onClick={() => {
+              setOpen(true);
+              setRegistering(false);
+            }}
+            variant="outlined"
+          >
+            Login
+          </Button>
+        </Grid>
+        <Grid item>
+          <Button
+            onClick={() => {
+              setOpen(true);
+              setRegistering(true);
+            }}
+            variant="outlined"
+          >
+            Register
+          </Button>
+        </Grid>
+      </Grid>
+    </MenuItem>
     </React.Fragment>
   );
 }
