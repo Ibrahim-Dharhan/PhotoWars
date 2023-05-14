@@ -21,16 +21,22 @@ const battleRouter = express.Router();
  * @openapi
  * /battle/all:
  *   get:
- *     summary: Return information about a battle.
+ *     summary: Get all battle IDs.
  *     responses:
  *       200:
- *         description: Successfully returned information about battle.
+ *         description: Resource successfully retrieved.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: array
+ *               items:
+ *                 type: string
  *       404:
- *         $ref: '#/components/responses/404ResourceNotFound'
+ *         $ref: '#/components/responses/404NotFound'
  *       500:
  *         $ref: '#/components/responses/500'
  */
-battleRouter.get('/ids', async (req, res) => {
+battleRouter.get('/all', async (req, res) => {
   const query = Battle.find();
   try {
     const result = await query.distinct('_id').exec();
@@ -56,9 +62,13 @@ battleRouter.get('/ids', async (req, res) => {
  *       - $ref: '#/components/parameters/idParam'
  *     responses:
  *       200:
- *         description: Successfully returned information about battle.
+ *         description: Resource successfully retrieved.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/Battle'
  *       404:
- *         $ref: '#/components/responses/404ResourceNotFound'
+ *         $ref: '#/components/responses/404NotFound'
  *       500:
  *         $ref: '#/components/responses/500'
  */
@@ -89,7 +99,6 @@ battleRouter.get('/:id', async (req, res) => {
  *       - $ref: '#/components/parameters/idParam'
  *     requestBody:
  *       description: Battle information to be updated.
- *       require: true
  *       content:
  *         application/x-www-form-urlencoded:
  *           schema:
@@ -106,12 +115,16 @@ battleRouter.get('/:id', async (req, res) => {
  *     responses:
  *       200:
  *         description: Successfully updated battle information.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/Battle'
  *       401:
- *         $ref: '#/components/responses/401NotLoggedIn'
+ *         $ref: '#/components/responses/401Unauthorized'
  *       403:
- *         $ref: '#/components/responses/403'
+ *         $ref: '#/components/responses/403Forbidden'
  *       404:
- *         $ref: '#/components/responses/404ResourceNotFound'
+ *         $ref: '#/components/responses/404NotFound'
  *       500:
  *         $ref: '#/components/responses/500'
  */
@@ -166,7 +179,6 @@ battleRouter.put('/:id', checkSchema(UpdateBattle), async (req, res) => {
  *     summary: Creating a new battle by a user.
  *     requestBody:
  *       description: Battle information to be updated.
- *       require: true
  *       content:
  *         multipart/form-data:
  *           schema:
@@ -187,10 +199,14 @@ battleRouter.put('/:id', checkSchema(UpdateBattle), async (req, res) => {
  *     responses:
  *       200:
  *         description: Successfully created new battle.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/Battle'
  *       400:
  *         description: Missing or invalid information to create a new battle.
  *       401:
- *         $ref: '#/components/responses/401NotLoggedIn'
+ *         $ref: '#/components/responses/401Unauthorized'
  *       500:
  *         $ref: '#/components/responses/500'
  */
@@ -261,12 +277,16 @@ battleRouter.post(
  *     responses:
  *       200:
  *         description: Successfully created new submission.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/Submission'
  *       400:
  *         description: Missing information to create a new submission.
  *       401:
- *         $ref: '#/components/responses/401NotLoggedIn'
+ *         $ref: '#/components/responses/401Unauthorized'
  *       404:
- *         $ref: '#/components/responses/404ResourceNotFound'
+ *         $ref: '#/components/responses/404NotFound'
  *       500:
  *         $ref: '#/components/responses/500'
  */
@@ -327,11 +347,11 @@ battleRouter.post(
  *       - $ref: '#/components/parameters/idParam'
  *     responses:
  *       200:
- *         description: Successfully vote on battle.
+ *         description: Successfully voted on battle.
  *       401:
- *         $ref: '#/components/responses/401NotLoggedIn'
+ *         $ref: '#/components/responses/401Unauthorized'
  *       404:
- *         $ref: '#/components/responses/404ResourceNotFound'
+ *         $ref: '#/components/responses/404NotFound'
  *       500:
  *         $ref: '#/components/responses/500'
  */
@@ -369,9 +389,9 @@ battleRouter.put('/:id/vote', async (req, res) => {
  *       200:
  *         description: Successfully unvoted battle.
  *       401:
- *         $ref: '#/components/responses/401NotLoggedIn'
+ *         $ref: '#/components/responses/401Unauthorized'
  *       404:
- *         $ref: '#/components/responses/404ResourceNotFound'
+ *         $ref: '#/components/responses/404NotFound'
  *       500:
  *         $ref: '#/components/responses/500'
  */
@@ -400,20 +420,26 @@ battleRouter.put('/:id/unvote', async (req, res) => {
 
 /**
  * @openapi
- * /battle/{id}/comment:
+ * /battle/{id}/comments:
  *   get:
  *     summary: Retrieve comments for battle.
  *     parameters:
  *       - $ref: '#/components/parameters/idParam'
  *     responses:
  *       200:
- *         description: Successfully returned comments.
+ *         description: Resource successfully retrieved.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: array
+ *               items:
+ *                 $ref: '#/components/schemas/Comment'
  *       404:
- *         $ref: '#/components/responses/404'
+ *         $ref: '#/components/responses/404NotFound'
  *       500:
  *         $ref: '#/components/responses/500'
  */
-battleRouter.get('/:id/comment', async (req, res) => {
+battleRouter.get('/:id/comments', async (req, res) => {
   const battleId = req.params.id;
   const query = Comment.find({
     commentedModel: 'Battle',
@@ -447,7 +473,7 @@ battleRouter.get('/:id/comment', async (req, res) => {
  *       400:
  *         description: Missing information to create a new comment.
  *       401:
- *         $ref: '#/components/responses/401NotLoggedIn'
+ *         $ref: '#/components/responses/401Unauthorized'
  *       500:
  *         $ref: '#/components/responses/500'
  */
@@ -486,11 +512,11 @@ battleRouter.post('/:id/comment', async (req, res) => {
  *       200:
  *         description: Successfully deleted battle.
  *       401:
- *         $ref: '#/components/responses/401NotLoggedIn'
+ *         $ref: '#/components/responses/401Unauthorized'
  *       403:
- *         $ref: '#/components/responses/403'
+ *         $ref: '#/components/responses/403Forbidden'
  *       404:
- *         $ref: '#/components/responses/404'
+ *         $ref: '#/components/responses/404NotFound'
  *       500:
  *         $ref: '#/components/responses/500'
  */
@@ -528,9 +554,15 @@ battleRouter.delete('/:id', async (req, res) => {
  *       - $ref: '#/components/parameters/idParam'
  *     responses:
  *       200:
- *         description: Successfully returned submissions.
+ *         description: Resource successfully retrieved.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: array
+ *               items:
+ *                 $ref: '#/components/schemas/Submission'
  *       404:
- *         $ref: '#/components/responses/404'
+ *         $ref: '#/components/responses/404NotFound'
  *       500:
  *         $ref: '#/components/responses/500'
  */

@@ -30,8 +30,12 @@ const accountRouter = express.Router();
  *     responses:
  *       200:
  *         description: Successfully logged in.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/User'
  *       401:
- *         description: Invalid credentials.
+ *         $ref: '#/components/responses/401Unauthorized'
  *       500:
  *         $ref: '#/components/responses/500'
  */
@@ -73,7 +77,7 @@ accountRouter.post('/login', async (req, res) => {
  *       400:
  *         description: Failed to logout user.
  *       401:
- *         $ref: '#/components/responses/401NotLoggedIn'
+ *         $ref: '#/components/responses/401Unauthorized'
  *       500:
  *         $ref: '#/components/responses/500'
  */
@@ -109,10 +113,12 @@ accountRouter.post('/logout', (req, res) => {
  *     responses:
  *       200:
  *         description: Successfully created new user.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/User'
  *       400:
- *         description: Missing information to create new user.
- *       409:
- *         description: User already exists.
+ *         description: Faulty information to create new user.
  *       500:
  *         $ref: '#/components/responses/500'
  */

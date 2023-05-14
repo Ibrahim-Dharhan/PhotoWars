@@ -16,9 +16,13 @@ const submissionRouter = express.Router();
  *       - $ref: '#/components/parameters/idParam'
  *     responses:
  *       200:
- *         description: Successfully returned information about submission.
+ *         description: Resource successfully retrieved.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/Submission'
  *       404:
- *         $ref: '#/components/responses/404'
+ *         $ref: '#/components/responses/404NotFound'
  *       500:
  *         $ref: '#/components/responses/500'
  */
@@ -49,11 +53,15 @@ submissionRouter.get('/:id', async (req, res) => {
  *       - $ref: '#/components/parameters/idParam'
  *     responses:
  *       200:
- *         description: Successfully commented on submission.
+ *         description: Successfully updated submission.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/Submission'
  *       401:
- *         $ref: '#/components/responses/401NotLoggedIn'
+ *         $ref: '#/components/responses/401Unauthorized'
  *       404:
- *         $ref: '#/components/responses/404'
+ *         $ref: '#/components/responses/404NotFound'
  *       500:
  *         $ref: '#/components/responses/500'
  */
@@ -105,7 +113,7 @@ submissionRouter.put('/:id', async (req, res) => {
  *       200:
  *         description: Successfully voted on the submission.
  *       401:
- *         $ref: '#/components/responses/401NotLoggedIn'
+ *         $ref: '#/components/responses/401Unauthorized'
  *       500:
  *         $ref: '#/components/responses/500'
  */
@@ -142,7 +150,7 @@ submissionRouter.post('/:id/vote', async (req, res) => {
  *       200:
  *         description: Successfully unvoted the submission.
  *       401:
- *         $ref: '#/components/responses/401NotLoggedIn'
+ *         $ref: '#/components/responses/401Unauthorized'
  *       500:
  *         $ref: '#/components/responses/500'
  */
@@ -170,20 +178,26 @@ submissionRouter.post('/:id/unvote', async (req, res) => {
 
 /**
  * @openapi
- * /submission/{id}/comment:
+ * /submission/{id}/comments:
  *   get:
  *     summary: Retrieve comments for submission.
  *     parameters:
  *       - $ref: '#/components/parameters/idParam'
  *     responses:
  *       200:
- *         description: Successfully returned comments.
+ *         description: Resource successfully retrieved.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: array
+ *               items:
+ *                 $ref: '#/components/schemas/Comment'
  *       404:
- *         $ref: '#/components/responses/404'
+ *         $ref: '#/components/responses/404NotFound'
  *       500:
  *         $ref: '#/components/responses/500'
  */
-submissionRouter.get('/:id/comment', async (req, res) => {
+submissionRouter.get('/:id/comments', async (req, res) => {
   try {
     const submissionId = req.params.id;
     const query = Comment.find({
@@ -214,10 +228,14 @@ submissionRouter.get('/:id/comment', async (req, res) => {
  *     responses:
  *       200:
  *         description: Successfully commented on submission.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/Comment'
  *       401:
- *         $ref: '#/components/responses/401NotLoggedIn'
+ *         $ref: '#/components/responses/401Unauthorized'
  *       404:
- *         $ref: '#/components/responses/404'
+ *         $ref: '#/components/responses/404NotFound'
  *       500:
  *         $ref: '#/components/responses/500'
  */
@@ -228,13 +246,13 @@ submissionRouter.post('/:id/comment', async (req, res) => {
   }
   const submissionId = req.params.id;
   try {
-    const newCommentObj = await Comment.create({
+    const newComment = await Comment.create({
       author: req.session.userId,
       commentedModel: 'Submission',
       post: submissionId,
       text: req.body.comment,
     });
-    res.status(200).json(newCommentObj);
+    res.status(200).json(newComment);
   } catch (err) {
     res.status(500).send('Internal server error.');
     console.error(err);
@@ -252,11 +270,11 @@ submissionRouter.post('/:id/comment', async (req, res) => {
  *       200:
  *         description: Successfully deleted submission.
  *       401:
- *         $ref: '#/components/responses/401NotLoggedIn'
+ *         $ref: '#/components/responses/401Unauthorized'
  *       403:
- *         $ref: '#/components/responses/403'
+ *         $ref: '#/components/responses/403Forbidden'
  *       404:
- *         $ref: '#/components/responses/404'
+ *         $ref: '#/components/responses/404NotFound'
  *       500:
  *         $ref: '#/components/responses/500'
  */

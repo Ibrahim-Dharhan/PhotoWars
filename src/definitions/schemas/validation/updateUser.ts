@@ -5,7 +5,11 @@ import { User } from '../mongoose/user';
 const UpdateUser = {
   description: {},
   displayName: {
-    notEmpty: true,
+    isLength: {
+      options: {
+        min: 3
+      },
+    },
     displayNameNotInUse: {
       custom: async (displayName) => {
         const query = User.findOne({ 

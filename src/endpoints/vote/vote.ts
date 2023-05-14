@@ -9,12 +9,21 @@ const voteRouter = express.Router();
  * @openapi
  * /vote/{id}:
  *   get:
- *     summary: Get votes.
+ *     summary: Get vote for a post.
  *     parameters:
  *       - $ref: '#/components/parameters/idParam'
  *     responses:
  *       200:
- *         $ref: '#/components/responses/200ResourceRetrieved'
+ *         description: Resource successfully retrieved.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 numVotes:
+ *                   type: number
+ *                 votedOn:
+ *                   type: boolean
  *       500:
  *         $ref: '#/components/responses/500'
 */
