@@ -467,6 +467,15 @@ battleRouter.get('/:id/comments', async (req, res) => {
  *     summary: Creating a new comment by a user on a battle.
  *     parameters:
  *       - $ref: '#/components/parameters/idParam'
+ *     requestBody:
+ *       description: Comment information.
+ *       content:
+ *         application/x-www-form-urlencoded:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               comment:
+ *                 type: string
  *     responses:
  *       200:
  *         description: Successfully created new comment.
