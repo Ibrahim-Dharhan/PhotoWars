@@ -14,7 +14,7 @@ const Layout = () => {
     if (storedUser) {
       const user = JSON.parse(storedUser);
       name = user.displayName;
-      id = user.userId;
+      id = user._id;
     }
     setDisplayName(name);
     setUserId(id);

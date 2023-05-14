@@ -521,7 +521,7 @@ battleRouter.delete('/:id', async (req, res) => {
 
 /**
  * @openapi
- * /battle/{id}/submission:
+ * /battle/{id}/submissions:
  *   get:
  *     summary: Retrieve submissions for battle.
  *     parameters:
@@ -534,7 +534,7 @@ battleRouter.delete('/:id', async (req, res) => {
  *       500:
  *         $ref: '#/components/responses/500'
  */
-battleRouter.get('/:id/submission', async (req, res) => {
+battleRouter.get('/:id/submissions', async (req, res) => {
   const battleId = req.params.id;
   try {
     const battleObj = await Battle.findById(battleId).lean().exec();

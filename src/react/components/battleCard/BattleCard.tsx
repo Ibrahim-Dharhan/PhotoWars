@@ -12,12 +12,13 @@ import {
   CardMedia,
   CardHeader,
   IconButton,
+  Tooltip,
   Typography
 } from '@mui/material'
 import DownloadIcon from '@mui/icons-material/Download';
 import FavoriteIcon from '@mui/icons-material/Favorite';
 import ImageIcon from '@mui/icons-material/Image';
-import { pink } from '@mui/material/colors';
+import { blue, grey, pink } from '@mui/material/colors';
 import { Link, useNavigate } from 'react-router-dom';
 import './battleCard.css';
 import PropTypes from 'prop-types';
@@ -27,15 +28,20 @@ const BattleCard = ({
   battleId
 }) => {
   const { userId, setOpen } = useContext(UserContext);
+
   const [caption, setCaption] = useState('');
   const [displayName, setDisplayName] = useState('');
   const [filename, setFilename] = useState('');
+  const [submissions, setSubmissions] = useState([]);
   const [numVotes, setNumVotes] = useState(0);
   const [voted, setVoted] = useState(false);
   const [timeRemaining, setTimeRemaining] = useState('--:--:--');
+
   const _battle = useRef(null);
   const _deadline = useRef(null);
+  const _submitted = useRef(false);
   const _timerEvent = useRef(null);
+
   const navigate = useNavigate();
 
   /* useEffect for updating caption, display name, and image.  */
@@ -63,21 +69,33 @@ const BattleCard = ({
     return () => { shouldUpdate = false; };
   }, []);
 
-  /* useEffect for updating vote count.  */
+  /* useEffect for updating vote and submission count.  */
   useEffect(() => {
     let shouldUpdate = true;
-    const getVotes = async() => {
-      const path = `/vote/${battleId}`;
-      const res = await axios.get(path);
-      const { numVotes, votedOn } = res.data;
+    const getSubmissionsAndVotes = async() => {
+      const votesPath = `/vote/${battleId}`;
+      const votesRes = await axios.get(votesPath);
+      const { numVotes, votedOn } = votesRes.data;
+
+      const submissionsPath = `/battle/${battleId}/submissions`;
+      const submissionsRes = await axios.get(submissionsPath);
+                color: (submissions
+                        .map(submission => submission.author)
+                        .includes(userId)
+                        ? blue[500] : undefined)
 
       if (shouldUpdate) {
         setVoted(votedOn);
         setNumVotes(numVotes);
+
+        setSubmissions(submissionsRes.data);
+        _submitted.current = submissions
+                             .map(submission => submission.author)
+                             .includes(userId);
       }
     };
     try {
-      getVotes();
+      getSubmissionsAndVotes();
     } catch (err) {
       console.error(err.data);
     }
@@ -113,14 +131,13 @@ const BattleCard = ({
           title={
             <Link
               to=""
+              // to=`/user/${_battle.current.author._id}`
               onMouseDown={ (event) => event.stopPropagation()}
               onClick={ (event) => {
                 event.stopPropagation();
                 event.preventDefault();
                 console.log(`Go to profile page at /user/${_battle.current._id}`);
-                // navigate(`/user/${_battle.curent._id}`);
               }}
-              style={{ color: 'black' }}
             >
               {displayName}
             </Link>
@@ -149,10 +166,21 @@ const BattleCard = ({
           loading="lazy"
         />
         <CardActions disableSpacing>
-          <IconButton aria-label="add to favorites">
-            <ImageIcon sx={{ pr: 1 }} />
+          <IconButton
+            onMouseDown={(event) => event.stopPropagation()}
+            onClick={(event) => {
+              event.stopPropagation();
+              event.preventDefault();
+            }}
+          >
+            <ImageIcon
+              sx={{
+                pr: 1,
+                color: (_submitted.current && blue[500])
+              }}
+            />
             <Typography>
-              328
+              {submissions.length}
             </Typography>
           </IconButton>
           <IconButton
@@ -168,7 +196,7 @@ const BattleCard = ({
             }}
           >
             <FavoriteIcon
-              sx={{ pr: 1, color: (voted ? pink[500]: undefined) }}
+              sx={{ pr: 1, color: (voted && pink[500]) }}
             />
             <Typography>
               {numVotes}
@@ -178,6 +206,17 @@ const BattleCard = ({
             <Typography sx={{ pr: 2 }}>
               {timeRemaining}
             </Typography>
+            <Tooltip
+              title={
+                      _submitted.current
+                      ? "Only one submission is allowed."
+                      : !userId && "Log in to submit to this battle."
+                    }
+            >
+            <span
+              onClick={(event) => event.stopPropagation()}
+              onMouseDown={(event) => event.stopPropagation()}
+            >
             <Button
               onMouseDown={ (event) => event.stopPropagation()}
               onClick={ (event) => {
@@ -188,9 +227,12 @@ const BattleCard = ({
               variant="outlined"
               size="small"
               color="primary"
+              disabled={_submitted.current || !userId}
             >
               Enter
             </Button>
+            </span>
+            </Tooltip>
           </Box>
         </CardActions>
       </CardActionArea>
