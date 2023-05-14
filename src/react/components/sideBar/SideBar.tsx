@@ -1,4 +1,4 @@
-import React, { useContext, useState } from 'react';
+import React, { useContext } from 'react';
 import axios from 'axios';
 import AccountCircleOutlinedIcon from '@mui/icons-material/AccountCircleOutlined';
 import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
@@ -7,7 +7,7 @@ import ExploreOutlinedIcon from '@mui/icons-material/ExploreOutlined';
 import NotificationsOutlinedIcon from '@mui/icons-material/NotificationsOutlined';
 import PeopleOutlinedIcon from "@mui/icons-material/PeopleOutlined";
 import SearchOutlinedIcon from '@mui/icons-material/SearchOutlined';
-import { Button, Grid, Typography } from '@mui/material';
+import { Button, Typography } from '@mui/material';
 import { Link } from 'react-router-dom';
 import {
   Menu,
@@ -20,12 +20,10 @@ import { UserContext } from '../../contexts/UserContext';
 
 const SideBar = () => {
   const {
-    displayName,
     setDisplayName,
     userId,
     setUserId
   } = useContext(UserContext);
-  const [loginOpen, setLoginOpen] = useState(false);
   const {
     broken,
   } = useProSidebar();
@@ -33,7 +31,7 @@ const SideBar = () => {
   const handleLogOut = async () => {
     const path = '/account/logout';
     try {
-      const res = await axios.post(path);
+      await axios.post(path);
       setDisplayName('');
       setUserId('');
       localStorage.removeItem('user');
