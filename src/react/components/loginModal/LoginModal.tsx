@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from 'react';
+import React, { useContext, useState } from 'react';
 import axios from 'axios';
 import {
   Box,
@@ -14,7 +14,6 @@ import {
 import {
   MenuItem
 } from 'react-pro-sidebar';
-import PropTypes from 'prop-types';
 import { Controller, useForm } from 'react-hook-form';
 import { UserContext } from '../../contexts/UserContext';
 

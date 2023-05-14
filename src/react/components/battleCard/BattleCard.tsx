@@ -18,7 +18,7 @@ import {
 import DownloadIcon from '@mui/icons-material/Download';
 import FavoriteIcon from '@mui/icons-material/Favorite';
 import ImageIcon from '@mui/icons-material/Image';
-import { blue, grey, pink } from '@mui/material/colors';
+import { blue, pink } from '@mui/material/colors';
 import { Link, useNavigate } from 'react-router-dom';
 import './battleCard.css';
 import PropTypes from 'prop-types';
@@ -77,7 +77,7 @@ const BattleCard = ({
       console.error(err.data);
     }
     return () => { shouldUpdate = false; };
-  }, []);
+  }, [battleId]);
 
   /* useEffect for updating vote and submission count.  */
   useEffect(() => {
@@ -89,10 +89,6 @@ const BattleCard = ({
 
       const submissionsPath = `/battle/${battleId}/submissions`;
       const submissionsRes = await axios.get(submissionsPath);
-                color: (submissions
-                        .map(submission => submission.author)
-                        .includes(userId)
-                        ? blue[500] : undefined)
 
       if (shouldUpdate) {
         setVoted(votedOn);
@@ -110,12 +106,12 @@ const BattleCard = ({
       console.error(err.data);
     }
     return () => { shouldUpdate = false; };
-  }, [userId]);
+  }, [battleId, submissions, userId]);
 
   const vote = async () => {
     const path = `/battle/${battleId}/${voted ? 'unvote' : 'vote'}`;
     try {
-      const res = await axios.put(path);
+      await axios.put(path);
       setVoted(!voted);
       setNumVotes(numVotes + (voted ? -1 : 1));
     } catch (err) {
@@ -146,7 +142,7 @@ const BattleCard = ({
               onClick={ (event) => {
                 event.stopPropagation();
                 event.preventDefault();
-                console.log(`Go to profile page at /user/${_battle.current._id}`);
+                console.log(`Go to profile page at /user/${_battle.current.author._id}`);
               }}
             >
               {displayName}
