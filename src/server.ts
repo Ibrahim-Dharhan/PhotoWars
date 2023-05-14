@@ -45,11 +45,14 @@ app.use('/account', accountRouter);
 import { battleRouter } from './endpoints/battle/battle';
 app.use('/battle', battleRouter);
 
+import { commentRouter } from './endpoints/comment/comment';
+app.use('/comment', commentRouter);
+
 import { imageRouter } from './endpoints/image/image';
 app.use('/image', imageRouter);
 
-import { commentRouter } from './endpoints/comment/comment';
-app.use('/comment', commentRouter );
+import { submissionRouter } from './endpoints/submission/submission';
+app.use('/submission', submissionRouter);
 
 import { swaggerRouter } from './endpoints/swagger/swagger';
 app.use('/swagger', swaggerRouter);
