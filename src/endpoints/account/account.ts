@@ -1,7 +1,9 @@
 "use strict"
 
 import express = require('express');
-import { User } from '../../schemas/user';
+import { checkSchema, validationResult } from 'express-validator';
+import { NewUser } from '../../definitions/schemas/validation/newUser';
+import { User } from '../../definitions/schemas/mongoose/user';
 
 const accountRouter = express.Router();
 
@@ -18,13 +20,13 @@ const accountRouter = express.Router();
  *           schema:
  *             type: object
  *             properties:
- *               login_name:
+ *               loginName:
  *                 type: string
- *               login_password:
+ *               loginPassword:
  *                 type: string
  *             required:
- *               - login_name
- *               - login_password
+ *               - loginName
+ *               - loginPassword
  *     responses:
  *       200:
  *         description: Successfully logged in.
@@ -34,18 +36,20 @@ const accountRouter = express.Router();
  *         $ref: '#/components/responses/500'
  */
 accountRouter.post('/login', async (req, res) => {
-  const login_name = req.body.login_name;
-  const login_password = req.body.login_password;
-  const query = User.findOne({ login_name: login_name,
-                               login_password: login_password });
+  const loginName = req.body.loginName;
+  const loginPassword = req.body.loginPassword;
+  console.log(`Logging in as ${loginName} with password ${loginPassword}`);
+  const query = User.findOne({ loginName: loginName,
+                               loginPassword: loginPassword });
 
   try {
     const result = await query.lean().exec();
     if (result) {
       /* Found user matching login credentials.  */
-      req.session.logged_in = true;
-      req.session.user_id = result._id;
+      req.session.loggedIn = true;
+      req.session.userId = result._id.toString();
       // TODO: Change response message.
+      console.log("Successful login");
       res.status(200).json(result);
     } else {
       /* Did not find a user with credentials.  */
@@ -74,9 +78,55 @@ accountRouter.post('/login', async (req, res) => {
  *         $ref: '#/components/responses/500'
  */
 accountRouter.post('/logout', (req, res) => {
-  req.session.logged_in = false;
-  req.session.user_id = null;
+  req.session.loggedIn = false;
+  req.session.userId = null;
   res.status(200).send('Successfully logged out.');
+});
+
+/**
+ * @openapi
+ * /account/new:
+ *   post:
+ *     summary: Creating a new user account.
+ *     requestBody:
+ *       description: User account information.
+ *       required: true
+ *       content:
+ *         application/x-www-form-urlencoded:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               displayName:
+ *                 type: string
+ *               loginName:
+ *                 type: string
+ *               loginPassword:
+ *                 type: string
+ *             required:
+ *               - displayName
+ *               - loginName
+ *               - loginPassword
+ *     responses:
+ *       200:
+ *         description: Successfully created new user.
+ *       400:
+ *         description: Missing information to create new user.
+ *       409:
+ *         description: User already exists.
+ *       500:
+ *         $ref: '#/components/responses/500'
+ */
+accountRouter.post('/new', checkSchema(NewUser), async (req, res) => {
+  const errors = validationResult(req);
+  if (!errors.isEmpty()) {
+    res.status(400).json({
+      errors: errors.array()
+    });
+    return;
+  }
+  console.log(`Creating user ${req.body.displayName}`);
+  const userObj = await User.create(req.body);
+  res.status(200).json(userObj.toObject());
 });
 
 export { accountRouter };
