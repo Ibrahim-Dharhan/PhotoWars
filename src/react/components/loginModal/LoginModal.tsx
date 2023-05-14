@@ -57,7 +57,7 @@ const LoginModal = () => {
       setUserId(user._id);
       localStorage.setItem('user', JSON.stringify(user));
     } catch (err) {
-      if (err.response.data instanceof String) {
+      if (typeof err.response.data === 'string') {
         setResponseError(err.response.data);
       } else if (err.response.data.errors !== null) {
         setResponseError(err.response.data.errors[0].msg);
