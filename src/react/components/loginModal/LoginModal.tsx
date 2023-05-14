@@ -81,7 +81,6 @@ const LoginModal = () => {
           sx={style}
           direction="column"
           alignItems="center"
-          wrap="nowrap"
           spacing={2}
         >
           <Typography variant="h4">Photo Wars</Typography>
