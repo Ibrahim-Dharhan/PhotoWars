@@ -35,12 +35,10 @@ const BattleCard = ({
   const _battle = useRef(null);
   const _deadline = useRef(null);
   const _timerEvent = useRef(null);
+  const _numVotes = useRef(null);
   const navigate = useNavigate();
 
-  useEffect(() => {
-    updateDeadline(_deadline.current, _timerEvent, setTimeRemaining);
-  }, []);
-
+  /* useEffect for updating caption, display name, and image.  */
   useEffect(() => {
     let shouldUpdate = true;
     const setBattleInformation = async() => {
@@ -58,11 +56,34 @@ const BattleCard = ({
     };
     try {
       setBattleInformation();
+      updateDeadline(_deadline.current, _timerEvent, setTimeRemaining);
     } catch (err) {
       console.error(err.data);
     }
     return () => { shouldUpdate = false; };
-  }, [battleId]);
+  }, [voted]);
+
+  /* useEffect for updating vote count.  */
+  useEffect(() => {
+    let shouldUpdate = true;
+    const setVotes = async() => {
+      const path = `/vote/${battleId}`;
+      const res = await axios.get(path);
+      const { numVotes, votedOn } = res.data;
+
+      if (shouldUpdate) {
+        // We subtract one based on votedOn to discount current user's votes.
+        _numVotes.current = numVotes + (votedOn ? -1 : 0);
+        setVoted(votedOn);
+      }
+    };
+    try {
+      setVotes();
+    } catch (err) {
+      console.error(err.data);
+    }
+    return () => { shouldUpdate = false; };
+  }, [userId]);
 
   const vote = async () => {
     const path = `/battle/${battleId}/${voted ? 'unvote' : 'vote'}`;
@@ -150,7 +171,7 @@ const BattleCard = ({
               sx={{ pr: 1, color: (voted ? pink[500]: undefined) }}
             />
             <Typography>
-              {voted ? 1 : 0}
+              {voted ? _numVotes.current + 1 : _numVotes.current}
             </Typography>
           </IconButton>
           <Box display="flex" marginLeft="auto" alignItems="center">
