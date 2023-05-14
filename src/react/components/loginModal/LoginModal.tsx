@@ -33,8 +33,7 @@ const style = {
 const LoginModal = () => {
   const { setDisplayName, setUserId } = useContext(UserContext);
   const [open, setOpen] = useState(false);
-  const [resCode, setResCode] = useState(200);
-  // false for login form, true for register form
+  const [responseError, setResponseError] = useState('');
   const [registering, setRegistering] = useState(false);
 
   const { control,
@@ -43,26 +42,29 @@ const LoginModal = () => {
           reset: clearForm
   } = useForm({ mode: 'onChange' });
 
+  const closeModal = () => {
+    clearForm();
+    setOpen(false);
+    setResponseError('');
+  }
+
   const handleFormSubmit = async (data) => {
     try {
       console.log(data);
       const path = registering ? '/account/new' : '/account/login';
       const res = await axios.post(path, data);
       const user = res.data;
-      clearForm();
-      setOpen(false);
-      setResCode(res.status);
+      closeModal();
       setDisplayName(user.displayName);
       setUserId(user._id);
       localStorage.setItem('user', JSON.stringify(user));
     } catch (err) {
-      if (err.response.status === 401) {
-        setResCode(err.response.status);
-      } else if (err.response.status === 409) {
-        setResCode(err.response.status)
-      } else {
-        console.error(err.response.data);
+      if (err.response.data instanceof String) {
+        setResponseError(err.response.data);
+      } else if (err.response.data.errors !== null) {
+        setResponseError(err.response.data.errors[0].msg);
       }
+      console.error(err.response.data);
     }
   };
 
@@ -71,8 +73,7 @@ const LoginModal = () => {
     <Modal 
       open={open}
       onClose={() => {
-        setOpen(false)
-        setResCode(200);
+        closeModal();
       }}
     >
       <Fade in={open} onExited={clearForm}>
@@ -94,8 +95,8 @@ const LoginModal = () => {
               rules={{
                 required: 'Display name required',
                 minLength: {
-                  value: registering ? 1 : 0,
-                  message: 'Must be at least 1 character long.'
+                  value: registering ? 3 : 0,
+                  message: 'Must be at least 3 character long.'
                 }
               }}
               render={({ field, fieldState: { error } }) => (
@@ -174,8 +175,7 @@ const LoginModal = () => {
               )}
             />
           }
-          { resCode === 401 && <Typography>Invalid credentials.</Typography> }
-          { resCode === 409 && <Typography>User with username or display name already exists.</Typography> }
+          { responseError !== '' && <Typography error="true">{responseError}</Typography> }
           <Button type="submit" variant="outlined">
             { registering ? 'Register' : 'Login' }
           </Button>

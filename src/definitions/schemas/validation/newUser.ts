@@ -4,7 +4,11 @@ import { User } from '../mongoose/user';
 
 const NewUser = {
   displayName: {
-    notEmpty: true,
+    isLength: {
+      options: {
+        min: 3
+      },
+    },
     displayNameNotInUse: {
       custom: async (displayName) => {
         const query = User.findOne({ 
