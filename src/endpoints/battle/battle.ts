@@ -535,7 +535,7 @@ battleRouter.delete('/:id', async (req, res) => {
     return;
   }
   const battleId = req.params.id;
-  /* Delete submission.  */
+  /* Delete battle.  */
   const query = Battle.findOneAndDelete({
     _id: battleId,
     author: req.session.userId,
