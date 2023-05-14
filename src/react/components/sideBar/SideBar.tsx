@@ -56,7 +56,9 @@ const SideBar = () => {
       <MenuItem>
         <Typography variant="h5">Photo Wars</Typography>
       </MenuItem>
-      <MenuItem icon={<ExploreOutlinedIcon />}>Explore</MenuItem>
+        <MenuItem icon={<ExploreOutlinedIcon />}>
+          Explore
+        </MenuItem>
       <MenuItem icon={<PeopleOutlinedIcon />}>Open Competitions</MenuItem>
       <MenuItem icon={<EmojiEventsOutlinedIcon />}>Winners</MenuItem>
       <MenuItem icon={<NotificationsOutlinedIcon />}>Notifications</MenuItem>

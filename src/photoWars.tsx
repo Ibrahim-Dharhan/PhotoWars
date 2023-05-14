@@ -10,7 +10,7 @@ import {
 
 
 /* Importing Components */
-import { Battle } from './react/pages/battle/Battle';
+import { BattleView, battleViewLoader } from './react/pages/battleView/BattleView';
 import { Create } from './react/pages/create/Create';
 import { Feed, feedLoader } from './react/pages/feed/Feed';
 import { Home } from './react/pages/home/Home';
@@ -24,7 +24,9 @@ const PhotoWars = () => {
         <Route path="/" element={<Home />} >
           <Route
             path="battles/:id"
-            element={<Battle />}
+            element={<BattleView />}
+            loader={battleViewLoader}
+            errorElement={<div>Error viewing battle</div>}
           />
           <Route
             index
