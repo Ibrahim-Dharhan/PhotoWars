@@ -30,12 +30,12 @@ const BattleCard = ({
   const [caption, setCaption] = useState('');
   const [displayName, setDisplayName] = useState('');
   const [filename, setFilename] = useState('');
+  const [numVotes, setNumVotes] = useState(0);
   const [voted, setVoted] = useState(false);
   const [timeRemaining, setTimeRemaining] = useState('--:--:--');
   const _battle = useRef(null);
   const _deadline = useRef(null);
   const _timerEvent = useRef(null);
-  const _numVotes = useRef(null);
   const navigate = useNavigate();
 
   /* useEffect for updating caption, display name, and image.  */
@@ -61,24 +61,23 @@ const BattleCard = ({
       console.error(err.data);
     }
     return () => { shouldUpdate = false; };
-  }, [voted]);
+  }, []);
 
   /* useEffect for updating vote count.  */
   useEffect(() => {
     let shouldUpdate = true;
-    const setVotes = async() => {
+    const getVotes = async() => {
       const path = `/vote/${battleId}`;
       const res = await axios.get(path);
       const { numVotes, votedOn } = res.data;
 
       if (shouldUpdate) {
-        // We subtract one based on votedOn to discount current user's votes.
-        _numVotes.current = numVotes + (votedOn ? -1 : 0);
         setVoted(votedOn);
+        setNumVotes(numVotes);
       }
     };
     try {
-      setVotes();
+      getVotes();
     } catch (err) {
       console.error(err.data);
     }
@@ -88,8 +87,9 @@ const BattleCard = ({
   const vote = async () => {
     const path = `/battle/${battleId}/${voted ? 'unvote' : 'vote'}`;
     try {
-      await axios.put(path);
+      const res = await axios.put(path);
       setVoted(!voted);
+      setNumVotes(numVotes + (voted ? -1 : 1));
     } catch (err) {
       console.error(err.response.data);
     }
@@ -171,7 +171,7 @@ const BattleCard = ({
               sx={{ pr: 1, color: (voted ? pink[500]: undefined) }}
             />
             <Typography>
-              {voted ? _numVotes.current + 1 : _numVotes.current}
+              {numVotes}
             </Typography>
           </IconButton>
           <Box display="flex" marginLeft="auto" alignItems="center">

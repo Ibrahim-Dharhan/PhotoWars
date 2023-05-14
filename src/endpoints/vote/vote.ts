@@ -21,13 +21,11 @@ const voteRouter = express.Router();
 voteRouter.get('/:id', async (req, res) => {
   const voteModelId = req.params.id;
   const numVotesQuery = Vote.countDocuments({ post: voteModelId });
-  const votedOnQuery = Vote.findOne({ user: req.session.userId });
+  const votedOnQuery = Vote.findOne({ post: voteModelId, user: req.session.userId });
 
   try {
     const numVotes = await numVotesQuery.exec();
-    const votedOn = (await votedOnQuery.lean().exec()) ? true : false;
-    console.log("userId", req.session.userId);
-    console.log("result", votedOn);
+    const votedOn = !!(await votedOnQuery.lean().exec());
     res.status(200).json({ numVotes: numVotes, votedOn: votedOn });
   } catch (err) {
     res.status(500).send('Internal server error.');
