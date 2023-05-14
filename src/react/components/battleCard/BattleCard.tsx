@@ -44,6 +44,16 @@ const BattleCard = ({
 
   const navigate = useNavigate();
 
+  const handleDownload = async (event) => {
+    event.stopPropagation();
+    event.preventDefault();
+    const url = `/image/${filename}`;
+    const link = document.createElement('a');
+    link.href = url;
+    link.download = filename;
+    link.click();
+  };
+
   /* useEffect for updating caption, display name, and image.  */
   useEffect(() => {
     let shouldUpdate = true;
@@ -145,11 +155,7 @@ const BattleCard = ({
           action={
             <IconButton
               onMouseDown={ (event) => event.stopPropagation()}
-              onClick={ (event) => {
-                event.stopPropagation();
-                event.preventDefault();
-                console.log('Clicked download');
-              }}
+              onClick={handleDownload}
             >
               <DownloadIcon />
             </IconButton>
