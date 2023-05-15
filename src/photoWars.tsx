@@ -10,11 +10,12 @@ import {
 
 
 /* Importing Components */
-import { BattleView, battleViewLoader } from './react/pages/battleView/BattleView';
+import { BattleView } from './react/pages/battleView/BattleView';
 import { Create } from './react/pages/create/Create';
 import { Feed, feedLoader } from './react/pages/feed/Feed';
 import { Home } from './react/pages/home/Home';
 import { Layout } from './react/pages/Layout';
+import { SubmissionFeed, submissionFeedLoader } from './react/pages/submissionFeed/SubmissionFeed';
 import { Submit } from './react/pages/submit/Submit';
 
 const PhotoWars = () => {
@@ -25,9 +26,17 @@ const PhotoWars = () => {
           <Route
             path="battles/:id"
             element={<BattleView />}
-            loader={battleViewLoader}
             errorElement={<div>Error viewing battle</div>}
-          />
+          >
+            <Route
+              index
+              element={<SubmissionFeed/>}
+              loader={submissionFeedLoader}
+              errorElement={<div>Error loading submissions</div>}
+            />
+          </Route>
+          <Route path="create" element={<Create />} />
+          <Route path="submit" element={<Submit />} />
           <Route
             index
             element={<Feed />}
