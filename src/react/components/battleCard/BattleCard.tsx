@@ -38,7 +38,6 @@ const BattleCard = ({
   const [timeRemaining, setTimeRemaining] = useState('--:--:--');
 
   const _battle = useRef(null);
-  const _deadline = useRef(null);
   const _submitted = useRef(false);
   const _timerEvent = useRef(null);
 
@@ -68,12 +67,11 @@ const BattleCard = ({
         setDisplayName(battle.author.displayName);
         setFilename(battle.filename);
         _battle.current = battle;
-        _deadline.current = new Date(battle.deadline);
+        updateDeadline(new Date(battle.deadline), _timerEvent, setTimeRemaining);
       }
     };
     try {
       setBattleInformation();
-      updateDeadline(_deadline.current, _timerEvent, setTimeRemaining);
     } catch (err) {
       console.error(err.data);
     }
