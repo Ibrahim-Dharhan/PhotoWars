@@ -1,6 +1,5 @@
 import React, { useContext, useEffect, useRef, useState } from 'react';
 import axios from 'axios';
-import { updateDeadline } from './timerLogic';
 import {
   Avatar,
   Box,
@@ -19,31 +18,24 @@ import DownloadIcon from '@mui/icons-material/Download';
 import FavoriteIcon from '@mui/icons-material/Favorite';
 import ImageIcon from '@mui/icons-material/Image';
 import { blue, pink } from '@mui/material/colors';
-import { Link, useLocation, useNavigate } from 'react-router-dom';
-import './battleCard.css';
+import { Link } from 'react-router-dom';
+import './submissionCard.css';
 import PropTypes from 'prop-types';
 import { UserContext } from '../../contexts/UserContext';
 
-const BattleCard = ({
-  battleId
+const SubmissionCard = ({
+  submissionId
 }) => {
   const { userId, setOpen } = useContext(UserContext);
 
   const [caption, setCaption] = useState('');
   const [displayName, setDisplayName] = useState('');
   const [filename, setFilename] = useState('');
-  const [submissions, setSubmissions] = useState([]);
   const [numVotes, setNumVotes] = useState(0);
   const [voted, setVoted] = useState(false);
-  const [timeRemaining, setTimeRemaining] = useState('--:--:--');
 
-  const _battle = useRef(null);
-  const _deadline = useRef(null);
-  const _submitted = useRef(false);
-  const _timerEvent = useRef(null);
-
-  const location = useLocation();
-  const navigate = useNavigate();
+  const _isAuthor = useRef(false);
+  const _submission = useRef(null);
 
   const handleDownload = async (event) => {
     event.stopPropagation();
@@ -58,59 +50,50 @@ const BattleCard = ({
   /* useEffect for updating caption, display name, and image.  */
   useEffect(() => {
     let shouldUpdate = true;
-    const setBattleInformation = async() => {
-      const path = `/battle/${battleId}`;
+    const setSubmissionInformation = async() => {
+      const path = `/submission/${submissionId}`;
       const res = await axios.get(path);
-      const battle = res.data;
+      const submission = res.data;
 
       if (shouldUpdate) {
-        setCaption(battle.caption);
-        setDisplayName(battle.author.displayName);
-        setFilename(battle.filename);
-        _battle.current = battle;
-        _deadline.current = new Date(battle.deadline);
+        setCaption(submission.caption);
+        setDisplayName(submission.author.displayName);
+        setFilename(submission.filename);
+        _isAuthor.current = submission.author._id;
+        _submission.current = submission;
       }
     };
     try {
-      setBattleInformation();
-      updateDeadline(_deadline.current, _timerEvent, setTimeRemaining);
+      setSubmissionInformation();
     } catch (err) {
       console.error(err.data);
     }
     return () => { shouldUpdate = false; };
-  }, [battleId]);
+  }, [submissionId]);
 
-  /* useEffect for updating vote and submission count.  */
+  /* useEffect for updating vote count.  */
   useEffect(() => {
     let shouldUpdate = true;
-    const getSubmissionsAndVotes = async() => {
-      const votesPath = `/vote/${battleId}`;
+    const getVotes = async() => {
+      const votesPath = `/vote/${submissionId}`;
       const votesRes = await axios.get(votesPath);
       const { numVotes, votedOn } = votesRes.data;
-
-      const submissionsPath = `/battle/${battleId}/submissions`;
-      const submissionsRes = await axios.get(submissionsPath);
 
       if (shouldUpdate) {
         setVoted(votedOn);
         setNumVotes(numVotes);
-
-        setSubmissions(submissionsRes.data);
-        _submitted.current = submissions
-                             .map(submission => submission.author)
-                             .includes(userId);
       }
     };
     try {
-      getSubmissionsAndVotes();
+      getVotes();
     } catch (err) {
       console.error(err.data);
     }
     return () => { shouldUpdate = false; };
-  }, [battleId, submissions, userId]);
+  }, [submissionId, userId]);
 
   const vote = async () => {
-    const path = `/battle/${battleId}/${voted ? 'unvote' : 'vote'}`;
+    const path = `/submission/${submissionId}/${voted ? 'unvote' : 'vote'}`;
     try {
       await axios.put(path);
       setVoted(!voted);
@@ -122,20 +105,7 @@ const BattleCard = ({
 
   return (
     <Card variant="outlined">
-      <CardActionArea
-        component="div"
-        onClick={() => {
-          if (location.pathname === '/') {
-            console.log("Open post");
-            navigate(`/battles/${battleId}`);
-          }
-        }}
-        onMouseDown={(event) => {
-          if (location.pathname !== '/') {
-            event.stopPropagation();
-          }
-        }}
-      >
+      <CardActionArea component="div">
         <CardHeader
           avatar={
             <Avatar sx={{ width: 24, height: 24 }}>
@@ -145,12 +115,12 @@ const BattleCard = ({
           title={
             <Link
               to=""
-              // to=`/user/${_battle.current.author._id}`
+              // to=`/user/${_submission.current.author._id}`
               onMouseDown={ (event) => event.stopPropagation()}
               onClick={ (event) => {
                 event.stopPropagation();
                 event.preventDefault();
-                console.log(`Go to profile page at /user/${_battle.current.author._id}`);
+                console.log(`Go to profile page at /user/${_submission.current.author._id}`);
               }}
             >
               {displayName}
@@ -183,15 +153,6 @@ const BattleCard = ({
               event.preventDefault();
             }}
           >
-            <ImageIcon
-              sx={{
-                pr: 1,
-                color: (_submitted.current && blue[500])
-              }}
-            />
-            <Typography>
-              {submissions.length}
-            </Typography>
           </IconButton>
           <IconButton
             onMouseDown={ (event) => event.stopPropagation()}
@@ -212,46 +173,14 @@ const BattleCard = ({
               {numVotes}
             </Typography>
           </IconButton>
-          <Box display="flex" marginLeft="auto" alignItems="center">
-            <Typography sx={{ pr: 2 }}>
-              {timeRemaining}
-            </Typography>
-            <Tooltip
-              title={
-                      _submitted.current
-                      ? "Only one submission is allowed."
-                      : !userId && "Log in to submit to this battle."
-                    }
-            >
-            <span
-              onClick={(event) => event.stopPropagation()}
-              onMouseDown={(event) => event.stopPropagation()}
-            >
-            <Button
-              onMouseDown={ (event) => event.stopPropagation()}
-              onClick={ (event) => {
-                event.stopPropagation();
-                event.preventDefault();
-                console.log('Open submit page');
-              }}
-              variant="outlined"
-              size="small"
-              color="primary"
-              disabled={_submitted.current || !userId}
-            >
-              Enter
-            </Button>
-            </span>
-            </Tooltip>
-          </Box>
         </CardActions>
       </CardActionArea>
     </Card>
   );
 };
 
-BattleCard.propTypes = {
-  battleId: PropTypes.string
+SubmissionCard.propTypes = {
+  submissionId: PropTypes.string
 };
 
-export { BattleCard };
+export { SubmissionCard };
