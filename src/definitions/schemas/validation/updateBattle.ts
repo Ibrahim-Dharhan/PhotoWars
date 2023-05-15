@@ -14,9 +14,9 @@ const UpdateBattle = {
         checkFalsy: true
       }
     },
-    isISO8601: {
-      errorMessage: 'Must be a valid date.'
-    }
+    // isISO8601: {
+    //   errorMessage: 'Must be a valid date.'
+    // }
   }
 }
 
