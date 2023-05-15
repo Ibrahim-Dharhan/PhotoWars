@@ -231,11 +231,12 @@ const BattleCard = ({
                 event.stopPropagation();
                 event.preventDefault();
                 console.log('Open submit page');
+                navigate(`/battles/${battleId}/submit`);
               }}
               variant="outlined"
               size="small"
               color="primary"
-              disabled={_submitted.current || !userId}
+              disabled={_submitted.current || !userId || location.pathname.endsWith('submit')}
             >
               Enter
             </Button>
