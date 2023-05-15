@@ -28,6 +28,8 @@ const PhotoWars = () => {
             loader={battleViewLoader}
             errorElement={<div>Error viewing battle</div>}
           />
+          <Route path="create" element={<Create />} />
+          <Route path="submit" element={<Submit />} />
           <Route
             index
             element={<Feed />}
@@ -35,8 +37,6 @@ const PhotoWars = () => {
             errorElement={<div>Error fetching battles</div>}
           />
         </Route>
-        <Route path="/create" element={<Create />} />
-        <Route path="/submit" element={<Submit />} />
         <Route path="*" element={<div>404 Not Found</div>} />
       </Route>
     )
