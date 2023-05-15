@@ -12,7 +12,7 @@ const feedLoader = async () => {
 }
 
 const Feed = () => {
-  const battleIds = useLoaderData();
+  const battleIds = useLoaderData() as string[];
 
   return (
     <React.Fragment>
