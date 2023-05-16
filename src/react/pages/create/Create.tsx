@@ -23,7 +23,7 @@ const Create = () => {
     formData.append("file", image);
     formData.append("deadline", length);
     try {
-      const res = await axios.post('/battle/new', formData, {
+      await axios.post('/battle/new', formData, {
         headers: {
           "Content-Type": "multipart/form-data",
         },
@@ -53,40 +53,40 @@ const Create = () => {
             />
           )}
         />
-              {image ? (
-                <img src={URL.createObjectURL(image)} className="image-preview" />
-              ) : (
-                <Box
-                  onDragOver={(event) => event.preventDefault()}
-                  sx={{ p: 2, border: "1px dashed grey" }}
-                >
-                  <label htmlFor="image-upload">Drag and drop an image, or</label>
+        {image ? (
+          <img src={URL.createObjectURL(image)} className="image-preview" />
+        ) : (
+          <Box
+            onDragOver={(event) => event.preventDefault()}
+            sx={{ p: 2, border: "1px dashed grey" }}
+          >
+            <label htmlFor="image-upload">Drag and drop an image, or</label>
 
-                  <Button variant="outlined" component="label">
-                    Upload File
-                    <input
-                      type="file"
-                      hidden
-                      id="image-upload"
-                      accept="image/*"
-                      name="image"
-                      onChange={(event) => setImage(event.target.files[0])}
-                    />
-                  </Button>
-                </Box>
-              )}
-        <InputLabel id="demo-simple-select-label">Age</InputLabel>
-  <Select
-    labelId="demo-simple-select-label"
-    id="demo-simple-select"
-    value={length}
-    label="Length"
-    onChange={(event) => setLength(event.target.value as string)}
-  >
-    <MenuItem value={12}>12 hours</MenuItem>
-    <MenuItem value={24}>24 hours</MenuItem>
-    <MenuItem value={48}>48 hours</MenuItem>
-  </Select>
+            <Button variant="outlined" component="label">
+              Upload File
+              <input
+                type="file"
+                hidden
+                id="image-upload"
+                accept="image/*"
+                name="image"
+                onChange={(event) => setImage(event.target.files[0])}
+              />
+            </Button>
+          </Box>
+        )}
+        <InputLabel id="demo-simple-select-label">Length</InputLabel>
+        <Select
+          labelId="demo-simple-select-label"
+          id="demo-simple-select"
+          value={length}
+          label="Length"
+          onChange={(event) => setLength(event.target.value as string)}
+        >
+          <MenuItem value={12}>12 hours</MenuItem>
+          <MenuItem value={24}>24 hours</MenuItem>
+          <MenuItem value={48}>48 hours</MenuItem>
+        </Select>
         <Button
           variant="contained"
           type="submit"
