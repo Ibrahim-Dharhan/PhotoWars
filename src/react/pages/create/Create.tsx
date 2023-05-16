@@ -35,7 +35,7 @@ const Create = () => {
 
   return (
     <div>
-      <Typography variant="h6">
+      <Typography variant="h6" sx={{mb: 1}}>
         Create a war
       </Typography>
       <form onSubmit={handleSubmit(handleFormSubmit)}>
@@ -58,11 +58,14 @@ const Create = () => {
         ) : (
           <Box
             onDragOver={(event) => event.preventDefault()}
-            sx={{ p: 2, border: "1px dashed grey" }}
+            sx={{ p: 2, border: "1px dashed grey", my: 2 }}
           >
             <label htmlFor="image-upload">Drag and drop an image, or</label>
 
-            <Button variant="outlined" component="label">
+            <Button
+              variant="outlined"
+              component="label"
+              sx={{ ml: 1 }}>
               Upload File
               <input
                 type="file"
@@ -87,9 +90,11 @@ const Create = () => {
           <MenuItem value={24}>24 hours</MenuItem>
           <MenuItem value={48}>48 hours</MenuItem>
         </Select>
+        <br />
         <Button
           variant="contained"
           type="submit"
+          sx={{ mt: 2 }}
         >
           Post
         </Button>
