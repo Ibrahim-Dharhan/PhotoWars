@@ -20,6 +20,11 @@ const imageRouter = express.Router();
  *           type: string
  *         required: true
  *         description: Filename of the image.
+ *     responses:
+ *       200:
+ *         description: Resource successfully retrieved.
+ *       404:
+ *         $ref: '#/components/responses/404NotFound'
  *
  */
 imageRouter.get('/:filename', (req, res) => {

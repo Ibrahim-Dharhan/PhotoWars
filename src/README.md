@@ -43,6 +43,11 @@ when you save changes to React components and `server.js`, instead run
 
 Then, go to the **Loopback** URL, **not** the URL following `nodemon` output.
 
+## Tips
+* Load MongoDB with dummy data using `npm run load`.
+* A list of all backend endpoints is located at `/swagger` (e.g. `localhost:3000/swagger`).
+* Run the linter often using `npm run lint`.
+
 ## Different Technologies Used
 Name | Description
 --- | ---

@@ -13,18 +13,35 @@ const userRouter = express.Router();
  *   get:
  *     summary: Returns information for user with id.
  *     parameters:
- *       - $ref: '#components/parameters/idParam'
+ *       - $ref: '#/components/parameters/idParam'
  *     responses:
  *       200:
- *         description: Successfully found and returned user data.
+ *         description: Resource successfully retrieved.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 _id:
+ *                   type: string
+ *                 description:
+ *                   type: string
+ *                 displayName:
+ *                   type: string
+ *                 filename:
+ *                   type: string
+ *                 firstName:
+ *                   type: string
+ *                 lastName:
+ *                   type: string
  *       404:
- *         $ref: '#/components/responses/404ResourceNotFound'
+ *         $ref: '#/components/responses/404NotFound'
  *       500:
  *         $ref: '#/components/responses/500'
  */
 userRouter.get('/:id', async (req, res) => {
   const userId = req.params.id;
-  const query = User.findOne({ _id: userId });
+  const query = User.findOne({ _id: userId }, ['-__v', '-loginName', '-loginPassword']);
 
   try {
     const userObj = await query.lean().exec();
@@ -46,7 +63,6 @@ userRouter.get('/:id', async (req, res) => {
  *     summary: Update user profile information.
  *     requestBody:
  *       description: User profile information to be updated.
- *       require: true
  *       content:
  *         application/x-www-form-urlencoded:
  *           schema:
@@ -68,8 +84,16 @@ userRouter.get('/:id', async (req, res) => {
  *     responses:
  *       200:
  *         description: Successfully updated user data.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/User'
+ *       400:
+ *         description: Invalid information to update user.
  *       401:
- *         $ref: '#/components/responses/401NotLoggedIn'
+ *         $ref: '#/components/responses/401Unauthorized'
+ *       404:
+ *         $ref: '#/components/responses/404NotFound'
  *       500:
  *         $ref: '#/components/responses/500'
  */
@@ -92,7 +116,7 @@ userRouter.put('/', checkSchema(UpdateUser), async (req, res) => {
   try {
     const userObj = await query.lean().exec();
     if (!userObj) {
-      res.status(500).send('Failed to find user.');
+      res.status(404).send('Failed to find user.');
       console.error('Failed to find user.');
     } else {
       res.status(200).json(userObj);
@@ -112,7 +136,9 @@ userRouter.put('/', checkSchema(UpdateUser), async (req, res) => {
  *       200:
  *         description: Successfully deleted user.
  *       401:
- *         $ref: '#/components/responses/401NotLoggedIn'
+ *         $ref: '#/components/responses/401Unauthorized'
+ *       404:
+ *         $ref: '#/components/responses/404NotFound'
  *       500:
  *         $ref: '#/components/responses/500'
  */
@@ -127,7 +153,7 @@ userRouter.delete('/', async (req, res) => {
   try {
     const userObj = await query.lean().exec();
     if (!userObj) {
-      res.status(500).send('Failed to find user.');
+      res.status(404).send('Failed to find user.');
       console.error('Failed to find user.');
     } else {
       res.status(200).send('Successfully deleted user.');

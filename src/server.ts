@@ -63,6 +63,9 @@ app.use('/test', testRouter);
 import { userRouter } from './endpoints/user/user';
 app.use('/user', userRouter);
 
+import { voteRouter } from './endpoints/vote/vote';
+app.use('/vote', voteRouter);
+
 app.get('*', (req, res) => {
   res.sendFile(path.join(__dirname, 'dist/index.html'));
 });

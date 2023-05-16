@@ -4,8 +4,9 @@ import { UserContext } from '../contexts/UserContext';
 
 const Layout = () => {
   const [displayName, setDisplayName] = useState(null);
+  const [open, setOpen] = useState(false);
   const [userId, setUserId] = useState(null);
-  const contextValue = { displayName, setDisplayName, userId, setUserId };
+  const contextValue = { displayName, setDisplayName, open, setOpen, userId, setUserId };
   useEffect(() => {
     let name = '';
     let id = '';
@@ -13,7 +14,7 @@ const Layout = () => {
     if (storedUser) {
       const user = JSON.parse(storedUser);
       name = user.displayName;
-      id = user.userId;
+      id = user._id;
     }
     setDisplayName(name);
     setUserId(id);

@@ -6,13 +6,13 @@ import {
 } from 'react-router-dom';
 
 const feedLoader = async () => {
-  const path = '/battle/ids';
+  const path = '/battle/all';
   const res = await axios.get(path);
   return res.data;
 }
 
 const Feed = () => {
-  const battleIds = useLoaderData();
+  const battleIds = useLoaderData() as string[];
 
   return (
     <React.Fragment>
