@@ -51,39 +51,43 @@ const SideBar = () => {
       }}
       breakPoint="md"
     >
-    <Menu>
-      <MenuItem>
-        <Typography variant="h5">Photo Wars</Typography>
-      </MenuItem>
-        <MenuItem icon={<ExploreOutlinedIcon />}>
-          Explore
+      <Menu>
+        <MenuItem>
+          <Link to="/">
+            <Typography variant="h5">Photo Wars</Typography>
+          </Link>
         </MenuItem>
-      <MenuItem icon={<PeopleOutlinedIcon />}>Open Competitions</MenuItem>
-      <MenuItem icon={<EmojiEventsOutlinedIcon />}>Winners</MenuItem>
-      <MenuItem icon={<NotificationsOutlinedIcon />}>Notifications</MenuItem>
-      <MenuItem icon={<SearchOutlinedIcon />}>Search</MenuItem>
-      <MenuItem icon={<AccountCircleOutlinedIcon />}>Profile</MenuItem>
-      { userId === null ? <div /> : userId !== '' ?
+        <MenuItem icon={<ExploreOutlinedIcon />}>
+          <Link to="/">
+            Explore
+          </Link>
+        </MenuItem>
+        <MenuItem icon={<PeopleOutlinedIcon />}>Open Competitions</MenuItem>
+        <MenuItem icon={<EmojiEventsOutlinedIcon />}>Winners</MenuItem>
+        <MenuItem icon={<NotificationsOutlinedIcon />}>Notifications</MenuItem>
+        <MenuItem icon={<SearchOutlinedIcon />}>Search</MenuItem>
+        <MenuItem icon={<AccountCircleOutlinedIcon />}>Profile</MenuItem>
+        {userId === null ? <div /> : userId !== '' ?
           <React.Fragment>
-          <MenuItem component="div" style={{ cursor: 'default'}}>
-            <Button component={Link}
-              to="/create"
-              startIcon={<AddCircleOutlineIcon/>}
-              variant="outlined"
-            >
-              Create Battle
-            </Button>
-          </MenuItem>
-          <MenuItem component="div" style={{ cursor: 'default'}}>
-            <Button onClick={handleLogOut} variant="outlined">
-              Log Out
-            </Button>
-          </MenuItem>
+            <MenuItem component="div" style={{ cursor: 'default' }}>
+              <Button component={Link}
+                to="/create"
+                startIcon={<AddCircleOutlineIcon />}
+                variant="outlined"
+              >
+                Create Battle
+              </Button>
+            </MenuItem>
+            <MenuItem component="div" style={{ cursor: 'default' }}>
+              <Button onClick={handleLogOut} variant="outlined">
+                Log Out
+              </Button>
+            </MenuItem>
           </React.Fragment>
-        :
+          :
           <LoginModal />
-      }
-    </Menu>
+        }
+      </Menu>
     </Sidebar>
   );
 }
