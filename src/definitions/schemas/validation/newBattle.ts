@@ -9,9 +9,9 @@ const NewBattle = {
   deadline: {
     notEmpty: {
       errorMessage: 'Not a valid deadline.'
-    // },
-    // isNumber: {
-    //   errorMessage: 'Must be a valid date.'
+    },
+    isISO8601: {
+      errorMessage: 'Must be a valid date.'
     }
   }
 }

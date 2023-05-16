@@ -9,10 +9,13 @@ import { Controller, useForm } from 'react-hook-form';
 import InputLabel from '@mui/material/InputLabel';
 import MenuItem from '@mui/material/MenuItem';
 import Select, { SelectChangeEvent } from '@mui/material/Select';
+import { DatePicker } from '@mui/x-date-pickers/DatePicker';
+import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
+import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 
 const Create = () => {
   const [image, setImage] = useState(null);
-  const [length, setLength] = React.useState<number>(0);
+  const [length, setLength] = useState(null);
   const { control,
     handleSubmit,
   } = useForm({ mode: 'onChange' });
@@ -21,7 +24,7 @@ const Create = () => {
     const formData = new FormData();
     formData.append("caption", data.caption);
     formData.append("file", image);
-    formData.append("deadline", length);
+    formData.append("deadline", length.toISOString());
     try {
       await axios.post('/battle/new', formData, {
         headers: {
@@ -53,13 +56,18 @@ const Create = () => {
             />
           )}
         />
+                  <Box
+            onDragOver={(event) => event.preventDefault()}
+            onDrop={(event) => {
+              event.preventDefault();
+              setImage(event.dataTransfer.files[0]);
+            }}
+            sx={{ p: 2, border: "1px dashed grey", my: 2 }}
+          >
         {image ? (
           <img src={URL.createObjectURL(image)} className="image-preview" />
         ) : (
-          <Box
-            onDragOver={(event) => event.preventDefault()}
-            sx={{ p: 2, border: "1px dashed grey", my: 2 }}
-          >
+          <Box>
             <label htmlFor="image-upload">Drag and drop an image, or</label>
 
             <Button
@@ -76,10 +84,18 @@ const Create = () => {
                 onChange={(event) => setImage(event.target.files[0])}
               />
             </Button>
-          </Box>
+            </Box>
         )}
-        <InputLabel id="demo-simple-select-label">Length</InputLabel>
-        <Select
+        </Box>
+        <LocalizationProvider dateAdapter={AdapterDayjs}>
+        <DatePicker label="Deadline" 
+        value={length}
+        onChange={(newValue) => {
+          setLength(newValue);
+        }}
+        />
+        </LocalizationProvider>
+        {/* <Select
           labelId="demo-simple-select-label"
           id="demo-simple-select"
           value={length}
@@ -89,14 +105,14 @@ const Create = () => {
           <MenuItem value={12}>12 hours</MenuItem>
           <MenuItem value={24}>24 hours</MenuItem>
           <MenuItem value={48}>48 hours</MenuItem>
-        </Select>
+        </Select> */}
         <br />
         <Button
           variant="contained"
           type="submit"
           sx={{ mt: 2 }}
         >
-          Post
+          Create
         </Button>
       </form>
     </div >

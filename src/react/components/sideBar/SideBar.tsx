@@ -75,7 +75,7 @@ const SideBar = () => {
                 startIcon={<AddCircleOutlineIcon />}
                 variant="outlined"
               >
-                Create Battle
+                Create War
               </Button>
             </MenuItem>
             <MenuItem component="div" style={{ cursor: 'default' }}>
