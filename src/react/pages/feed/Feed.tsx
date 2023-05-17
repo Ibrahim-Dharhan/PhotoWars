@@ -13,10 +13,11 @@ const feedLoader = async () => {
 
 const Feed = () => {
   const battleIds = useLoaderData() as string[];
+  const battleIdsRecent = battleIds.slice(0).reverse();
 
   return (
     <React.Fragment>
-      {battleIds.map((battleId) => {
+      {battleIdsRecent.map((battleId) => {
         return (<BattleCard battleId={battleId} key={battleId}/>);
       })}
     </React.Fragment>
