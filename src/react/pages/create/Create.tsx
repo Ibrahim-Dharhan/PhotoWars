@@ -6,12 +6,12 @@ import Box from '@mui/material/Box';
 import './create.css';
 import axios from "axios";
 import { Controller, useForm } from 'react-hook-form';
-import InputLabel from '@mui/material/InputLabel';
-import MenuItem from '@mui/material/MenuItem';
-import Select, { SelectChangeEvent } from '@mui/material/Select';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
+import { Link, useNavigate } from 'react-router-dom';
+import { Grid } from '@mui/material';
+import Stack from '@mui/material/Stack';
 
 const Create = () => {
   const [image, setImage] = useState(null);
@@ -19,8 +19,8 @@ const Create = () => {
   const { control,
     handleSubmit,
   } = useForm({ mode: 'onChange' });
+  const navigate = useNavigate();
   const handleFormSubmit = async (data) => {
-    console.log(data);
     const formData = new FormData();
     formData.append("caption", data.caption);
     formData.append("file", image);
@@ -31,6 +31,7 @@ const Create = () => {
           "Content-Type": "multipart/form-data",
         },
       });
+      navigate('/');
     } catch (err) {
       console.error(err.response.data);
     }
@@ -38,7 +39,7 @@ const Create = () => {
 
   return (
     <div>
-      <Typography variant="h6" sx={{mb: 1}}>
+      <Typography variant="h6" sx={{ mb: 1 }}>
         Create a war
       </Typography>
       <form onSubmit={handleSubmit(handleFormSubmit)}>
@@ -46,8 +47,13 @@ const Create = () => {
           name="caption"
           control={control}
           defaultValue=""
-          render={({ field }) => (
+          rules={{
+            required: 'Title required'
+          }}
+          render={({ field, fieldState: { error } }) => (
             <TextField
+              error={!!error}
+              helperText={error ? error.message : null}
               fullWidth
               id="outlined-basic"
               label="Title"
@@ -56,44 +62,52 @@ const Create = () => {
             />
           )}
         />
-                  <Box
-            onDragOver={(event) => event.preventDefault()}
-            onDrop={(event) => {
-              event.preventDefault();
-              setImage(event.dataTransfer.files[0]);
-            }}
-            sx={{ p: 2, border: "1px dashed grey", my: 2 }}
-          >
-        {image ? (
-          <img src={URL.createObjectURL(image)} className="image-preview" />
-        ) : (
-          <Box>
-            <label htmlFor="image-upload">Drag and drop an image, or</label>
 
-            <Button
-              variant="outlined"
-              component="label"
-              sx={{ ml: 1 }}>
-              Upload File
-              <input
-                type="file"
-                hidden
-                id="image-upload"
-                accept="image/*"
-                name="image"
-                onChange={(event) => setImage(event.target.files[0])}
-              />
-            </Button>
-            </Box>
-        )}
+        <Box
+          onDragOver={(event) => event.preventDefault()}
+          onDrop={(event) => {
+            event.preventDefault();
+            setImage(event.dataTransfer.files[0]);
+          }}
+          sx={{ p: 2, border: "1px dashed grey", my: 2 }}
+        >
+          {image ? (
+            <img src={URL.createObjectURL(image)} className="image-preview" />
+          ) : (
+            <Stack
+              sx={{ height: "200px" }}
+              direction="row"
+              justifyContent="center"
+              alignItems="center"
+            >
+
+              <label htmlFor="image-upload">Drag and drop an image, or</label>
+              <Button
+                variant="outlined"
+                component="label"
+                sx={{ ml: 1 }}>
+                Upload File
+                <input
+                  type="file"
+                  hidden
+                  id="image-upload"
+                  accept="image/*"
+                  name="image"
+                  onChange={(event) => setImage(event.target.files[0])}
+                />
+              </Button>
+
+            </Stack>
+          )}
         </Box>
+
         <LocalizationProvider dateAdapter={AdapterDayjs}>
-        <DatePicker label="Deadline" 
-        value={length}
-        onChange={(newValue) => {
-          setLength(newValue);
-        }}
-        />
+          <DatePicker label="Deadline"
+            value={length}
+            onChange={(newValue) => {
+              setLength(newValue);
+            }}
+          />
         </LocalizationProvider>
         {/* <Select
           labelId="demo-simple-select-label"
@@ -108,6 +122,7 @@ const Create = () => {
         </Select> */}
         <br />
         <Button
+
           variant="contained"
           type="submit"
           sx={{ mt: 2 }}
