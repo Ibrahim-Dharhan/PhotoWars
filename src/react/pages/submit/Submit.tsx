@@ -7,7 +7,7 @@ import {
   FormHelperText,
   Stack,
   TextField,
-  Typography
+  Typography,
 } from '@mui/material';
 import { useParams, useNavigate } from 'react-router-dom';
 
