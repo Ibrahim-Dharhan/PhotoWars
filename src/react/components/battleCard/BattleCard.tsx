@@ -57,7 +57,7 @@ const BattleCard = ({
   /* useEffect for updating caption, display name, and image.  */
   useEffect(() => {
     let shouldUpdate = true;
-    const setBattleInformation = async() => {
+    const setBattleInformation = async () => {
       const path = `/battle/${battleId}`;
       const res = await axios.get(path);
       const battle = res.data;
@@ -81,7 +81,7 @@ const BattleCard = ({
   /* useEffect for updating vote and submission count.  */
   useEffect(() => {
     let shouldUpdate = true;
-    const getSubmissionsAndVotes = async() => {
+    const getSubmissionsAndVotes = async () => {
       const votesPath = `/vote/${battleId}`;
       const votesRes = await axios.get(votesPath);
       const { numVotes, votedOn } = votesRes.data;
@@ -95,8 +95,8 @@ const BattleCard = ({
 
         setSubmissions(submissionsRes.data);
         _submitted.current = submissions
-                             .map(submission => submission.author)
-                             .includes(userId);
+          .map(submission => submission.author)
+          .includes(userId);
       }
     };
     try {
@@ -144,8 +144,8 @@ const BattleCard = ({
             <Link
               to=""
               // to=`/user/${_battle.current.author._id}`
-              onMouseDown={ (event) => event.stopPropagation()}
-              onClick={ (event) => {
+              onMouseDown={(event) => event.stopPropagation()}
+              onClick={(event) => {
                 event.stopPropagation();
                 event.preventDefault();
                 console.log(`Go to profile page at /user/${_battle.current.author._id}`);
@@ -156,7 +156,7 @@ const BattleCard = ({
           }
           action={
             <IconButton
-              onMouseDown={ (event) => event.stopPropagation()}
+              onMouseDown={(event) => event.stopPropagation()}
               onClick={handleDownload}
             >
               <DownloadIcon />
@@ -192,8 +192,8 @@ const BattleCard = ({
             </Typography>
           </IconButton>
           <IconButton
-            onMouseDown={ (event) => event.stopPropagation()}
-            onClick={ (event) => {
+            onMouseDown={(event) => event.stopPropagation()}
+            onClick={(event) => {
               event.stopPropagation();
               event.preventDefault();
               if (userId !== '') {
@@ -211,37 +211,45 @@ const BattleCard = ({
             </Typography>
           </IconButton>
           <Box display="flex" marginLeft="auto" alignItems="center">
-            <Typography sx={{ pr: 2 }}>
-              {timeRemaining}
-            </Typography>
-            <Tooltip
-              title={
-                      _submitted.current
+            {timeRemaining === '00d:00h:00m:00s' ? (
+              <Typography>
+                Finished
+              </Typography>
+            ) : (
+              <>
+                <Typography sx={{ pr: 2 }}>
+                  {timeRemaining}
+                </Typography>
+                <Tooltip
+                  title={
+                    _submitted.current
                       ? "Only one submission is allowed."
                       : !userId && "Log in to submit to this battle."
-                    }
-            >
-            <span
-              onClick={(event) => event.stopPropagation()}
-              onMouseDown={(event) => event.stopPropagation()}
-            >
-            <Button
-              onMouseDown={ (event) => event.stopPropagation()}
-              onClick={ (event) => {
-                event.stopPropagation();
-                event.preventDefault();
-                console.log('Open submit page');
-                navigate(`/battles/${battleId}/submit`);
-              }}
-              variant="outlined"
-              size="small"
-              color="primary"
-              disabled={_submitted.current || !userId || location.pathname.endsWith('submit')}
-            >
-              Enter
-            </Button>
-            </span>
-            </Tooltip>
+                  }
+                >
+                  <span
+                    onClick={(event) => event.stopPropagation()}
+                    onMouseDown={(event) => event.stopPropagation()}
+                  >
+                    <Button
+                      onMouseDown={(event) => event.stopPropagation()}
+                      onClick={(event) => {
+                        event.stopPropagation();
+                        event.preventDefault();
+                        console.log('Open submit page');
+                        navigate(`/battles/${battleId}/submit`);
+                      }}
+                      variant="outlined"
+                      size="small"
+                      color="primary"
+                      disabled={_submitted.current || !userId || location.pathname.endsWith('submit')}
+                    >
+                      Enter
+                    </Button>
+                  </span>
+                </Tooltip>
+              </>
+            )}
           </Box>
         </CardActions>
       </CardActionArea>
