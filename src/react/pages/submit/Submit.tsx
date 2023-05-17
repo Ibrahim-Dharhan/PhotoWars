@@ -7,7 +7,7 @@ import {
   FormHelperText,
   Stack,
   TextField,
-  Typography
+  Typography,
 } from '@mui/material';
 import { useParams, useNavigate, useOutletContext } from 'react-router-dom';
 
@@ -59,21 +59,26 @@ const Submit = () => {
 
   return (
     <React.Fragment>
+      <Box sx={{ mt: 4 }}>
+      <form onSubmit={handleSubmit(submitForm)}>
+      <Stack spacing={2}>
       <Typography variant="h6">
         Enter a submission
       </Typography>
-      <form onSubmit={handleSubmit(submitForm)}>
-      <Stack spacing={1}>
         <Controller
           name="caption"
           control={control}
           defaultValue=""
+          rules={{
+            required: 'Caption required'
+          }}
           render={({ field, fieldState: { error } }) => (
             <TextField
-              fullWidth
               error={!!error}
               helperText={error ? error.message : null}
-              label="Title"
+              fullWidth
+              id="outlined-basic"
+              label="Photo caption"
               variant="outlined"
               {...field}
             />
@@ -93,7 +98,7 @@ const Submit = () => {
            <Box display="flex" justifyContent="flex-end">
              <Button
                onClick={handleClearImage}
-               sx={{width: '10px'}}
+               sx={{ width: '10px' }}
                variant="outlined"
              >
                Clear
@@ -115,24 +120,33 @@ const Submit = () => {
              <Box
                onDrop={handleImageDrop}
                onDragOver={(event) => event.preventDefault()}
-               sx={{ p: 2, border: '1px dashed grey' }}
+               sx={{ border: '1px dashed grey' }}
                {...field}
              >
-               <label>
+               <Stack
+              sx={{ height: "200px" }}
+              direction="row"
+              justifyContent="center"
+              alignItems="center"
+            >
+              <label>
                  {'Drag and drop an image, or '}
                </label>
-               <Button
-                 variant="outlined"
-                 component="label"
-               >
-                 Upload File
-                 <input
-                   type="file"
-                   hidden
-                   accept="image/*"
-                   onChange={handleImageChange}
-                 />
-               </Button>
+              <Button
+                variant="outlined"
+                component="label"
+                sx={{ ml: 1 }}>
+                Upload File
+                <input
+                  type="file"
+                  hidden
+                  id="image-upload"
+                  accept="image/*"
+                  name="image"
+                  onChange={(event) => setImage(event.target.files[0])}
+                />
+              </Button>
+            </Stack>
              </Box>
              <FormHelperText error={!!error}>
                {error ? error.message : ''}
@@ -149,6 +163,7 @@ const Submit = () => {
         </Button>
         </Stack>
       </form>
+      </Box>
     </React.Fragment>
   );
 };
