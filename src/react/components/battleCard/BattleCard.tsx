@@ -252,7 +252,8 @@ const BattleCard = ({
 
 BattleCard.propTypes = {
   battleId: PropTypes.string,
-  setNumBVSubmissions: React.Dispatch<React.SetStateAction<number>>
+  numBVSubmissions: PropTypes.number,
+  setNumBVSubmissions: PropTypes.func
 };
 
 export { BattleCard };

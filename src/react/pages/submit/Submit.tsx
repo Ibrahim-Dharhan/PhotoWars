@@ -11,11 +11,16 @@ import {
 } from '@mui/material';
 import { useParams, useNavigate, useOutletContext } from 'react-router-dom';
 
+interface BVSubmissionState {
+  numBVSubmissions: number,
+  setNumBVSubmissions: React.Dispatch<React.SetStateAction<number>>
+}
+
 const Submit = () => {
   const { id } = useParams();
   const [image, setImage] = useState(null);
   const navigate = useNavigate();
-  const [numBVSubmissions, setNumBVSubmissions] = useOutletContext();
+  const {numBVSubmissions, setNumBVSubmissions} = useOutletContext() as BVSubmissionState;
 
   const {
     control,

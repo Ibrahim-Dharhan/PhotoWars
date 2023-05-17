@@ -13,7 +13,7 @@ const BattleView = () => {
         numBVSubmissions={numBVSubmissions}
         setNumBVSubmissions={setNumBVSubmissions}
       />
-      <Outlet context={[numBVSubmissions, setNumBVSubmissions]}/>
+      <Outlet context={{numBVSubmissions, setNumBVSubmissions}}/>
     </React.Fragment>
   );
 };
