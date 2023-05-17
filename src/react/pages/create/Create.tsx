@@ -9,8 +9,7 @@ import { Controller, useForm } from 'react-hook-form';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
-import { Link, useNavigate } from 'react-router-dom';
-import { Grid } from '@mui/material';
+import { useNavigate } from 'react-router-dom';
 import Stack from '@mui/material/Stack';
 
 const Create = () => {
@@ -38,7 +37,7 @@ const Create = () => {
   };
 
   return (
-    <div>
+    <React.Fragment>
       <Typography variant="h6" sx={{ mb: 1 }}>
         Create a war
       </Typography>
@@ -130,7 +129,7 @@ const Create = () => {
           Create
         </Button>
       </form>
-    </div >
+    </React.Fragment>
   );
 };
 
