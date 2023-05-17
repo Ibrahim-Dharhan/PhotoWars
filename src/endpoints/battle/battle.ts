@@ -327,6 +327,7 @@ battleRouter.post(
       const newSubmissionObj = await Submission.create({
         ...{
           author: req.session.userId,
+          battle: battleId,
           filename: req.file.filename,
         },
         ...matchedData(req),
