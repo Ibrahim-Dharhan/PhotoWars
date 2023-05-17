@@ -23,20 +23,53 @@ const style = {
   top: '50%',
   left: '50%',
   transform: 'translate(-50%, -50%)',
-  width: 400,
+  width: 600,
   bgcolor: 'background.paper',
   boxShadow: 24,
   borderRadius: '2px',
   p: 2
 };
 
+interface Comment {
+  _id: string;
+  __v: number;
+  author: string;
+  commentedModel: string;
+  creationTime: string;
+  filename: string;
+  post: string;
+  text: string;
+}
+
 const SubmissionModal = ({
   open, 
   handleClose,
+  submissionId,
   displayName,
   caption,
   filename
 }) => {
+  const [comments, setComments] = useState([]);
+
+  /* useEffect for updating comments.  */
+  useEffect(() => {
+    let shouldUpdate = true;
+    const getComments = async() => {
+      const path = `/submission/${submissionId}/comments`;
+      const res = await axios.get(path);
+      const retrievedComments: Comment[] = res.data;
+
+      if (shouldUpdate) {
+        setComments(retrievedComments);
+      }
+    };
+    try {
+      getComments();
+    } catch (err) {
+      console.error(err.data);
+    }
+    return () => { shouldUpdate = false; };
+  }, [submissionId]);
 
   return (
     <Modal
@@ -60,12 +93,12 @@ const SubmissionModal = ({
             <List>
               <ListItem alignItems="flex-start">
                 <ListItemAvatar>
-                  <Avatar sx={{ width: 24, height: 24 }}>
+                  <Avatar>
                     {displayName[0]}
                   </Avatar>
                 </ListItemAvatar>
                 <ListItemText
-                  primary="Title of submission"
+                  primary={caption}
                   secondary={
                     <React.Fragment>
                       <Typography
@@ -74,57 +107,43 @@ const SubmissionModal = ({
                         variant="body2"
                         color="text.primary"
                       >
-                        {displayName + ': '}
+                        {displayName}
                       </Typography>
-                      {caption}
                     </React.Fragment>
                   }
                 />
               </ListItem>
               <Divider variant="inset" component="li" />
-              <ListItem alignItems="flex-start">
-                <ListItemAvatar>
-                  <Avatar alt="Avatar" src="/static/images/avatar/1.jpg" />
-                </ListItemAvatar>
-                <ListItemText
-                  secondary={
-                    <React.Fragment>
-                      <Typography
-                        sx={{ display: 'inline' }}
-                        component="span"
-                        variant="body2"
-                        color="text.primary"
-                      >
-                        Commenter 1
-                      </Typography>
-                      {" This is a comment."}
-                    </React.Fragment>
-                  }
-                />
-              </ListItem>
-              <Divider variant="inset" component="li" />
-              <ListItem alignItems="flex-start">
-                <ListItemAvatar>
-                  <Avatar alt="Avatar" src="/static/images/avatar/1.jpg" />
-                </ListItemAvatar>
-                <ListItemText
-                  secondary={
-                    <React.Fragment>
-                      <Typography
-                        sx={{ display: 'inline' }}
-                        component="span"
-                        variant="body2"
-                        color="text.primary"
-                      >
-                        Commenter 2
-                      </Typography>
-                      {" This is another comment."}
-                    </React.Fragment>
-                  }
-                />
-              </ListItem>
+              {comments.map((comment: Comment) => {
+                return (
+                <div key={comment._id}>
+                  <ListItem alignItems="flex-start">
+                    <ListItemAvatar>
+                      <Avatar>
+                        {comment.author[0]}
+                      </Avatar>
+                    </ListItemAvatar>
+                    <ListItemText
+                      secondary={
+                        <React.Fragment>
+                          <Typography
+                            sx={{ display: 'inline' }}
+                            component="span"
+                            variant="body2"
+                            color="text.primary"
+                          >
+                            {comment.author + '\n'}
+                          </Typography>
+                          {comment.text}
+                        </React.Fragment>
+                      }
+                    />
+                  </ListItem>
+                  <Divider variant="inset" component="li" />
+                </div>)
+              })}
+
             </List>
-            <Button></Button>
           </Grid>
         </Grid>
       </Box>
