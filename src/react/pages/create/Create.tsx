@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import {
   Box,
   Button,
-  FormControl,
+  FormHelperText,
   Stack,
   TextField,
   Typography,
@@ -46,94 +46,121 @@ const Create = () => {
     resetField('file');
   }
 
+  function handleImageChange(event) {
+    const file = event.target.files[0];
+    setImage(file);
+  }
+
+  function handleImageDrop(event) {
+    event.preventDefault();
+    const file = event.dataTransfer.files[0];
+    setImage(file);
+  }
+
   return (
     <React.Fragment>
-      <Typography variant="h6" sx={{ mb: 1 }}>
-        Create a war
-      </Typography>
       <form onSubmit={handleSubmit(handleFormSubmit)}>
-        <Controller
-          name="caption"
-          control={control}
-          defaultValue=""
-          rules={{
-            required: 'Caption required'
-          }}
-          render={({ field, fieldState: { error } }) => (
-            <TextField
-              error={!!error}
-              helperText={error ? error.message : null}
-              fullWidth
-              id="outlined-basic"
-              label="Photo caption"
-              variant="outlined"
-              {...field}
+        <Stack spacing={2}>
+          <Typography variant="h6" >
+            Create a war
+          </Typography>
+
+          <Controller
+            name="caption"
+            control={control}
+            defaultValue=""
+            rules={{
+              required: 'Caption required'
+            }}
+            render={({ field, fieldState: { error } }) => (
+              <TextField
+                error={!!error}
+                helperText={error ? error.message : null}
+                fullWidth
+                id="outlined-basic"
+                label="Photo caption"
+                variant="outlined"
+                {...field}
+              />
+            )}
+          />
+
+          {image ? (
+            <React.Fragment>
+              <Box sx={{ my: 2 }}>
+                <img src={URL.createObjectURL(image)} className="image-preview" />
+              </Box>
+
+              <Box display="flex" justifyContent="flex-end">
+                <Button
+                  onClick={handleClearImage}
+                  sx={{ width: '10px' }}
+                  variant="outlined"
+                >
+                  Clear
+                </Button>
+              </Box>
+            </React.Fragment>
+          ) : (
+            <Controller
+              name="file"
+              control={control}
+              defaultValue=""
+              rules={{
+                validate: {
+                  imageExists: value => !!value || 'Please upload an image.'
+                }
+              }}
+              render={({ field, fieldState: { error } }) => (
+                <React.Fragment>
+                  <Box
+                    onDrop={handleImageDrop}
+                    onDragOver={(event) => event.preventDefault()}
+                    sx={{ border: '1px dashed grey' }}
+                    {...field}
+                  >
+                    <Stack
+                      sx={{ height: "200px" }}
+                      direction="row"
+                      justifyContent="center"
+                      alignItems="center"
+                    >
+                      <label>
+                        {'Drag and drop an image, or '}
+                      </label>
+                      <Button
+                        variant="outlined"
+                        component="label"
+                        sx={{ ml: 1 }}>
+                        Upload File
+                        <input
+                          type="file"
+                          hidden
+                          id="image-upload"
+                          accept="image/*"
+                          name="image"
+                          onChange={(event) => setImage(event.target.files[0])}
+                        />
+                      </Button>
+                    </Stack>
+                  </Box>
+                  <FormHelperText error={!!error}>
+                    {error ? error.message : ''}
+                  </FormHelperText>
+                </React.Fragment>
+              )}
             />
           )}
-        />
 
-        {image ? (
-          <React.Fragment>
-
-            <Box sx={{ my: 2 }}>
-              <img src={URL.createObjectURL(image)} className="image-preview" />
-
-            </Box>
-
-            <Box display="flex" justifyContent="flex-end">
-              <Button
-                onClick={handleClearImage}
-                sx={{ width: '10px' }}
-                variant="outlined"
-              >
-                Clear
-              </Button>
-            </Box>
-          </React.Fragment>
-        ) : (
-          <Box
-            onDragOver={(event) => event.preventDefault()}
-            onDrop={(event) => {
-              event.preventDefault();
-              setImage(event.dataTransfer.files[0]);
-            }}
-            sx={{ p: 2, border: "1px dashed grey", my: 2 }}
-          >
-            <Stack
-              sx={{ height: "200px" }}
-              direction="row"
-              justifyContent="center"
-              alignItems="center"
-            >
-
-              <label htmlFor="image-upload">Drag and drop an image, or</label>
-              <Button
-                variant="outlined"
-                component="label"
-                sx={{ ml: 1 }}>
-                Upload File
-                <input
-                  type="file"
-                  hidden
-                  id="image-upload"
-                  accept="image/*"
-                  name="image"
-                  onChange={(event) => setImage(event.target.files[0])}
-                />
-              </Button>
-            </Stack>
-          </Box>
-        )}
-
-        <LocalizationProvider dateAdapter={AdapterDayjs}>
-          <DatePicker label="Deadline"
-            value={length}
-            onChange={(value) => {
-              setLength(value);
-            }}
-          />
-        </LocalizationProvider>
-        {/* <Select
+          <LocalizationProvider dateAdapter={AdapterDayjs}>
+            <DatePicker label="Deadline"
+              value={length}
+              onChange={(value) => {
+                setLength(value);
+              }}
+            />
+          </LocalizationProvider>
+          {/* <Select
           labelId="demo-simple-select-label"
           id="demo-simple-select"
           value={length}
@@ -144,15 +171,15 @@ const Create = () => {
           <MenuItem value={24}>24 hours</MenuItem>
           <MenuItem value={48}>48 hours</MenuItem>
         </Select> */}
-        <br />
-        <Button
+          <Button
 
-          variant="contained"
-          type="submit"
-          sx={{ mt: 2 }}
-        >
-          Create
-        </Button>
+            variant="contained"
+            type="submit"
+            sx={{ mt: 2 }}
+          >
+            Create
+          </Button>
+        </Stack>
       </form>
     </React.Fragment>
   );
