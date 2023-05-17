@@ -30,7 +30,6 @@ const imageRouter = express.Router();
 imageRouter.get('/:filename', (req, res) => {
   const options = {
     root: path.join('.', IMAGE_DIR),
-    dotfiles: 'deny',
     headers: {
       'x-timestamp': Date.now(),
       'x-sent': true

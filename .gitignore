@@ -1,5 +1,6 @@
 .DS_Store
 .vscode/
+compiled/
 dist/
 node_modules/
 public/

@@ -34,9 +34,9 @@ const PhotoWars = () => {
               loader={submissionFeedLoader}
               errorElement={<div>Error loading submissions</div>}
             />
+            <Route path="submit" element={<Submit />} />
           </Route>
           <Route path="create" element={<Create />} />
-          <Route path="submit" element={<Submit />} />
           <Route
             index
             element={<Feed />}

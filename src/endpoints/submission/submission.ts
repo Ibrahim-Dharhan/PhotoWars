@@ -107,8 +107,6 @@ submissionRouter.put('/:id', checkSchema(UpdateSubmission), async (req, res) => 
       return;
     }
 
-    const caption =
-      req.body.caption !== null ? req.body.caption : result.caption;
     const body = matchedData(req);
     const updatedSubmission = await Submission.findByIdAndUpdate(
       submissionId,

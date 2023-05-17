@@ -3,7 +3,7 @@ import axios from 'axios';
 import Grid from '@mui/material/Grid';
 import Box from '@mui/material/Box';
 import { SubmissionCard } from '../../components/submissionCard/SubmissionCard';
-import { useParams, useLoaderData } from 'react-router-dom';
+import { useLoaderData } from 'react-router-dom';
 
 const submissionFeedLoader = async({ params }) => {
   const id = params.id;
@@ -12,9 +12,18 @@ const submissionFeedLoader = async({ params }) => {
   return res.data;
 }
 
+interface Submission {
+  _id: string;
+  __v: number;
+  author: string;
+  caption: string;
+  creationTime: string;
+  filename: string;
+}
+
 const SubmissionFeed = () => {
-  const { id } = useParams();
-  const submissions = useLoaderData();
+  const submissions = useLoaderData() as Submission[];
+  console.log(submissions);
   
   return (
     <React.Fragment>
