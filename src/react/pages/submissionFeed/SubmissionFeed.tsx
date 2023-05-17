@@ -1,6 +1,5 @@
 import React from 'react';
 import axios from 'axios';
-import Grid from '@mui/material/Grid';
 import Box from '@mui/material/Box';
 import { SubmissionCard } from '../../components/submissionCard/SubmissionCard';
 import { useLoaderData } from 'react-router-dom';
@@ -10,6 +9,7 @@ const submissionFeedLoader = async({ params }) => {
   const path = `/battle/${id}/submissions`;
   const res = await axios.get(path);
   return res.data;
+  console.log("Loading submission data");
 }
 
 interface Submission {
