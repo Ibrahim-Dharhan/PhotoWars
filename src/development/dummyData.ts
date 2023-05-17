@@ -56,7 +56,37 @@ function dummyDataFunc() {
     numVotes: 1,
   };
 
-  const fakeSubmissions = [submission1];
+  const submission2 = {
+    _id: '64544e66d74751fa1b70b201',
+    author: user1._id,
+    battle: battle1._id,
+    caption: 'submission2',
+    creationTime: '2023-05-05T00:32:09.969Z',
+    filename: 'seagull.jpg',
+    numVotes: 0,
+  };
+
+  const submission3 = {
+    _id: '64544e66d74751fa1b70b202',
+    author: user1._id,
+    battle: battle1._id,
+    caption: 'submission3',
+    creationTime: '2023-05-05T00:32:09.969Z',
+    filename: 'seagull.jpg',
+    numVotes: 0,
+  };
+
+  const submission4 = {
+    _id: '64544e66d74751fa1b70b203',
+    author: user1._id,
+    battle: battle1._id,
+    caption: 'submission4',
+    creationTime: '2023-05-05T00:32:09.969Z',
+    filename: 'seagull.jpg',
+    numVotes: 0,
+  };
+
+  const fakeSubmissions = [submission1, submission2, submission3, submission4];
 
   /* Fake comments.  */
   const comment1 = {
