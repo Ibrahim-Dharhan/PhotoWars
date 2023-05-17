@@ -4,6 +4,7 @@ import { BattleCard } from '../../components/battleCard/BattleCard';
 import {
   useLoaderData
 } from 'react-router-dom';
+import Stack from '@mui/material/Stack';
 
 const feedLoader = async () => {
   const path = '/battle/all';
@@ -17,9 +18,11 @@ const Feed = () => {
 
   return (
     <React.Fragment>
-      {battleIdsRecent.map((battleId) => {
-        return (<BattleCard battleId={battleId} key={battleId}/>);
-      })}
+      <Stack spacing={1}>
+        {battleIdsRecent.map((battleId) => {
+          return (<BattleCard battleId={battleId} key={battleId} />);
+        })}
+      </Stack>
     </React.Fragment>
   );
 };
