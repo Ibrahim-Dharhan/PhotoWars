@@ -13,19 +13,13 @@ const getTimeRemaining = (deadline) => {
 const startTimer = (deadline, setTimeRemaining) => {
   const { total, days, hours, minutes, seconds } = getTimeRemaining(deadline);
   if (total >= 0) {
-    /*
-    const dd = days > 0 ? `${days} day${days === 1 ? '' : 's'}, `: '';
-    const hh = hours > 0 ? `${hours} hour${hours === 1 ? '' : 's'}, `: '';
-    const mm = minutes > 0 ? `${minutes} minute${minutes === 1 ? '' : 's'}, `: '';
-    const ss = seconds > 0 ? `${seconds} second${seconds === 1 ? '' : 's'} `: '';
-    */
-    const dd = days > 0 ? `${days}d:` : '';
-    const hh = hours > 0 ? `${hours}h:`: '';
-    const mm = minutes > 0 ? `${minutes}m:`: '';
-    const ss = seconds > 0 ? `${seconds}s`: '';
+    const dd = `${days < 10 ? '0' : ''}${days}d:`;
+    const hh = `${hours < 10 ? '0' : ''}${hours}h:`;
+    const mm = `${minutes < 10 ? '0' : ''}${minutes}m:`;
+    const ss = `${seconds < 10 ? '0' : ''}${seconds}s`;
     setTimeRemaining(dd + hh + mm + ss);
   } else {
-    setTimeRemaining('00:00:00');
+    setTimeRemaining('00d:00h:00m:00s');
   }
 };
 

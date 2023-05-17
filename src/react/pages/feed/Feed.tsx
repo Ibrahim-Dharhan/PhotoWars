@@ -18,11 +18,17 @@ const Feed = () => {
 
   return (
     <React.Fragment>
+<<<<<<< HEAD
       <Stack spacing={1}>
         {battleIdsRecent.map((battleId) => {
           return (<BattleCard battleId={battleId} key={battleId} />);
         })}
       </Stack>
+=======
+      {battleIdsRecent.map((battleId) => {
+        return (<BattleCard battleId={battleId} key={battleId}/>);
+      })}
+>>>>>>> main
     </React.Fragment>
   );
 };
