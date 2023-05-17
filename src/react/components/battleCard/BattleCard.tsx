@@ -25,7 +25,7 @@ import PropTypes from 'prop-types';
 import { UserContext } from '../../contexts/UserContext';
 
 const BattleCard = ({
-  battleId
+  battleId, numBVSubmissions, setNumBVSubmissions
 }) => {
   const { userId, setOpen } = useContext(UserContext);
 
@@ -33,12 +33,12 @@ const BattleCard = ({
   const [displayName, setDisplayName] = useState('');
   const [filename, setFilename] = useState('');
   const [numSubmissions, setNumSubmissions] = useState(0);
+  const [submitted, setSubmitted] = useState(false);
   const [numVotes, setNumVotes] = useState(0);
   const [voted, setVoted] = useState(false);
   const [timeRemaining, setTimeRemaining] = useState('--:--:--');
 
   const _battle = useRef(null);
-  const _submitted = useRef(false);
   const _timerEvent = useRef(null);
 
   const location = useLocation();
@@ -93,10 +93,11 @@ const BattleCard = ({
         setVoted(votedOn);
         setNumVotes(numVotes);
 
+        if (setNumBVSubmissions) setNumBVSubmissions(submissionsRes.data.length);
         setNumSubmissions(submissionsRes.data.length);
-        _submitted.current = submissionsRes.data
-                             .map(submission => submission.author)
-                             .includes(userId);
+        setSubmitted(submissionsRes.data
+                     .map(submission => submission.author)
+                     .includes(userId));
       }
     };
     try {
@@ -105,7 +106,7 @@ const BattleCard = ({
       console.error(err.data);
     }
     return () => { shouldUpdate = false; };
-  }, [battleId, numSubmissions, userId]);
+  }, [battleId, numBVSubmissions, numSubmissions, setNumBVSubmissions, userId]);
 
   const vote = async () => {
     const path = `/battle/${battleId}/${voted ? 'unvote' : 'vote'}`;
@@ -184,7 +185,7 @@ const BattleCard = ({
             <ImageIcon
               sx={{
                 pr: 1,
-                color: (_submitted.current && blue[500])
+                color: (submitted && blue[500])
               }}
             />
             <Typography>
@@ -216,7 +217,7 @@ const BattleCard = ({
             </Typography>
             <Tooltip
               title={
-                      _submitted.current
+                      submitted 
                       ? "Only one submission is allowed."
                       : !userId && "Log in to submit to this battle."
                     }
@@ -236,7 +237,7 @@ const BattleCard = ({
               variant="outlined"
               size="small"
               color="primary"
-              disabled={_submitted.current || !userId || location.pathname.endsWith('submit')}
+              disabled={submitted || !userId || location.pathname.endsWith('submit')}
             >
               Enter
             </Button>
@@ -250,7 +251,8 @@ const BattleCard = ({
 };
 
 BattleCard.propTypes = {
-  battleId: PropTypes.string
+  battleId: PropTypes.string,
+  setNumBVSubmissions: React.Dispatch<React.SetStateAction<number>>
 };
 
 export { BattleCard };
