@@ -299,6 +299,7 @@ battleRouter.post(
       res.status(400).send('Invalid file.');
       return;
     }
+
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
       await fs.promises.unlink(path.join('.', IMAGE_DIR, req.file.filename));
