@@ -32,7 +32,7 @@ const BattleCard = ({
   const [caption, setCaption] = useState('');
   const [displayName, setDisplayName] = useState('');
   const [filename, setFilename] = useState('');
-  const [submissions, setSubmissions] = useState([]);
+  const [numSubmissions, setNumSubmissions] = useState(0);
   const [numVotes, setNumVotes] = useState(0);
   const [voted, setVoted] = useState(false);
   const [timeRemaining, setTimeRemaining] = useState('--:--:--');
@@ -93,10 +93,10 @@ const BattleCard = ({
         setVoted(votedOn);
         setNumVotes(numVotes);
 
-        setSubmissions(submissionsRes.data);
-        _submitted.current = submissions
-          .map(submission => submission.author)
-          .includes(userId);
+        setNumSubmissions(submissionsRes.data.length);
+        _submitted.current = submissionsRes.data
+                             .map(submission => submission.author)
+                             .includes(userId);
       }
     };
     try {
@@ -105,7 +105,7 @@ const BattleCard = ({
       console.error(err.data);
     }
     return () => { shouldUpdate = false; };
-  }, [battleId, submissions, userId]);
+  }, [battleId, numSubmissions, userId]);
 
   const vote = async () => {
     const path = `/battle/${battleId}/${voted ? 'unvote' : 'vote'}`;
@@ -188,7 +188,7 @@ const BattleCard = ({
               }}
             />
             <Typography>
-              {submissions.length}
+              {numSubmissions}
             </Typography>
           </IconButton>
           <IconButton

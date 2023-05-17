@@ -131,8 +131,14 @@ accountRouter.post('/new', checkSchema(NewUser), async (req, res) => {
     return;
   }
   console.log(`Creating user ${req.body.displayName}`);
-  const userObj = await User.create(req.body);
-  res.status(200).json(userObj.toObject());
+  try {
+    const userObj = await User.create(req.body);
+    req.session.loggedIn = true;
+    req.session.userId = result._id.toString();
+    res.status(200).json(userObj.toObject());
+  } catch (err) {
+    res.status(500).send('Internal server error.');
+  }
 });
 
 export { accountRouter };
