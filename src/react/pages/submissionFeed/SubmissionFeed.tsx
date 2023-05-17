@@ -13,6 +13,7 @@ const submissionFeedLoader = async({ params }) => {
 const SubmissionFeed = () => {
   const { id } = useParams();
   const submissions = useLoaderData();
+  console.log(submissions);
   
   return (
     <React.Fragment>
