@@ -12,12 +12,12 @@ const submissionFeedLoader = async({ params }) => {
 
 const SubmissionFeed = () => {
   const { id } = useParams();
-  const submissions = useLoaderData();
+  const submissionIds = useLoaderData() as string[];
   
   return (
     <React.Fragment>
-      {submissions.map((submission) => {
-        return (<SubmissionCard submissionId={submission._id} key={submission._id}/>);
+      {submissionIds.map((submissionId) => {
+        return (<SubmissionCard submissionId={submissionId} key={submissionId}/>);
       })}
     </React.Fragment>
   );
