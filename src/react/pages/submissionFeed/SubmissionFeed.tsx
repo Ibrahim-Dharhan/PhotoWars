@@ -2,10 +2,8 @@ import React from 'react';
 import axios from 'axios';
 import Grid from '@mui/material/Grid';
 import Box from '@mui/material/Box';
-import Button from '@mui/material/Button';
 import { useLoaderData } from 'react-router-dom';
 import { SubmissionCard } from '../../components/submissionCard/SubmissionCard';
-import { SubmissionModal } from '../../components/submissionModal/submissionModal';
 
 const submissionFeedLoader = async({ params }) => {
   const id = params.id;
@@ -37,27 +35,14 @@ const feedStyle = {
 const SubmissionFeed = () => {
   const submissions = useLoaderData() as Submission[];
   console.log(submissions);
-
-  const [open, setOpen] = React.useState(false);
-  const handleOpen = () => setOpen(true);
-  const handleClose = () => setOpen(false);
   
   return (
     <React.Fragment>
-      <Button onClick={handleOpen}>Open modal</Button>
       <Box sx={feedStyle}>
         {submissions.map((submission) => {
           return <SubmissionCard submissionId={submission._id} key={submission._id}/>
         })}
       </Box>
-      <SubmissionModal 
-        open={open}
-        handleClose={handleClose}
-        submissionId={submissions[0]._id}
-        displayName={'User'}
-        caption={submissions[0].caption}
-        filename={submissions[0].filename}
-      />
     </React.Fragment>
   );
 };
