@@ -1,6 +1,6 @@
 import React from 'react';
 import { createRoot } from 'react-dom/client';
-import { CssBaseline } from '@mui/material';
+import { CssBaseline, ThemeProvider } from '@mui/material';
 import {
   createBrowserRouter,
   createRoutesFromElements,
@@ -17,6 +17,7 @@ import { Home } from './react/pages/home/Home';
 import { Layout } from './react/pages/Layout';
 import { SubmissionFeed, submissionFeedLoader } from './react/pages/submissionFeed/SubmissionFeed';
 import { Submit } from './react/pages/submit/Submit';
+import theme from './theme';
 
 const PhotoWars = () => {
   const router = createBrowserRouter(
@@ -51,7 +52,9 @@ const PhotoWars = () => {
   return (
     <React.StrictMode>
     <CssBaseline />
+    <ThemeProvider theme={theme}>
       <RouterProvider router={router} />
+      </ThemeProvider>
     </React.StrictMode>
   );
 };
