@@ -2,8 +2,6 @@ import React, { useContext, useEffect, useRef, useState } from 'react';
 import axios from 'axios';
 import {
   Avatar,
-  Box,
-  Button,
   Card,
   CardActionArea,
   CardActions,
@@ -11,13 +9,11 @@ import {
   CardMedia,
   CardHeader,
   IconButton,
-  Tooltip,
   Typography
 } from '@mui/material'
 import DownloadIcon from '@mui/icons-material/Download';
 import FavoriteIcon from '@mui/icons-material/Favorite';
-import ImageIcon from '@mui/icons-material/Image';
-import { blue, pink } from '@mui/material/colors';
+import { pink } from '@mui/material/colors';
 import { Link } from 'react-router-dom';
 import './submissionCard.css';
 import PropTypes from 'prop-types';
