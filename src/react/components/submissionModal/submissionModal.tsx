@@ -1,9 +1,8 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import {
   Avatar,
   Box,
-  Button,
   Card,
   CardMedia,
   Divider,
@@ -152,7 +151,12 @@ const SubmissionModal = ({
 };
 
 SubmissionModal.propTypes = {
-  submissionId: PropTypes.string
+  open: PropTypes.bool,
+  handleClose: PropTypes.func,
+  submissionId: PropTypes.string,
+  displayName: PropTypes.string,
+  caption: PropTypes.string,
+  filename: PropTypes.string
 };
 
 export { SubmissionModal };
