@@ -339,6 +339,12 @@ battleRouter.post(
         },
         ...matchedData(req),
       });
+      /* Uploading to S3.  */
+      if (AWS_BUCKET_NAME) {
+        const s3Result = await uploadFileToS3(req.file);
+        console.log(s3Result);
+        await fs.promises.unlink(path.join(IMAGE_DIR, req.file.filename));
+      }
       res.status(200).json(newSubmissionObj);
     } catch (err) {
       await fs.promises.unlink(path.join('.', IMAGE_DIR, req.file.filename));

@@ -37,6 +37,7 @@ imageRouter.get('/:filename', (req, res) => {
   };
 
   const filename = req.params.filename;
+  /*
   res.sendFile(filename, options, (err) => {
     if (err) {
       console.error('Failed to send file.', err);
@@ -45,6 +46,8 @@ imageRouter.get('/:filename', (req, res) => {
       console.log(`Sent: ${filename}`);
     }
   });
+  */
+  res.redirect(301, 'https://photowars.s3.us-west-2.amazonaws.com/public/images/hedgehogBattle.jpg');
 });
 
 export { imageRouter };
