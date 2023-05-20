@@ -3,6 +3,7 @@
 import express = require('express');
 import path = require('path');
 
+import { AWS_BUCKET_NAME, getFileFromS3 } from '../../definitions/s3';
 import * as constants from '../../definitions/constants';
 
 const IMAGE_DIR = process.env.IMAGE_DIR || constants._imageDir;
@@ -28,26 +29,37 @@ const imageRouter = express.Router();
  *
  */
 imageRouter.get('/:filename', (req, res) => {
-  const options = {
-    root: path.join('.', IMAGE_DIR),
-    headers: {
-      'x-timestamp': Date.now(),
-      'x-sent': true
-    }
-  };
-
   const filename = req.params.filename;
-  /*
-  res.sendFile(filename, options, (err) => {
-    if (err) {
-      console.error('Failed to send file.', err);
-      res.status(404).send('Image does not exist.');
-    } else {
-      console.log(`Sent: ${filename}`);
+  if (AWS_BUCKET_NAME) {
+    /* Get file from Amazon S3 storage.  */
+    const fileKey = path.join(IMAGE_DIR, filename);
+    try {
+      const readStream = getFileFromS3(fileKey);
+      console.log(fileKey);
+      readStream.pipe(res);
+    } catch (err) {
+      console.error(err);
+      res.status(404).send('Not Found');
     }
-  });
-  */
-  res.redirect(301, 'https://photowars.s3.us-west-2.amazonaws.com/public/images/hedgehogBattle.jpg');
+  } else {
+    /* Get file from local file system.  */
+    const options = {
+      root: IMAGE_DIR,
+      headers: {
+        'x-timestamp': Date.now(),
+        'x-sent': true
+      }
+    };
+
+    res.sendFile(filename, options, (err) => {
+      if (err) {
+        console.error('Failed to send file.', err);
+        res.status(404).send('Image does not exist.');
+      } else {
+        console.log(`Sent: ${filename}`);
+      }
+    });
+  }
 });
 
 export { imageRouter };

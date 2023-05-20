@@ -247,7 +247,7 @@ battleRouter.post(
       if (AWS_BUCKET_NAME) {
         const s3Result = await uploadFileToS3(req.file);
         console.log(s3Result);
-        await fs.promises.unlink(path.join(IMAGE_DIR, req.file.filename));
+        // await fs.promises.unlink(path.join(IMAGE_DIR, req.file.filename));
       }
       res.status(200).json(newBattleObj);
     } catch (err) {

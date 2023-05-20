@@ -1,6 +1,8 @@
 "use strict"
 
-require('dotenv').config();
+// require('dotenv').config();
+import dotenv = require('dotenv');
+dotenv.config();
 import fs = require('fs');
 import path = require('path');
 import * as constants from './constants';
@@ -21,11 +23,19 @@ const s3 = new AWS.S3({
 const uploadFileToS3 = (file) => {
   const fileStream = fs.createReadStream(file.path);
   const uploadParams = {
-    Bucket: AWS_BUCKET_NAME,
     Body: fileStream,
+    Bucket: AWS_BUCKET_NAME,
     Key: path.join(IMAGE_DIR, file.filename),
   };
   return s3.upload(uploadParams).promise();
 };
 
-export { AWS_BUCKET_NAME, uploadFileToS3 };
+const getFileFromS3 = (fileKey) => {
+  const downloadParams = {
+    Bucket: AWS_BUCKET_NAME,
+    Key: fileKey
+  };
+  return s3.getObject(downloadParams).createReadStream();
+};
+
+export { AWS_BUCKET_NAME, uploadFileToS3, getFileFromS3 };
