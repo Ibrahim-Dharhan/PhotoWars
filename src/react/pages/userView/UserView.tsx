@@ -43,28 +43,27 @@ const UserView = () => {
           <Grid item xs={12}>
             <Toolbar
               sx={{
-                background: 'aqua',
-                textAlign: 'center',
+                // background: 'aqua',
+                marginX: "2em",
+                justifyContent: 'space-between',
+                
               }}
             >
               <Button
-                variant='text'
+                variant='contained'
                 component='div'
-                sx={{ flexGrow: 1, color: 'black' }}
               >
                 Battles
               </Button>
               <Button
-                variant='text'
+                variant='contained'
                 component='div'
-                sx={{ flexGrow: 1, color: 'black' }}
               >
                 Submissions
               </Button>
               <Button
-                variant='text'
+                variant='contained'
                 component='div'
-                sx={{ flexGrow: 1, color: 'black' }}
               >
                 Comments
               </Button>
