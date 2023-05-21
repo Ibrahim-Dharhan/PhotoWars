@@ -11,6 +11,7 @@ import { Submission } from '../../definitions/schemas/mongoose/submission';
 import { Comment } from '../../definitions/schemas/mongoose/comment';
 import { UpdateBattle } from '../../definitions/schemas/validation/updateBattle';
 import { upload } from '../../server';
+import { AWS_BUCKET_NAME, uploadFileToS3 } from '../../definitions/s3';
 import { voteOn, unvoteOn } from '../../definitions/schemas/mongoose/vote';
 
 import * as constants from '../../definitions/constants';
@@ -221,7 +222,7 @@ battleRouter.post(
     }
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
-      await fs.promises.unlink(path.join('.', IMAGE_DIR, req.file.filename));
+      await fs.promises.unlink(path.join(IMAGE_DIR, req.file.filename));
       res.status(400).json({
         errors: errors.array(),
       });
@@ -229,7 +230,7 @@ battleRouter.post(
     }
 
     if (!req.session.loggedIn) {
-      await fs.promises.unlink(path.join('.', IMAGE_DIR, req.file.filename));
+      await fs.promises.unlink(path.join(IMAGE_DIR, req.file.filename));
       res.status(401).send('Not logged in.');
       return;
     }
@@ -242,10 +243,16 @@ battleRouter.post(
         },
         ...matchedData(req),
       });
+      /* Uploading to S3.  */
+      if (AWS_BUCKET_NAME) {
+        const s3Result = await uploadFileToS3(req.file);
+        console.log(s3Result);
+        // await fs.promises.unlink(path.join(IMAGE_DIR, req.file.filename));
+      }
       res.status(200).json(newBattleObj);
     } catch (err) {
       res.status(500).send('Internal server error.');
-      await fs.promises.unlink(path.join('.', IMAGE_DIR, req.file.filename));
+      await fs.promises.unlink(path.join(IMAGE_DIR, req.file.filename));
       console.error(err);
     }
   }
@@ -332,6 +339,12 @@ battleRouter.post(
         },
         ...matchedData(req),
       });
+      /* Uploading to S3.  */
+      if (AWS_BUCKET_NAME) {
+        const s3Result = await uploadFileToS3(req.file);
+        console.log(s3Result);
+        await fs.promises.unlink(path.join(IMAGE_DIR, req.file.filename));
+      }
       res.status(200).json(newSubmissionObj);
     } catch (err) {
       await fs.promises.unlink(path.join('.', IMAGE_DIR, req.file.filename));
