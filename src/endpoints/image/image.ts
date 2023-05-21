@@ -33,14 +33,10 @@ imageRouter.get('/:filename', (req, res) => {
   if (AWS_BUCKET_NAME) {
     /* Get file from Amazon S3 storage.  */
     const fileKey = path.join(IMAGE_DIR, filename);
-    try {
-      const readStream = getFileFromS3(fileKey);
-      console.log(fileKey);
+      const readStream = getFileFromS3(fileKey).on('error', (err) => {
+        res.status(404).send('Not Found');
+      });
       readStream.pipe(res);
-    } catch (err) {
-      console.error(err);
-      res.status(404).send('Not Found');
-    }
   } else {
     /* Get file from local file system.  */
     const options = {
