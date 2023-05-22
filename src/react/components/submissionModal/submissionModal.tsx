@@ -32,7 +32,7 @@ const style = {
 interface Comment {
   _id: string;
   __v: number;
-  author: string;
+  author: any;
   commentedModel: string;
   creationTime: string;
   filename: string;
@@ -119,7 +119,7 @@ const SubmissionModal = ({
                   <ListItem alignItems="flex-start">
                     <ListItemAvatar>
                       <Avatar>
-                        {comment.author[0]}
+                        {comment.author.displayName[0]}
                       </Avatar>
                     </ListItemAvatar>
                     <ListItemText
@@ -131,7 +131,7 @@ const SubmissionModal = ({
                             variant="body2"
                             color="text.primary"
                           >
-                            {comment.author + '\n'}
+                            {comment.author.displayName + '\n'}
                           </Typography>
                           {comment.text}
                         </React.Fragment>

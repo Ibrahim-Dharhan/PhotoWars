@@ -3,6 +3,7 @@
 import express = require('express');
 import { Comment } from '../../definitions/schemas/mongoose/comment';
 import { voteOn, unvoteOn } from '../../definitions/schemas/mongoose/vote';
+import { Submission } from '../../definitions/schemas/mongoose/submission';
 
 const commentRouter = express.Router();
 
