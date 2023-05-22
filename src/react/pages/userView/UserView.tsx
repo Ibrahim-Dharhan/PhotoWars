@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import axios from 'axios';
 import { BattleCard } from '../../components/battleCard/BattleCard';
 import { Outlet, useLoaderData, useParams } from 'react-router-dom';
@@ -18,7 +18,6 @@ const userViewLoader = async ({ params }) => {
   const path = `/user/${id}`;
   const res = await axios.get(path);
   return res.data;
-  console.log('Loading user data');
 };
 
 interface User {
@@ -35,6 +34,37 @@ interface User {
 
 const UserView = () => {
   const user = useLoaderData() as User;
+  const [feed, setFeed] = useState('battles');
+  const [battles, setBattles] = useState(null);
+  const [submissions, setSubmissions] = useState(null);
+  const [comments, setComments] = useState(null);
+  useEffect(() => {
+    let shouldUpdate = true;
+    const setUserData = async () => {
+      const pathBattle = `/battle/all`;
+      const resBattles = await axios.get(pathBattle);
+      const pathSubmissions = `/battle/all`;
+      const resSubmissions = await axios.get(pathSubmissions);
+      const pathComments = `/battle/all`;
+      const resComments = await axios.get(pathComments);
+      if (shouldUpdate) {
+        setBattles(resBattles.data);
+
+        console.log(resBattles.data);
+        setSubmissions(resSubmissions.data);
+        setComments(resComments.data);
+      }
+    };
+    try {
+      setUserData();
+    } catch (err) {
+      console.error(err.data);
+    }
+    return () => {
+      shouldUpdate = false;
+    };
+  }, []);
+
   return (
     <React.Fragment>
       <Card sx={{ padding: '1em', width: '100$' }}>
@@ -44,30 +74,67 @@ const UserView = () => {
             <Toolbar
               sx={{
                 // background: 'aqua',
-                marginX: "2em",
+                marginX: '2em',
                 justifyContent: 'space-between',
-                
               }}
             >
               <Button
                 variant='contained'
                 component='div'
+                onClick={() => {
+                  setFeed('battles');
+                }}
               >
                 Battles
               </Button>
               <Button
                 variant='contained'
                 component='div'
+                onClick={() => {
+                  setFeed('submissions');
+                }}
               >
                 Submissions
               </Button>
               <Button
                 variant='contained'
                 component='div'
+                onClick={() => {
+                  setFeed('comments');
+                }}
               >
                 Comments
               </Button>
             </Toolbar>
+          </Grid>
+          <Grid item xs={12}>
+            {feed === 'battles' && battles ? (
+              battles.map((battle_id) => {
+                return (
+                  <BattleCard
+                    battleId={battle_id}
+                    numBVSubmissions={null}
+                    setNumBVSubmissions={null}
+                    key={battle_id}
+                  />
+                );
+              })
+            ) : feed === 'submissions' && submissions ? (
+              submissions.map((submission_id) => {
+                return (
+                  <BattleCard
+                    battleId={submission_id}
+                    numBVSubmissions={null}
+                    setNumBVSubmissions={null}
+                    key={submission_id}
+                  />
+                );
+              })
+            ) : feed === 'comments' && comments ? (
+              <div>comments</div>
+            ) : (
+              <></>
+            )}
           </Grid>
         </Grid>
       </Card>

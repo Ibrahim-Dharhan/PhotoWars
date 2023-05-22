@@ -50,7 +50,7 @@ const BattleCard = ({
     const url = `/image/${filename}`;
     const link = document.createElement('a');
     link.href = url;
-    link.download = filename;
+  link.download = filename;
     link.click();
   };
 
@@ -124,7 +124,7 @@ const BattleCard = ({
       <CardActionArea
         component="div"
         onClick={() => {
-          if (location.pathname === '/') {
+          if (location.pathname === '/' || location.pathname.startsWith('/users')) {
             console.log("Open post");
             navigate(`/battles/${battleId}`);
           }

@@ -91,7 +91,7 @@ const SubmissionModal = ({
       aria-describedby='modal-modal-description'
     >
       <Box sx={style}>
-        <Grid container spacing={1}>
+        <Grid direction='row' container spacing={1}>
           <Grid item xs={6}>
             <Card>
               <CardMedia
