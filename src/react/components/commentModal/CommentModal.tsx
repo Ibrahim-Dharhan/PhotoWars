@@ -40,10 +40,11 @@ interface Comment {
   text: string;
 }
 
-const SubmissionModal = ({
+const CommentModal = ({
   open, 
   handleClose,
-  submissionId,
+  variant,
+  id,
   displayName,
   caption,
   filename
@@ -52,9 +53,10 @@ const SubmissionModal = ({
 
   /* useEffect for updating comments.  */
   useEffect(() => {
+    if (!open) return;
     let shouldUpdate = true;
     const getComments = async() => {
-      const path = `/submission/${submissionId}/comments`;
+      const path = `/${variant}/${id}/comments`;
       const res = await axios.get(path);
       const retrievedComments: Comment[] = res.data;
 
@@ -68,7 +70,7 @@ const SubmissionModal = ({
       console.error(err.data);
     }
     return () => { shouldUpdate = false; };
-  }, [submissionId]);
+  }, [id]);
 
   return (
     <Modal
@@ -150,13 +152,14 @@ const SubmissionModal = ({
   );
 };
 
-SubmissionModal.propTypes = {
+CommentModal.propTypes = {
   open: PropTypes.bool,
   handleClose: PropTypes.func,
-  submissionId: PropTypes.string,
+  variant: PropTypes.string,
+  id: PropTypes.string,
   displayName: PropTypes.string,
   caption: PropTypes.string,
   filename: PropTypes.string
 };
 
-export { SubmissionModal };
+export { CommentModal };
