@@ -8,21 +8,18 @@ import {
   CardActions,
   CardContent,
   CardMedia,
-  CardHeader,
   IconButton,
   Typography,
 } from '@mui/material';
-import DownloadIcon from '@mui/icons-material/Download';
 import FavoriteIcon from '@mui/icons-material/Favorite';
 import { pink } from '@mui/material/colors';
-import { Link, useNavigate } from 'react-router-dom';
 import './submissionCard.css';
 import PropTypes from 'prop-types';
 import { UserContext } from '../../contexts/UserContext';
+import { PostCardHeader } from '../postCardHeader/PostCardHeader';
 
 const SubmissionCard = ({ submissionId, showModal }) => {
   const { userId, setOpen } = useContext(UserContext);
-  const navigate = useNavigate();
   const [caption, setCaption] = useState('');
   const [displayName, setDisplayName] = useState('');
   const [filename, setFilename] = useState('');
@@ -31,16 +28,6 @@ const SubmissionCard = ({ submissionId, showModal }) => {
 
   const _isAuthor = useRef(false);
   const _submission = useRef(null);
-
-  const handleDownload = async (event) => {
-    event.stopPropagation();
-    event.preventDefault();
-    const url = `/image/${filename}`;
-    const link = document.createElement('a');
-    link.href = url;
-    link.download = filename;
-    link.click();
-  };
 
   /* useEffect for updating caption, display name, and image.  */
   useEffect(() => {
@@ -105,47 +92,7 @@ const SubmissionCard = ({ submissionId, showModal }) => {
   return (
     <Card variant='outlined'>
       <CardActionArea component='div'>
-        <CardHeader
-          avatar={
-            <Avatar
-              sx={{ width: 24, height: 24 }}
-              onClick={(event) => {
-                event.stopPropagation();
-                event.preventDefault();
-                console.log(
-                  `Go to profile page at /user/${_submission.current?.author._id}`
-                );
-                navigate(`/users/${_submission.current?.author._id}`);
-              }}
-            >
-              {displayName[0]}
-            </Avatar>
-          }
-          title={
-            <Link
-              to=''
-              onMouseDown={(event) => event.stopPropagation()}
-              onClick={(event) => {
-                event.stopPropagation();
-                event.preventDefault();
-                console.log(
-                  `Go to profile page at /user/${_submission.current?.author._id}`
-                );
-                navigate(`/users/${_submission.current?.author._id}`);
-              }}
-            >
-              {displayName}
-            </Link>
-          }
-          action={
-            <IconButton
-              onMouseDown={(event) => event.stopPropagation()}
-              onClick={handleDownload}
-            >
-              <DownloadIcon />
-            </IconButton>
-          }
-        />
+        <PostCardHeader _post={_submission} />
         <CardContent sx={{ mt: -3 }}>
           <Typography variant='h6'>{caption}</Typography>
         </CardContent>
