@@ -10,23 +10,21 @@ import {
   CardMedia,
   CardHeader,
   IconButton,
-  Typography
-} from '@mui/material'
+  Typography,
+} from '@mui/material';
 import DownloadIcon from '@mui/icons-material/Download';
 import FavoriteIcon from '@mui/icons-material/Favorite';
 import { pink } from '@mui/material/colors';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import './submissionCard.css';
 import PropTypes from 'prop-types';
 import { UserContext } from '../../contexts/UserContext';
 import { Block } from '@mui/icons-material';
 import { auto } from 'async';
 
-const SubmissionCard = ({
-  submissionId, showModal
-}) => {
+const SubmissionCard = ({ submissionId, showModal }) => {
   const { userId, setOpen } = useContext(UserContext);
-
+  const navigate = useNavigate();
   const [caption, setCaption] = useState('');
   const [displayName, setDisplayName] = useState('');
   const [filename, setFilename] = useState('');
@@ -49,7 +47,7 @@ const SubmissionCard = ({
   /* useEffect for updating caption, display name, and image.  */
   useEffect(() => {
     let shouldUpdate = true;
-    const setSubmissionInformation = async() => {
+    const setSubmissionInformation = async () => {
       const path = `/submission/${submissionId}`;
       const res = await axios.get(path);
       const submission = res.data;
@@ -67,13 +65,15 @@ const SubmissionCard = ({
     } catch (err) {
       console.error(err.data);
     }
-    return () => { shouldUpdate = false; };
+    return () => {
+      shouldUpdate = false;
+    };
   }, [submissionId]);
 
   /* useEffect for updating vote count.  */
   useEffect(() => {
     let shouldUpdate = true;
-    const getVotes = async() => {
+    const getVotes = async () => {
       const votesPath = `/vote/${submissionId}`;
       const votesRes = await axios.get(votesPath);
       const { numVotes, votedOn } = votesRes.data;
@@ -88,7 +88,9 @@ const SubmissionCard = ({
     } catch (err) {
       console.error(err.data);
     }
-    return () => { shouldUpdate = false; };
+    return () => {
+      shouldUpdate = false;
+    };
   }, [submissionId, userId]);
 
   const vote = async () => {
@@ -109,19 +111,31 @@ const SubmissionCard = ({
       <CardActionArea component="div">
         <CardHeader
           avatar={
-            <Avatar sx={{ width: 24, height: 24 }}>
+            <Avatar
+              sx={{ width: 24, height: 24 }}
+              onClick={(event) => {
+                event.stopPropagation();
+                event.preventDefault();
+                console.log(
+                  `Go to profile page at /user/${_submission.current?.author._id}`
+                );
+                navigate(`/users/${_submission.current?.author._id}`);
+              }}
+            >
               {displayName[0]}
             </Avatar>
           }
           title={
             <Link
-              to=""
-              // to=`/user/${_submission.current.author._id}`
-              onMouseDown={ (event) => event.stopPropagation()}
-              onClick={ (event) => {
+              to=''
+              onMouseDown={(event) => event.stopPropagation()}
+              onClick={(event) => {
                 event.stopPropagation();
                 event.preventDefault();
-                console.log(`Go to profile page at /user/${_submission.current.author._id}`);
+                console.log(
+                  `Go to profile page at /user/${_submission.current?.author._id}`
+                );
+                navigate(`/users/${_submission.current?.author._id}`);
               }}
             >
               {displayName}
@@ -129,7 +143,7 @@ const SubmissionCard = ({
           }
           action={
             <IconButton
-              onMouseDown={ (event) => event.stopPropagation()}
+              onMouseDown={(event) => event.stopPropagation()}
               onClick={handleDownload}
             >
               <DownloadIcon />
@@ -141,9 +155,20 @@ const SubmissionCard = ({
             {caption}
           </Typography>
         </CardContent>
-        <ButtonBase onClick={() => showModal('submission', submissionId, displayName, caption, filename)} sx = {{width: "100%"}}>
+        <ButtonBase
+          onClick={() => 
+            showModal &&
+            showModal(
+              'submission',
+              submissionId,
+              displayName,
+              caption,
+              filename
+            )
+          }
+          sx = {{width: "100%"}}>
           <CardMedia
-            component="img"
+            component='img'
             image={`/image/${filename}`}
             loading="lazy"
             sx={{height:300, objectFit: "contain"}}
@@ -156,11 +181,10 @@ const SubmissionCard = ({
               event.stopPropagation();
               event.preventDefault();
             }}
-          >
-          </IconButton>
+          ></IconButton>
           <IconButton
-            onMouseDown={ (event) => event.stopPropagation()}
-            onClick={ (event) => {
+            onMouseDown={(event) => event.stopPropagation()}
+            onClick={(event) => {
               event.stopPropagation();
               event.preventDefault();
               if (userId !== '') {
@@ -170,12 +194,8 @@ const SubmissionCard = ({
               }
             }}
           >
-            <FavoriteIcon
-              sx={{ pr: 1, color: (voted && pink[500]) }}
-            />
-            <Typography>
-              {numVotes}
-            </Typography>
+            <FavoriteIcon sx={{ pr: 1, color: voted && pink[500] }} />
+            <Typography>{numVotes}</Typography>
           </IconButton>
         </CardActions>
       </CardActionArea>
@@ -186,7 +206,7 @@ const SubmissionCard = ({
 
 SubmissionCard.propTypes = {
   submissionId: PropTypes.string,
-  showModal: PropTypes.func
+  showModal: PropTypes.func,
 };
 
 export { SubmissionCard };

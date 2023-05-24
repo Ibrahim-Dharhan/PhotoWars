@@ -2,55 +2,55 @@ function dummyDataFunc() {
   /* Fake users.  */
   const user1 = {
     _id: '645449c2d0215be49c7e1300',
-    description: 'Desc',
-    displayName: 'ab',
+    description: "I'm Spiderman!",
+    displayName: 'Spidey',
     filename: 'seagull.jpg',
-    firstName: 'a',
-    lastName: 'b',
+    firstName: 'Tom',
+    lastName: 'Holland',
     loginName: 'ab',
     loginPassword: 'ab',
   };
 
   const user2 = {
     _id: '645449c2d0215be49c7e1301',
-    description: 'Desc',
-    displayName: 'bc',
+    description: 'I do all of my stunts!',
+    displayName: 'RushHour',
     filename: 'seagull.jpg',
-    firstName: 'b',
-    lastName: 'c',
+    firstName: 'Jackie',
+    lastName: 'Chan',
     loginName: 'bc',
     loginPassword: 'bc',
   };
 
   const user3 = {
     _id: '645449c2d0215be49c7e1302',
-    description: 'Desc',
-    displayName: 'cd',
+    description: 'Unholy is the best song',
+    displayName: 'Sammy',
     filename: 'seagull.jpg',
-    firstName: 'c',
-    lastName: 'd',
+    firstName: 'Sam',
+    lastName: 'Smith',
     loginName: 'cd ',
     loginPassword: 'cd',
   };
 
   const user4 = {
     _id: '645449c2d0215be49c7e1303',
-    description: 'Desc',
-    displayName: 'de',
+    description: "I'm deadpool",
+    displayName: 'Deadpool',
     filename: 'seagull.jpg',
-    firstName: 'd',
-    lastName: 'e',
+    firstName: 'Ryan',
+    lastName: 'Reynolds',
     loginName: 'de',
     loginPassword: 'de',
   };
 
   const user5 = {
     _id: '645449c2d0215be49c7e1304',
-    description: 'Desc',
-    displayName: 'ef',
+    description: 'La La La La Land',
+    displayName: 'Emmaaa',
     filename: 'seagull.jpg',
-    firstName: 'e',
-    lastName: 'f',
+    firstName: 'Emma',
+    lastName: 'Stone',
     loginName: 'ef',
     loginPassword: 'ef',
   };
@@ -69,7 +69,7 @@ function dummyDataFunc() {
 
   const battle2 = {
     _id: '64544bf83f9238e774994e01',
-    author: user1._id,
+    author: user2._id,
     caption: 'This hedgehog posing in a tiny kayak',
     creationTime: '2023-05-05T00:24:14.710Z',
     deadline: '2023-05-28T00:26:13.696Z',
@@ -78,7 +78,7 @@ function dummyDataFunc() {
 
   const battle3 = {
     _id: '64544bf83f9238e774994e02',
-    author: user1._id,
+    author: user3._id,
     caption: 'Obama winning connect four against Stephen Curry',
     creationTime: '2023-05-05T00:24:14.710Z',
     deadline: '2023-05-30T00:26:13.696Z',

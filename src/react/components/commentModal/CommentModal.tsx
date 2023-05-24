@@ -12,10 +12,12 @@ import {
   ListItemAvatar,
   ListItemText,
   Modal,
-  Typography
-} from '@mui/material'
+  Typography,
+} from '@mui/material';
 import '../submissionCard/submissionCard.css';
 import PropTypes from 'prop-types';
+import { useNavigate } from 'react-router-dom';
+import './style.css';
 
 const style = {
   position: 'absolute',
@@ -26,7 +28,7 @@ const style = {
   bgcolor: 'background.paper',
   boxShadow: 24,
   borderRadius: '2px',
-  p: 2
+  p: 2,
 };
 
 interface Comment {
@@ -35,27 +37,27 @@ interface Comment {
   author: any;
   commentedModel: string;
   creationTime: string;
-  filename: string;
   post: string;
   text: string;
 }
 
 const CommentModal = ({
-  open, 
+  open,
   handleClose,
   variant,
   id,
   displayName,
   caption,
-  filename
+  filename,
 }) => {
   const [comments, setComments] = useState([]);
+  const navigate = useNavigate();
 
   /* useEffect for updating comments.  */
   useEffect(() => {
     if (!open) return;
     let shouldUpdate = true;
-    const getComments = async() => {
+    const getComments = async () => {
       const path = `/${variant}/${id}/comments`;
       const res = await axios.get(path);
       const retrievedComments: Comment[] = res.data;
@@ -69,34 +71,34 @@ const CommentModal = ({
     } catch (err) {
       console.error(err.data);
     }
-    return () => { shouldUpdate = false; };
+    return () => {
+      shouldUpdate = false;
+    };
   }, [id]);
 
   return (
     <Modal
       open={open}
       onClose={handleClose}
-      aria-labelledby="modal-modal-title"
-      aria-describedby="modal-modal-description"
+      aria-labelledby='modal-modal-title'
+      aria-describedby='modal-modal-description'
     >
       <Box sx={style}>
-        <Grid container spacing={1}>
+        <Grid direction='row' container spacing={1}>
           <Grid item xs={6}>
             <Card>
               <CardMedia
-                component="img"
+                component='img'
                 image={`/image/${filename}`}
-                loading="lazy"
+                loading='lazy'
               />
             </Card>
           </Grid>
           <Grid item xs={6}>
             <List>
-              <ListItem alignItems="flex-start">
+              <ListItem alignItems='flex-start'>
                 <ListItemAvatar>
-                  <Avatar>
-                    {displayName[0]}
-                  </Avatar>
+                  <Avatar>{displayName[0]}</Avatar>
                 </ListItemAvatar>
                 <ListItemText
                   primary={caption}
@@ -104,9 +106,9 @@ const CommentModal = ({
                     <React.Fragment>
                       <Typography
                         sx={{ display: 'inline' }}
-                        component="span"
-                        variant="body2"
-                        color="text.primary"
+                        component='span'
+                        variant='body2'
+                        color='text.primary'
                       >
                         {displayName}
                       </Typography>
@@ -114,36 +116,45 @@ const CommentModal = ({
                   }
                 />
               </ListItem>
-              <Divider variant="inset" component="li" />
+              <Divider variant='inset' component='li' />
               {comments.map((comment: Comment) => {
                 return (
-                <div key={comment._id}>
-                  <ListItem alignItems="flex-start">
-                    <ListItemAvatar>
-                      <Avatar>
-                        {comment.author.displayName[0]}
-                      </Avatar>
-                    </ListItemAvatar>
-                    <ListItemText
-                      secondary={
-                        <React.Fragment>
-                          <Typography
-                            sx={{ display: 'inline' }}
-                            component="span"
-                            variant="body2"
-                            color="text.primary"
-                          >
-                            {comment.author.displayName + '\n'}
-                          </Typography>
-                          {comment.text}
-                        </React.Fragment>
-                      }
-                    />
-                  </ListItem>
-                  <Divider variant="inset" component="li" />
-                </div>)
+                  <div key={comment._id}>
+                    <ListItem
+                      className='comment-modal-comment'
+                      alignItems='flex-start'
+                      onClick={(event) => {
+                        event.stopPropagation();
+                        event.preventDefault();
+                        console.log(
+                          `Go to profile page at /user/${comment.author._id}`
+                        );
+                        navigate(`/users/${comment.author._id}`);
+                      }}
+                    >
+                      <ListItemAvatar>
+                        <Avatar>{comment.author.displayName[0]}</Avatar>
+                      </ListItemAvatar>
+                      <ListItemText
+                        secondary={
+                          <React.Fragment>
+                            <Typography
+                              sx={{ display: 'inline' }}
+                              component='span'
+                              variant='body2'
+                              color='text.primary'
+                            >
+                              {comment.author.displayName + '\n'}
+                            </Typography>
+                            {comment.text}
+                          </React.Fragment>
+                        }
+                      />
+                    </ListItem>
+                    <Divider variant='inset' component='li' />
+                  </div>
+                );
               })}
-
             </List>
           </Grid>
         </Grid>
@@ -159,7 +170,7 @@ CommentModal.propTypes = {
   id: PropTypes.string,
   displayName: PropTypes.string,
   caption: PropTypes.string,
-  filename: PropTypes.string
+  filename: PropTypes.string,
 };
 
 export { CommentModal };
