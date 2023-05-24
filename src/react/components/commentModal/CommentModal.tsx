@@ -29,18 +29,6 @@ const style = {
   p: 2,
 };
 
-interface User {
-  _id: string;
-  __v: number;
-  description: String;
-  displayName: String;
-  filename: String;
-  firstName: String;
-  lastName: String;
-  loginName: String;
-  loginPassword: String;
-}
-
 interface Comment {
   _id: string;
   __v: number;
@@ -52,7 +40,7 @@ interface Comment {
 }
 
 const CommentModal = ({
-  open, 
+  open,
   handleClose,
   variant,
   id,
@@ -66,7 +54,7 @@ const CommentModal = ({
   useEffect(() => {
     if (!open) return;
     let shouldUpdate = true;
-    const getComments = async() => {
+    const getComments = async () => {
       const path = `/${variant}/${id}/comments`;
       const res = await axios.get(path);
       const retrievedComments: Comment[] = res.data;
@@ -80,7 +68,9 @@ const CommentModal = ({
     } catch (err) {
       console.error(err.data);
     }
-    return () => { shouldUpdate = false; };
+    return () => {
+      shouldUpdate = false;
+    };
   }, [id]);
 
   return (
@@ -126,31 +116,30 @@ const CommentModal = ({
               <Divider variant='inset' component='li' />
               {comments.map((comment: Comment) => {
                 return (
-                <div key={comment._id}>
-                  <ListItem alignItems="flex-start">
-                    <ListItemAvatar>
-                      <Avatar>
-                        {comment.author.displayName[0]}
-                      </Avatar>
-                    </ListItemAvatar>
-                    <ListItemText
-                      secondary={
-                        <React.Fragment>
-                          <Typography
-                            sx={{ display: 'inline' }}
-                            component="span"
-                            variant="body2"
-                            color="text.primary"
-                          >
-                            {comment.author.displayName + '\n'}
-                          </Typography>
-                          {comment.text}
-                        </React.Fragment>
-                      }
-                    />
-                  </ListItem>
-                  <Divider variant="inset" component="li" />
-                </div>)
+                  <div key={comment._id}>
+                    <ListItem alignItems='flex-start'>
+                      <ListItemAvatar>
+                        <Avatar>{comment.author.displayName[0]}</Avatar>
+                      </ListItemAvatar>
+                      <ListItemText
+                        secondary={
+                          <React.Fragment>
+                            <Typography
+                              sx={{ display: 'inline' }}
+                              component='span'
+                              variant='body2'
+                              color='text.primary'
+                            >
+                              {comment.author.displayName + '\n'}
+                            </Typography>
+                            {comment.text}
+                          </React.Fragment>
+                        }
+                      />
+                    </ListItem>
+                    <Divider variant='inset' component='li' />
+                  </div>
+                );
               })}
             </List>
           </Grid>

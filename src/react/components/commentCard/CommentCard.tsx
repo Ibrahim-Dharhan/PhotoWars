@@ -1,7 +1,8 @@
-import React, { useContext, useEffect, useRef, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import { Card, CardMedia, Grid, Typography } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
+import PropTypes from 'prop-types';
 import './style.css';
 
 const CommentCard = ({ comment }) => {
@@ -34,7 +35,7 @@ const CommentCard = ({ comment }) => {
     return () => {
       shouldUpdate = false;
     };
-  }, []);
+  });
   return (
     <Card
       className='comment-card'
@@ -59,6 +60,10 @@ const CommentCard = ({ comment }) => {
       </Grid>
     </Card>
   );
+};
+
+CommentCard.propTypes = {
+  comment: PropTypes.object,
 };
 
 export default CommentCard;

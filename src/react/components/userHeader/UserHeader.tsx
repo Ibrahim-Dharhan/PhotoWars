@@ -1,8 +1,6 @@
-import React, { useState } from 'react';
-import axios from 'axios';
-import { BattleCard } from '../../components/battleCard/BattleCard';
-import { Outlet, useLoaderData, useParams } from 'react-router-dom';
-import { Typography, Avatar, Box, Card } from '@mui/material';
+import React from 'react';
+import PropTypes from 'prop-types';
+import { Typography, Avatar, Box } from '@mui/material';
 
 const UserHeader = ({ user }) => {
   return (
@@ -31,6 +29,10 @@ const UserHeader = ({ user }) => {
       </Box>
     </Box>
   );
+};
+
+UserHeader.propTypes = {
+  user: PropTypes.object,
 };
 
 export { UserHeader };

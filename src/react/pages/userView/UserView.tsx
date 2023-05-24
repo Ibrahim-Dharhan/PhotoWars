@@ -1,21 +1,8 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import { BattleCard } from '../../components/battleCard/BattleCard';
-import {
-  Outlet,
-  useLoaderData,
-  useParams,
-  useNavigate,
-} from 'react-router-dom';
-import {
-  Typography,
-  Avatar,
-  Box,
-  Card,
-  Grid,
-  Toolbar,
-  Button,
-} from '@mui/material';
+import { useLoaderData, useNavigate } from 'react-router-dom';
+import { Box, Card, Grid, Toolbar, Button } from '@mui/material';
 import { UserHeader } from '../../components/userHeader/UserHeader';
 import { SubmissionCard } from '../../components/submissionCard/SubmissionCard';
 import CommentCard from '../../components/commentCard/CommentCard';
@@ -30,13 +17,13 @@ const userViewLoader = async ({ params }) => {
 interface User {
   _id: string;
   __v: number;
-  description: String;
-  displayName: String;
-  filename: String;
-  firstName: String;
-  lastName: String;
-  loginName: String;
-  loginPassword: String;
+  description: string;
+  displayName: string;
+  filename: string;
+  firstName: string;
+  lastName: string;
+  loginName: string;
+  loginPassword: string;
 }
 
 const UserView = () => {
@@ -71,7 +58,7 @@ const UserView = () => {
     return () => {
       shouldUpdate = false;
     };
-  }, []);
+  });
 
   return (
     <React.Fragment>
@@ -81,8 +68,7 @@ const UserView = () => {
           <Grid item xs={12}>
             <Toolbar
               sx={{
-                marginX: '2em',
-                justifyContent: 'space-between',
+                justifyContent: 'space-evenly',
               }}
             >
               <Button
@@ -136,7 +122,7 @@ const UserView = () => {
                       navigate(`/battles/${submission.battle}`);
                     }}
                     key={submission._id}
-                    sx={{marginBottom: "5px"}}
+                    sx={{ marginBottom: '5px' }}
                   >
                     <SubmissionCard
                       submissionId={submission._id}
