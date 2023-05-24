@@ -30,8 +30,8 @@ const feedStyle = {
   paddingRight:0,
   bgcolor: 'background.default',
   display: 'grid',
-  gridTemplateColumns: { md: '1fr 1fr' },
-  gap: 2
+  gridTemplateColumns: { md: 'minmax(0,1fr) minmax(0,1fr)' },
+  gap: 2,
 };
 
 const SubmissionFeed = () => {
