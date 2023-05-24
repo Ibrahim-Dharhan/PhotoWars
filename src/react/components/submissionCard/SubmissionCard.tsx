@@ -96,14 +96,18 @@ const SubmissionCard = ({ submissionId, showModal }) => {
   };
 
   return (
-    <Card variant='outlined'>
-      <CardActionArea component='div'>
+    <div>
+    <Card variant="outlined"
+    sx = {{height:475, width: "100%"}}>
+      <CardActionArea component="div">
         <PostCardHeader _post={_submission} />
         <CardContent sx={{ mt: -3 }}>
-          <Typography variant='h6'>{caption}</Typography>
+          <Typography noWrap variant="h6">
+            {caption}
+          </Typography>
         </CardContent>
         <ButtonBase
-          onClick={() =>
+          onClick={() => 
             showModal &&
             showModal(
               'submission',
@@ -113,11 +117,12 @@ const SubmissionCard = ({ submissionId, showModal }) => {
               filename
             )
           }
-        >
+          sx = {{width: "100%"}}>
           <CardMedia
             component='img'
             image={imageUrl}
             loading='lazy'
+            sx={{height:300, objectFit: "contain"}}
           />
         </ButtonBase>
         <CardActions disableSpacing>
@@ -146,6 +151,7 @@ const SubmissionCard = ({ submissionId, showModal }) => {
         </CardActions>
       </CardActionArea>
     </Card>
+    </div>
   );
 };
 

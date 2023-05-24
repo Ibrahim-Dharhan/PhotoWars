@@ -153,10 +153,10 @@ const BattleCard = ({
           <Typography variant='h6'>{caption}</Typography>
         </CardContent>
         <ButtonBase
-          onClick={() =>
+          onClick={() => {
             showModal &&
             showModal('battle', battleId, displayName, caption, filename)
-          }
+          }}
         >
           <CardMedia
             component='img'
