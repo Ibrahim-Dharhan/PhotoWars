@@ -20,6 +20,7 @@ import './submissionCard.css';
 import PropTypes from 'prop-types';
 import { UserContext } from '../../contexts/UserContext';
 import { SubmissionModal } from '../../components/submissionModal/submissionModal';
+import { Block } from '@mui/icons-material';
 
 const SubmissionCard = ({
   submissionId
@@ -107,7 +108,8 @@ const SubmissionCard = ({
 
   return (
     <div>
-      <Card variant="outlined">
+      <Card variant="outlined" 
+      sx = {{height: 475}}>
         <CardActionArea component="div">
           <CardHeader
             avatar={
@@ -138,16 +140,18 @@ const SubmissionCard = ({
               </IconButton>
             }
           />
-          <CardContent sx={{ mt: -3 }}>
+          <CardContent sx={{ mt: -3}}> 
             <Typography variant="h6">
               {caption}
-            </Typography>
+            </Typography> 
+            
           </CardContent>
-          <ButtonBase onClick={handleOpenModal}>
+          <ButtonBase onClick={handleOpenModal} sx = {{width: "100%"}}>
             <CardMedia
               component="img"
               image={`/image/${filename}`}
               loading="lazy"
+              sx={{height: 300, objectFit: "cover"}}
             />
           </ButtonBase>
           <CardActions disableSpacing>
