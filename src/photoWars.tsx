@@ -5,9 +5,8 @@ import {
   createBrowserRouter,
   createRoutesFromElements,
   Route,
-  RouterProvider
+  RouterProvider,
 } from 'react-router-dom';
-
 
 /* Importing Components */
 import { BattleView } from './react/pages/battleView/BattleView';
@@ -15,29 +14,38 @@ import { Create } from './react/pages/create/Create';
 import { Feed, feedLoader } from './react/pages/feed/Feed';
 import { Home } from './react/pages/home/Home';
 import { Layout } from './react/pages/Layout';
-import { SubmissionFeed, submissionFeedLoader } from './react/pages/submissionFeed/SubmissionFeed';
+import {
+  SubmissionFeed,
+  submissionFeedLoader,
+} from './react/pages/submissionFeed/SubmissionFeed';
 import { Submit } from './react/pages/submit/Submit';
+import { UserView, userViewLoader } from './react/pages/userView/UserView';
 import theme from './theme';
 
 const PhotoWars = () => {
   const router = createBrowserRouter(
     createRoutesFromElements(
-      <Route path="/" element={<Layout />}>
-        <Route path="/" element={<Home />} >
+      <Route path='/' element={<Layout />}>
+        <Route path='/' element={<Home />}>
           <Route
-            path="battles/:id"
+            path='battles/:id'
             element={<BattleView />}
             errorElement={<div>Error viewing battle</div>}
           >
             <Route
               index
-              element={<SubmissionFeed/>}
+              element={<SubmissionFeed />}
               loader={submissionFeedLoader}
               errorElement={<div>Error loading submissions</div>}
             />
-            <Route path="submit" element={<Submit />} />
+            <Route path='submit' element={<Submit />} />
           </Route>
-          <Route path="create" element={<Create />} />
+          <Route path='create' element={<Create />} />
+          <Route
+            path='users/:id'
+            element={<UserView />}
+            loader={userViewLoader}
+          />
           <Route
             index
             element={<Feed />}
@@ -45,15 +53,15 @@ const PhotoWars = () => {
             errorElement={<div>Error fetching battles</div>}
           />
         </Route>
-        <Route path="*" element={<div>404 Not Found</div>} />
+        <Route path='*' element={<div>404 Not Found</div>} />
       </Route>
     )
   );
   return (
     <React.StrictMode>
-    <CssBaseline />
-    <ThemeProvider theme={theme}>
-      <RouterProvider router={router} />
+      <CssBaseline />
+      <ThemeProvider theme={theme}>
+        <RouterProvider router={router} />
       </ThemeProvider>
     </React.StrictMode>
   );

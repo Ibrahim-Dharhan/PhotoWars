@@ -79,47 +79,50 @@ submissionRouter.get('/:id', async (req, res) => {
  *       500:
  *         $ref: '#/components/responses/500'
  */
-submissionRouter.put('/:id', checkSchema(UpdateSubmission), async (req, res) => {
-  const errors = validationResult(req);
-  if (!errors.isEmpty()) {
-    res.status(400).json({
-    });
-    return;
-  }
-
-  if (!req.session.loggedIn) {
-    res.status(401).send('Not logged in.');
-  }
-
-  const submissionId = req.params.id;
-  const query = Submission.findById(submissionId);
-  try {
-    const result = await query.exec();
-    if (!result) {
-      /* Did not find a submission with matching submissionId. */
-      res.status(404).send('Invalid submission id.');
-      return
-    }
-
-    if (result.author.toString() !== req.session.userId) {
-      /* User is not the owner of the resource.  */
-      res.status(403).send('Access to that resource is forbidden');
+submissionRouter.put(
+  '/:id',
+  checkSchema(UpdateSubmission),
+  async (req, res) => {
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+      res.status(400).json({});
       return;
     }
 
-    const body = matchedData(req);
-    const updatedSubmission = await Submission.findByIdAndUpdate(
-      submissionId,
-      { $set: body },
-      { new: true }
-    ).exec();
+    if (!req.session.loggedIn) {
+      res.status(401).send('Not logged in.');
+    }
 
-    res.status(200).json(updatedSubmission);
-  } catch (err) {
-    res.status(500).send('Internal server error.');
-    console.error(err);
+    const submissionId = req.params.id;
+    const query = Submission.findById(submissionId);
+    try {
+      const result = await query.exec();
+      if (!result) {
+        /* Did not find a submission with matching submissionId. */
+        res.status(404).send('Invalid submission id.');
+        return;
+      }
+
+      if (result.author.toString() !== req.session.userId) {
+        /* User is not the owner of the resource.  */
+        res.status(403).send('Access to that resource is forbidden');
+        return;
+      }
+
+      const body = matchedData(req);
+      const updatedSubmission = await Submission.findByIdAndUpdate(
+        submissionId,
+        { $set: body },
+        { new: true }
+      ).exec();
+
+      res.status(200).json(updatedSubmission);
+    } catch (err) {
+      res.status(500).send('Internal server error.');
+      console.error(err);
+    }
   }
-});
+);
 
 /**
  * @openapi
