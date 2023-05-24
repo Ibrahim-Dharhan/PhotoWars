@@ -226,7 +226,7 @@ submissionRouter.get('/:id/comments', async (req, res) => {
     post: submissionId,
   });
   try {
-    const result = await query.populate('author').exec();
+    const result = await query.populate('author').lean().exec();
     if (result) {
       /* Found comments on submission. */
       res.status(200).json(result);

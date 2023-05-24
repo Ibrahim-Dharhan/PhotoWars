@@ -2,7 +2,11 @@
 
 import express = require('express');
 import { checkSchema, validationResult } from 'express-validator';
+import { Battle } from '../../definitions/schemas/mongoose/battle';
+import { Comment } from '../../definitions/schemas/mongoose/comment';
+import { Submission } from '../../definitions/schemas/mongoose/submission';
 import { User } from '../../definitions/schemas/mongoose/user';
+import { Vote } from '../../definitions/schemas/mongoose/vote';
 import { UpdateUser } from '../../definitions/schemas/validation/updateUser';
 
 const userRouter = express.Router();
@@ -161,6 +165,134 @@ userRouter.delete('/', async (req, res) => {
   } catch (err) {
     res.status(500).send('Internal server error.');
     console.error(err);
+  }
+});
+
+/**
+ * @openapi
+ * /user/{id}/battles:
+ *   get:
+ *     summary: Returns all battles created by user.
+ *     parameters:
+ *       - $ref: '#/components/parameters/idParam'
+ *     responses:
+ *       200:
+ *         description: Resource successfully retrieved.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: array
+ *               items:
+ *                 type: string
+ *       500:
+ *         $ref: '#/components/responses/500'
+ */
+userRouter.get('/:id/battles', async (req, res) => {
+  const userId = req.params.id;
+  const query = Battle.find({ author: userId}, ['_id']);
+
+  try {
+    const battleIds = await query.lean().exec();
+    res.status(200).json(battleIds);
+  } catch (err) {
+    res.status(500).send('Internal server error.');
+    return;
+  }
+});
+
+/**
+ * @openapi
+ * /user/{id}/comments:
+ *   get:
+ *     summary: Returns all comments created by user.
+ *     parameters:
+ *       - $ref: '#/components/parameters/idParam'
+ *     responses:
+ *       200:
+ *         description: Resource successfully retrieved.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: array
+ *               items:
+ *                 type: string
+ *       500:
+ *         $ref: '#/components/responses/500'
+ */
+userRouter.get('/:id/comments', async (req, res) => {
+  const userId = req.params.id;
+  const query = Comment.find({ author: userId}, ['_id']);
+
+  try {
+    const commentIds = await query.lean().exec();
+    res.status(200).json(commentIds);
+  } catch (err) {
+    res.status(500).send('Internal server error.');
+    return;
+  }
+});
+
+/**
+ * @openapi
+ * /user/{id}/submissions:
+ *   get:
+ *     summary: Returns all submissions created by user.
+ *     parameters:
+ *       - $ref: '#/components/parameters/idParam'
+ *     responses:
+ *       200:
+ *         description: Resource successfully retrieved.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: array
+ *               items:
+ *                 type: string
+ *       500:
+ *         $ref: '#/components/responses/500'
+ */
+userRouter.get('/:id/submissions', async (req, res) => {
+  const userId = req.params.id;
+  const query = Submission.find({ author: userId}, ['_id']);
+
+  try {
+    const submissionIds = await query.lean().exec();
+    res.status(200).json(submissionIds);
+  } catch (err) {
+    res.status(500).send('Internal server error.');
+    return;
+  }
+});
+
+/**
+ * @openapi
+ * /user/{id}/votes:
+ *   get:
+ *     summary: Returns all content voted on by user.
+ *     parameters:
+ *       - $ref: '#/components/parameters/idParam'
+ *     responses:
+ *       200:
+ *         description: Resource successfully retrieved.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: array
+ *               items:
+ *                 type: string
+ *       500:
+ *         $ref: '#/components/responses/500'
+ */
+userRouter.get('/:id/votes', async (req, res) => {
+  const userId = req.params.id;
+  const query = Vote.find({ user: userId}, ['-_id', '-__v']);
+
+  try {
+    const voteIds = await query.populate('post', ['_id']).lean().exec();
+    res.status(200).json(voteIds);
+  } catch (err) {
+    res.status(500).send('Internal server error.');
+    return;
   }
 });
 

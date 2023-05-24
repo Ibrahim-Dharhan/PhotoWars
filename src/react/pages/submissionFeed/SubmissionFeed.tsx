@@ -3,6 +3,7 @@ import axios from 'axios';
 import Box from '@mui/material/Box';
 import { useLoaderData } from 'react-router-dom';
 import { SubmissionCard } from '../../components/submissionCard/SubmissionCard';
+import { useShowModal } from '../battleView/BattleView';
 
 const submissionFeedLoader = async({ params }) => {
   const id = params.id;
@@ -33,14 +34,15 @@ const feedStyle = {
 };
 
 const SubmissionFeed = () => {
+  const { showModal } = useShowModal();
   const submissions = useLoaderData() as Submission[];
-  console.log(submissions);
+  // console.log(submissions);
   
   return (
     <React.Fragment>
       <Box sx={feedStyle}>
         {submissions.map((submission) => {
-          return <SubmissionCard submissionId={submission._id} key={submission._id}/>
+          return <SubmissionCard submissionId={submission._id} key={submission._id} showModal={showModal}/>
         })}
       </Box>
     </React.Fragment>

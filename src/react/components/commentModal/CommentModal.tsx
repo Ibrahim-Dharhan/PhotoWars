@@ -44,17 +44,18 @@ interface User {
 interface Comment {
   _id: string;
   __v: number;
-  author: User;
+  author: any;
   commentedModel: string;
   creationTime: string;
   post: string;
   text: string;
 }
 
-const SubmissionModal = ({
-  open,
+const CommentModal = ({
+  open, 
   handleClose,
-  submissionId,
+  variant,
+  id,
   displayName,
   caption,
   filename,
@@ -63,9 +64,10 @@ const SubmissionModal = ({
 
   /* useEffect for updating comments.  */
   useEffect(() => {
+    if (!open) return;
     let shouldUpdate = true;
-    const getComments = async () => {
-      const path = `/submission/${submissionId}/comments`;
+    const getComments = async() => {
+      const path = `/${variant}/${id}/comments`;
       const res = await axios.get(path);
       const retrievedComments: Comment[] = res.data;
 
@@ -78,10 +80,8 @@ const SubmissionModal = ({
     } catch (err) {
       console.error(err.data);
     }
-    return () => {
-      shouldUpdate = false;
-    };
-  }, [submissionId]);
+    return () => { shouldUpdate = false; };
+  }, [id]);
 
   return (
     <Modal
@@ -126,25 +126,31 @@ const SubmissionModal = ({
               <Divider variant='inset' component='li' />
               {comments.map((comment: Comment) => {
                 return (
-                  <div key={comment._id}>
-                    <ListItem alignItems='flex-start'>
-                      <ListItemAvatar>
-                        <Avatar src={`/image/${comment.author.filename}`} />
-                      </ListItemAvatar>
-                      <ListItemText
-                        secondary={
-                          <React.Fragment>
-                            <Typography variant='body2' color='text.primary'>
-                              {comment.author.displayName + '\n'}
-                            </Typography>
-                            {comment.text}
-                          </React.Fragment>
-                        }
-                      />
-                    </ListItem>
-                    <Divider variant='inset' component='li' />
-                  </div>
-                );
+                <div key={comment._id}>
+                  <ListItem alignItems="flex-start">
+                    <ListItemAvatar>
+                      <Avatar>
+                        {comment.author.displayName[0]}
+                      </Avatar>
+                    </ListItemAvatar>
+                    <ListItemText
+                      secondary={
+                        <React.Fragment>
+                          <Typography
+                            sx={{ display: 'inline' }}
+                            component="span"
+                            variant="body2"
+                            color="text.primary"
+                          >
+                            {comment.author.displayName + '\n'}
+                          </Typography>
+                          {comment.text}
+                        </React.Fragment>
+                      }
+                    />
+                  </ListItem>
+                  <Divider variant="inset" component="li" />
+                </div>)
               })}
             </List>
           </Grid>
@@ -154,13 +160,14 @@ const SubmissionModal = ({
   );
 };
 
-SubmissionModal.propTypes = {
+CommentModal.propTypes = {
   open: PropTypes.bool,
   handleClose: PropTypes.func,
-  submissionId: PropTypes.string,
+  variant: PropTypes.string,
+  id: PropTypes.string,
   displayName: PropTypes.string,
   caption: PropTypes.string,
   filename: PropTypes.string,
 };
 
-export { SubmissionModal };
+export { CommentModal };
