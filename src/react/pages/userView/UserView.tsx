@@ -1,7 +1,12 @@
 import React, { useEffect, useRef, useState } from 'react';
 import axios from 'axios';
 import { BattleCard } from '../../components/battleCard/BattleCard';
-import { Outlet, useLoaderData, useParams } from 'react-router-dom';
+import {
+  Outlet,
+  useLoaderData,
+  useParams,
+  useNavigate,
+} from 'react-router-dom';
 import {
   Typography,
   Avatar,
@@ -13,6 +18,7 @@ import {
 } from '@mui/material';
 import { UserHeader } from '../../components/userHeader/UserHeader';
 import { SubmissionCard } from '../../components/submissionCard/SubmissionCard';
+import CommentCard from '../../components/commentCard/CommentCard';
 
 const userViewLoader = async ({ params }) => {
   const id = params.id;
@@ -34,6 +40,8 @@ interface User {
 }
 
 const UserView = () => {
+  const navigate = useNavigate();
+
   const user = useLoaderData() as User;
   const [feed, setFeed] = useState('battles');
   const [battles, setBattles] = useState(null);
@@ -73,7 +81,6 @@ const UserView = () => {
           <Grid item xs={12}>
             <Toolbar
               sx={{
-                // background: 'aqua',
                 marginX: '2em',
                 justifyContent: 'space-between',
               }}
@@ -123,15 +130,25 @@ const UserView = () => {
             ) : feed === 'submissions' && submissions ? (
               submissions.map((submission) => {
                 return (
-                  <SubmissionCard
-                    submissionId={submission._id}
-                    showModal={null}
+                  <Box
+                    onClick={(event) => {
+                      event.stopPropagation();
+                      navigate(`/battles/${submission.battle}`);
+                    }}
                     key={submission._id}
-                  />
+                    sx={{marginBottom: "5px"}}
+                  >
+                    <SubmissionCard
+                      submissionId={submission._id}
+                      showModal={null}
+                    />
+                  </Box>
                 );
               })
             ) : feed === 'comments' && comments ? (
-              <div>comments</div>
+              comments.map((comment) => {
+                return <CommentCard key={comment._id} comment={comment} />;
+              })
             ) : (
               <></>
             )}

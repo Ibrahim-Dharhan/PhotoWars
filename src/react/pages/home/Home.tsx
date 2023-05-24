@@ -12,11 +12,11 @@ const Home = () => {
       </ProSidebarProvider>
 
       <Grid container spacing={7} sx={{ pt: 2 }}>
-        <Grid item xs={3} sm={3} md={3} lg={3} xl={3} />
-        <Grid item xs={6} sm={6} md={6} lg={6} xl={6}>
+        <Grid item xs={1} sm={2} md={2} lg={3} xl={4} />
+        <Grid item xs={7} sm={6} md={7} lg={5} xl={4}>
           <Outlet />
         </Grid>
-        <Grid item xs={3} sm={3} md={3} lg={3} xl={3} />
+        <Grid item xs={1} sm={2} md={2} lg={4} xl={4} />
       </Grid>
     </Stack>
   );
