@@ -35,6 +35,7 @@ imageRouter.get('/:filename', (req, res) => {
     const fileKey = path.join(IMAGE_DIR, filename);
       const readStream = getFileFromS3(fileKey).on('error', (err) => {
         res.status(404).send('Not Found');
+        console.error(err);
       });
       readStream.pipe(res);
   } else {

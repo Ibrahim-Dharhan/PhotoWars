@@ -1,9 +1,8 @@
 import React from 'react';
 import axios from 'axios';
 import Box from '@mui/material/Box';
-import { useLoaderData } from 'react-router-dom';
+import { useLoaderData, useOutletContext } from 'react-router-dom';
 import { SubmissionCard } from '../../components/submissionCard/SubmissionCard';
-import { useShowModal } from '../battleView/BattleView';
 
 const submissionFeedLoader = async({ params }) => {
   const id = params.id;
@@ -22,6 +21,10 @@ interface Submission {
   filename: string;
 }
 
+interface BVSubmissionFeedState {
+  showModal: (variant: string, id: string, author: string, caption: string, filename: string) => void
+}
+
 const feedStyle = {
   paddingTop: 2,
   paddingBottom: 2,
@@ -34,7 +37,7 @@ const feedStyle = {
 };
 
 const SubmissionFeed = () => {
-  const { showModal } = useShowModal();
+  const { showModal } = useOutletContext() as BVSubmissionFeedState;
   const submissions = useLoaderData() as Submission[];
   // console.log(submissions);
   

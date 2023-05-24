@@ -1,8 +1,10 @@
 import React, { useContext, useEffect, useRef, useState } from 'react';
 import axios from 'axios';
-import { updateDeadline } from './timerLogic';
+import FavoriteIcon from '@mui/icons-material/Favorite';
+import ImageIcon from '@mui/icons-material/Image';
+import PropTypes from 'prop-types';
+import { blue, pink } from '@mui/material/colors';
 import {
-  Avatar,
   Box,
   Button,
   ButtonBase,
@@ -15,14 +17,11 @@ import {
   Tooltip,
   Typography,
 } from '@mui/material';
-import FavoriteIcon from '@mui/icons-material/Favorite';
-import ImageIcon from '@mui/icons-material/Image';
-import { blue, pink } from '@mui/material/colors';
-import { useLocation, useNavigate } from 'react-router-dom';
-import './battleCard.css';
-import PropTypes from 'prop-types';
-import { UserContext } from '../../contexts/UserContext';
 import { PostCardHeader } from '../postCardHeader/PostCardHeader';
+import { updateDeadline } from './timerLogic';
+import { useLocation, useNavigate } from 'react-router-dom';
+import { UserContext } from '../../contexts/UserContext';
+import './battleCard.css';
 
 const BattleCard = ({
   battleId,

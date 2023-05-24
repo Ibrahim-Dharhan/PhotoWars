@@ -46,11 +46,6 @@ const Create = () => {
     resetField('file');
   }
 
-  function handleImageChange(event) {
-    const file = event.target.files[0];
-    setImage(file);
-  }
-
   function handleImageDrop(event) {
     event.preventDefault();
     const file = event.dataTransfer.files[0];

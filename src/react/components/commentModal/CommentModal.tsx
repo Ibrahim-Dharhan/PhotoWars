@@ -31,10 +31,15 @@ const style = {
   p: 2,
 };
 
+interface Author {
+  _id: string;
+  displayName: string;
+}
+
 interface Comment {
   _id: string;
   __v: number;
-  author: any;
+  author: Author;
   commentedModel: string;
   creationTime: string;
   post: string;
@@ -74,7 +79,7 @@ const CommentModal = ({
     return () => {
       shouldUpdate = false;
     };
-  }, [id]);
+  }, [id, open, variant]);
 
   return (
     <Modal
