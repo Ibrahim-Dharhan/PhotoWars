@@ -12,6 +12,7 @@ import {
   Button,
 } from '@mui/material';
 import { UserHeader } from '../../components/userHeader/UserHeader';
+import { SubmissionCard } from '../../components/submissionCard/SubmissionCard';
 
 const userViewLoader = async ({ params }) => {
   const id = params.id;
@@ -41,15 +42,14 @@ const UserView = () => {
   useEffect(() => {
     let shouldUpdate = true;
     const setUserData = async () => {
-      const pathBattle = `/battle/all`;
+      const pathBattle = `/user/${user._id}/battles`;
       const resBattles = await axios.get(pathBattle);
-      const pathSubmissions = `/battle/all`;
+      const pathSubmissions = `/user/${user._id}/submissions`;
       const resSubmissions = await axios.get(pathSubmissions);
-      const pathComments = `/battle/all`;
+      const pathComments = `/user/${user._id}/comments`;
       const resComments = await axios.get(pathComments);
       if (shouldUpdate) {
         setBattles(resBattles.data);
-
         console.log(resBattles.data);
         setSubmissions(resSubmissions.data);
         setComments(resComments.data);
@@ -109,24 +109,24 @@ const UserView = () => {
           </Grid>
           <Grid item xs={12}>
             {feed === 'battles' && battles ? (
-              battles.map((battle_id) => {
+              battles.map((battle) => {
                 return (
                   <BattleCard
-                    battleId={battle_id}
+                    battleId={battle._id}
                     numBVSubmissions={null}
                     setNumBVSubmissions={null}
-                    key={battle_id}
+                    showModal={null}
+                    key={battle._id}
                   />
                 );
               })
             ) : feed === 'submissions' && submissions ? (
-              submissions.map((submission_id) => {
+              submissions.map((submission) => {
                 return (
-                  <BattleCard
-                    battleId={submission_id}
-                    numBVSubmissions={null}
-                    setNumBVSubmissions={null}
-                    key={submission_id}
+                  <SubmissionCard
+                    submissionId={submission._id}
+                    showModal={null}
+                    key={submission._id}
                   />
                 );
               })
