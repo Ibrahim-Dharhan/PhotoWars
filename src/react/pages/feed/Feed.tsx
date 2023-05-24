@@ -20,7 +20,7 @@ const Feed = () => {
     <React.Fragment>
       <Stack spacing={1}>
         {battleIdsRecent.map((battleId) => {
-          return (<BattleCard battleId={battleId} key={battleId} />);
+          return (<BattleCard battleId={battleId} key={battleId} showModal={null}/>);
         })}
       </Stack>
     </React.Fragment>

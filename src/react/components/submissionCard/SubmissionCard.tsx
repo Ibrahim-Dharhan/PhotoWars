@@ -19,12 +19,11 @@ import { Link } from 'react-router-dom';
 import './submissionCard.css';
 import PropTypes from 'prop-types';
 import { UserContext } from '../../contexts/UserContext';
-import { SubmissionModal } from '../../components/submissionModal/submissionModal';
 import { Block } from '@mui/icons-material';
 import { auto } from 'async';
 
 const SubmissionCard = ({
-  submissionId
+  submissionId, showModal
 }) => {
   const { userId, setOpen } = useContext(UserContext);
 
@@ -33,10 +32,6 @@ const SubmissionCard = ({
   const [filename, setFilename] = useState('');
   const [numVotes, setNumVotes] = useState(0);
   const [voted, setVoted] = useState(false);
-
-  const [modalOpen, setModalOpen] = React.useState(false);
-  const handleOpenModal = () => setModalOpen(true);
-  const handleCloseModal = () => setModalOpen(false);
 
   const _isAuthor = useRef(false);
   const _submission = useRef(null);
@@ -109,97 +104,89 @@ const SubmissionCard = ({
 
   return (
     <div>
-      <Card variant="outlined" 
-      sx = {{height: 475, width: "100%"}}>
-        <CardActionArea component="div">
-          <CardHeader
-            avatar={
-              <Avatar sx={{ width: 24, height: 24 }}>
-                {displayName[0]}
-              </Avatar>
-            }
-            title={
-              <Link
-                to=""
-                // to=`/user/${_submission.current.author._id}`
-                onMouseDown={ (event) => event.stopPropagation()}
-                onClick={ (event) => {
-                  event.stopPropagation();
-                  event.preventDefault();
-                  console.log(`Go to profile page at /user/${_submission.current.author._id}`);
-                }}
-              >
-                {displayName}
-              </Link>
-            }
-            action={
-              <IconButton
-                onMouseDown={ (event) => event.stopPropagation()}
-                onClick={handleDownload}
-              >
-                <DownloadIcon />
-              </IconButton>
-            }
-          />
-          <CardContent sx={{ mt: -3}}> 
-            <Typography noWrap variant="h6">
-              {caption}
-            </Typography> 
-            
-          </CardContent>
-          <ButtonBase onClick={handleOpenModal} sx = {{width: "100%"}}>
-            <CardMedia
-              component="img"
-              image={`/image/${filename}`}
-              loading="lazy"
-              sx={{height: 300, objectFit: "contain"}}
-            />
-          </ButtonBase>
-          <CardActions disableSpacing>
-            <IconButton
-              onMouseDown={(event) => event.stopPropagation()}
-              onClick={(event) => {
-                event.stopPropagation();
-                event.preventDefault();
-              }}
-            >
-            </IconButton>
-            <IconButton
+    <Card variant="outlined"
+    sx = {{height:475, width: "100%"}}>
+      <CardActionArea component="div">
+        <CardHeader
+          avatar={
+            <Avatar sx={{ width: 24, height: 24 }}>
+              {displayName[0]}
+            </Avatar>
+          }
+          title={
+            <Link
+              to=""
+              // to=`/user/${_submission.current.author._id}`
               onMouseDown={ (event) => event.stopPropagation()}
               onClick={ (event) => {
                 event.stopPropagation();
                 event.preventDefault();
-                if (userId !== '') {
-                  vote();
-                } else {
-                  setOpen(true);
-                }
+                console.log(`Go to profile page at /user/${_submission.current.author._id}`);
               }}
             >
-              <FavoriteIcon
-                sx={{ pr: 1, color: (voted && pink[500]) }}
-              />
-              <Typography>
-                {numVotes}
-              </Typography>
+              {displayName}
+            </Link>
+          }
+          action={
+            <IconButton
+              onMouseDown={ (event) => event.stopPropagation()}
+              onClick={handleDownload}
+            >
+              <DownloadIcon />
             </IconButton>
-          </CardActions>
-        </CardActionArea>
-      </Card>
-      <SubmissionModal 
-        open={modalOpen}
-        handleClose={handleCloseModal}
-        submissionId={submissionId}
-        displayName={displayName}
-        caption={caption}
-        filename={filename}
-      />
+          }
+        />
+        <CardContent sx={{ mt: -3 }}>
+          <Typography noWrap variant="h6">
+            {caption}
+          </Typography>
+        </CardContent>
+        <ButtonBase onClick={() => showModal('submission', submissionId, displayName, caption, filename)} sx = {{width: "100%"}}>
+          <CardMedia
+            component="img"
+            image={`/image/${filename}`}
+            loading="lazy"
+            sx={{height:300, objectFit: "contain"}}
+          />
+        </ButtonBase>
+        <CardActions disableSpacing>
+          <IconButton
+            onMouseDown={(event) => event.stopPropagation()}
+            onClick={(event) => {
+              event.stopPropagation();
+              event.preventDefault();
+            }}
+          >
+          </IconButton>
+          <IconButton
+            onMouseDown={ (event) => event.stopPropagation()}
+            onClick={ (event) => {
+              event.stopPropagation();
+              event.preventDefault();
+              if (userId !== '') {
+                vote();
+              } else {
+                setOpen(true);
+              }
+            }}
+          >
+            <FavoriteIcon
+              sx={{ pr: 1, color: (voted && pink[500]) }}
+            />
+            <Typography>
+              {numVotes}
+            </Typography>
+          </IconButton>
+        </CardActions>
+      </CardActionArea>
+    </Card>
     </div>
   );
 };
 
 SubmissionCard.propTypes = {
-  submissionId: PropTypes.string
+  submissionId: PropTypes.string,
+  showModal: PropTypes.func
 };
 
 export { SubmissionCard };

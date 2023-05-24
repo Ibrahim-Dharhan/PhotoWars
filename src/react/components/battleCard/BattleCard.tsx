@@ -5,6 +5,7 @@ import {
   Avatar,
   Box,
   Button,
+  ButtonBase,
   Card,
   CardActionArea,
   CardActions,
@@ -25,7 +26,7 @@ import PropTypes from 'prop-types';
 import { UserContext } from '../../contexts/UserContext';
 
 const BattleCard = ({
-  battleId, numBVSubmissions, setNumBVSubmissions
+  battleId, numBVSubmissions, setNumBVSubmissions, showModal
 }) => {
   const { userId, setOpen } = useContext(UserContext);
 
@@ -169,11 +170,17 @@ const BattleCard = ({
             {caption}
           </Typography>
         </CardContent>
-        <CardMedia
-          component="img"
-          image={`/image/${filename}`}
-          loading="lazy"
-        />
+        <ButtonBase 
+          onClick={() => {
+            showModal && showModal('battle', battleId, displayName, caption, filename);
+          }}
+        >
+            <CardMedia
+              component="img"
+              image={`/image/${filename}`}
+              loading="lazy"
+            />
+          </ButtonBase>
         <CardActions disableSpacing>
           <IconButton
             onMouseDown={(event) => event.stopPropagation()}
@@ -261,7 +268,8 @@ const BattleCard = ({
 BattleCard.propTypes = {
   battleId: PropTypes.string,
   numBVSubmissions: PropTypes.number,
-  setNumBVSubmissions: PropTypes.func
+  setNumBVSubmissions: PropTypes.func,
+  showModal: PropTypes.func
 };
 
 export { BattleCard };
