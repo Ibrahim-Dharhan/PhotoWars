@@ -155,19 +155,31 @@ const BattleCard = ({
       >
         <CardHeader
           avatar={
-            <Avatar sx={{ width: 24, height: 24 }}>{displayName[0]}</Avatar>
-          }
-          title={
-            <Link
-              to=''
-              // to=`/user/${_battle.current.author._id}`
-              onMouseDown={(event) => event.stopPropagation()}
+            <Avatar
+              sx={{ width: 24, height: 24 }}
               onClick={(event) => {
                 event.stopPropagation();
                 event.preventDefault();
                 console.log(
                   `Go to profile page at /user/${_battle.current.author._id}`
                 );
+                navigate(`/users/${_battle.current?.author._id}`);
+              }}
+            >
+              {displayName[0]}
+            </Avatar>
+          }
+          title={
+            <Link
+              to={`/users/${_battle.current?.author._id}`}
+              // onMouseDown={(event) => event.stopPropagation()}
+              onClick={(event) => {
+                event.stopPropagation();
+                event.preventDefault();
+                console.log(
+                  `Go to profile page at /user/${_battle.current.author._id}`
+                );
+                navigate(`/users/${_battle.current.author._id}`);
               }}
             >
               {displayName}

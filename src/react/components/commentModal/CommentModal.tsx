@@ -16,6 +16,8 @@ import {
 } from '@mui/material';
 import '../submissionCard/submissionCard.css';
 import PropTypes from 'prop-types';
+import { useNavigate } from 'react-router-dom';
+import './style.css';
 
 const style = {
   position: 'absolute',
@@ -49,6 +51,7 @@ const CommentModal = ({
   filename,
 }) => {
   const [comments, setComments] = useState([]);
+  const navigate = useNavigate();
 
   /* useEffect for updating comments.  */
   useEffect(() => {
@@ -117,7 +120,18 @@ const CommentModal = ({
               {comments.map((comment: Comment) => {
                 return (
                   <div key={comment._id}>
-                    <ListItem alignItems='flex-start'>
+                    <ListItem
+                      className='comment-modal-comment'
+                      alignItems='flex-start'
+                      onClick={(event) => {
+                        event.stopPropagation();
+                        event.preventDefault();
+                        console.log(
+                          `Go to profile page at /user/${comment.author._id}`
+                        );
+                        navigate(`/users/${comment.author._id}`);
+                      }}
+                    >
                       <ListItemAvatar>
                         <Avatar>{comment.author.displayName[0]}</Avatar>
                       </ListItemAvatar>

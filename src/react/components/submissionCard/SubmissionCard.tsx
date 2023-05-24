@@ -15,14 +15,14 @@ import {
 import DownloadIcon from '@mui/icons-material/Download';
 import FavoriteIcon from '@mui/icons-material/Favorite';
 import { pink } from '@mui/material/colors';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import './submissionCard.css';
 import PropTypes from 'prop-types';
 import { UserContext } from '../../contexts/UserContext';
 
 const SubmissionCard = ({ submissionId, showModal }) => {
   const { userId, setOpen } = useContext(UserContext);
-
+  const navigate = useNavigate();
   const [caption, setCaption] = useState('');
   const [displayName, setDisplayName] = useState('');
   const [filename, setFilename] = useState('');
@@ -107,19 +107,31 @@ const SubmissionCard = ({ submissionId, showModal }) => {
       <CardActionArea component='div'>
         <CardHeader
           avatar={
-            <Avatar sx={{ width: 24, height: 24 }}>{displayName[0]}</Avatar>
+            <Avatar
+              sx={{ width: 24, height: 24 }}
+              onClick={(event) => {
+                event.stopPropagation();
+                event.preventDefault();
+                console.log(
+                  `Go to profile page at /user/${_submission.current?.author._id}`
+                );
+                navigate(`/users/${_submission.current?.author._id}`);
+              }}
+            >
+              {displayName[0]}
+            </Avatar>
           }
           title={
             <Link
               to=''
-              // to=`/user/${_submission.current.author._id}`
               onMouseDown={(event) => event.stopPropagation()}
               onClick={(event) => {
                 event.stopPropagation();
                 event.preventDefault();
                 console.log(
-                  `Go to profile page at /user/${_submission.current.author._id}`
+                  `Go to profile page at /user/${_submission.current?.author._id}`
                 );
+                navigate(`/users/${_submission.current?.author._id}`);
               }}
             >
               {displayName}

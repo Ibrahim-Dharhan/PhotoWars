@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import { BattleCard } from '../../components/battleCard/BattleCard';
 import { useLoaderData, useNavigate } from 'react-router-dom';
-import { Box, Card, Grid, Toolbar, Button } from '@mui/material';
+import { Box, Card, Grid, Toolbar, Button, Typography } from '@mui/material';
 import { UserHeader } from '../../components/userHeader/UserHeader';
 import { SubmissionCard } from '../../components/submissionCard/SubmissionCard';
 import CommentCard from '../../components/commentCard/CommentCard';
@@ -102,39 +102,57 @@ const UserView = () => {
           </Grid>
           <Grid item xs={12}>
             {feed === 'battles' && battles ? (
-              battles.map((battle) => {
-                return (
-                  <BattleCard
-                    battleId={battle._id}
-                    numBVSubmissions={null}
-                    setNumBVSubmissions={null}
-                    showModal={null}
-                    key={battle._id}
-                  />
-                );
-              })
-            ) : feed === 'submissions' && submissions ? (
-              submissions.map((submission) => {
-                return (
-                  <Box
-                    onClick={(event) => {
-                      event.stopPropagation();
-                      navigate(`/battles/${submission.battle}`);
-                    }}
-                    key={submission._id}
-                    sx={{ marginBottom: '5px' }}
-                  >
-                    <SubmissionCard
-                      submissionId={submission._id}
+              battles.length > 0 ? (
+                battles.map((battle) => {
+                  return (
+                    <BattleCard
+                      battleId={battle._id}
+                      numBVSubmissions={null}
+                      setNumBVSubmissions={null}
                       showModal={null}
+                      key={battle._id}
                     />
-                  </Box>
-                );
-              })
+                  );
+                })
+              ) : (
+                <Typography textAlign={'center'}>
+                  This user has no battles!
+                </Typography>
+              )
+            ) : feed === 'submissions' && submissions ? (
+              submissions.length > 0 ? (
+                submissions.map((submission) => {
+                  return (
+                    <Box
+                      onClick={(event) => {
+                        event.stopPropagation();
+                        navigate(`/battles/${submission.battle}`);
+                      }}
+                      key={submission._id}
+                      sx={{ marginBottom: '5px' }}
+                    >
+                      <SubmissionCard
+                        submissionId={submission._id}
+                        showModal={null}
+                      />
+                    </Box>
+                  );
+                })
+              ) : (
+                <Typography textAlign={'center'}>
+                  This user has no submissions!
+                </Typography>
+              )
             ) : feed === 'comments' && comments ? (
-              comments.map((comment) => {
-                return <CommentCard key={comment._id} comment={comment} />;
-              })
+              comments.length > 0 ? (
+                comments.map((comment) => {
+                  return <CommentCard key={comment._id} comment={comment} />;
+                })
+              ) : (
+                <Typography textAlign={'center'}>
+                  This user has no comments!
+                </Typography>
+              )
             ) : (
               <></>
             )}
