@@ -1,10 +1,8 @@
 import React from 'react';
 import axios from 'axios';
 import Box from '@mui/material/Box';
-import Grid from '@mui/material/Grid';
 import { useLoaderData } from 'react-router-dom';
 import { SubmissionCard } from '../../components/submissionCard/SubmissionCard';
-import { inherits } from 'util';
 import { useShowModal } from '../battleView/BattleView';
 
 const submissionFeedLoader = async({ params }) => {
@@ -31,7 +29,7 @@ const feedStyle = {
   paddingRight:0,
   bgcolor: 'background.default',
   display: 'grid',
-  gridTemplateColumns: { md: 'minmax(0,1fr) minmax(0,1fr)' },
+  gridTemplateColumns: { md: '1fr 1fr' },
   gap: 2,
 };
 
@@ -42,11 +40,11 @@ const SubmissionFeed = () => {
   
   return (
     <React.Fragment>
-      <Grid sx={feedStyle}>
+      <Box sx={feedStyle}>
         {submissions.map((submission) => {
           return <SubmissionCard submissionId={submission._id} key={submission._id} showModal={showModal}/>
         })}
-      </Grid>
+      </Box>
     </React.Fragment>
   );
 };

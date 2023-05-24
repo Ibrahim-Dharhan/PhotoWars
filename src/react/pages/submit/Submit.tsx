@@ -80,7 +80,6 @@ const Submit = () => {
               id="outlined-basic"
               label="Photo caption"
               variant="outlined"
-              inputProps = {{ maxLength: 60 }}
               {...field}
             />
           )}
