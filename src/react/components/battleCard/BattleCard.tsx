@@ -17,6 +17,7 @@ import {
   Tooltip,
   Typography,
 } from '@mui/material';
+import { getImage } from '../../../definitions/getImage';
 import { PostCardHeader } from '../postCardHeader/PostCardHeader';
 import { updateDeadline } from './timerLogic';
 import { useLocation, useNavigate } from 'react-router-dom';
@@ -34,6 +35,7 @@ const BattleCard = ({
   const [caption, setCaption] = useState('');
   const [displayName, setDisplayName] = useState('');
   const [filename, setFilename] = useState('');
+  const [imageUrl, setImageUrl] = useState('');
   const [numSubmissions, setNumSubmissions] = useState(0);
   const [submitted, setSubmitted] = useState(false);
   const [numVotes, setNumVotes] = useState(0);
@@ -111,6 +113,11 @@ const BattleCard = ({
     };
   }, [battleId, numBVSubmissions, numSubmissions, setNumBVSubmissions, userId]);
 
+  /* useEffect for retrieving the image.  */
+  useEffect(() => {
+    getImage(filename, setImageUrl);
+  }, [filename]);
+
   const vote = async () => {
     const path = `/battle/${battleId}/${voted ? 'unvote' : 'vote'}`;
     try {
@@ -153,7 +160,7 @@ const BattleCard = ({
         >
           <CardMedia
             component='img'
-            image={`/image/${filename}`}
+            image={imageUrl}
             loading='lazy'
           />
         </ButtonBase>

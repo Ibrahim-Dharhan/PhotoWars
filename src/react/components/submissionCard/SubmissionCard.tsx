@@ -11,6 +11,7 @@ import {
   Typography,
 } from '@mui/material';
 import FavoriteIcon from '@mui/icons-material/Favorite';
+import { getImage } from '../../../definitions/getImage';
 import { pink } from '@mui/material/colors';
 import './submissionCard.css';
 import PropTypes from 'prop-types';
@@ -21,6 +22,7 @@ const SubmissionCard = ({ submissionId, showModal }) => {
   const { userId, setOpen } = useContext(UserContext);
   const [caption, setCaption] = useState('');
   const [displayName, setDisplayName] = useState('');
+  const [imageUrl, setImageUrl] = useState('');
   const [filename, setFilename] = useState('');
   const [numVotes, setNumVotes] = useState(0);
   const [voted, setVoted] = useState(false);
@@ -77,6 +79,11 @@ const SubmissionCard = ({ submissionId, showModal }) => {
     };
   }, [submissionId, userId]);
 
+  /* useEffect for retriving the image.  */
+  useEffect(() => {
+    getImage(filename, setImageUrl);
+  }, [filename]);
+
   const vote = async () => {
     const path = `/submission/${submissionId}/${voted ? 'unvote' : 'vote'}`;
     try {
@@ -109,7 +116,7 @@ const SubmissionCard = ({ submissionId, showModal }) => {
         >
           <CardMedia
             component='img'
-            image={`/image/${filename}`}
+            image={imageUrl}
             loading='lazy'
           />
         </ButtonBase>

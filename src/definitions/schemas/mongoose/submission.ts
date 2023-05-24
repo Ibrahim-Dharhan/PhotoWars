@@ -17,6 +17,8 @@ import { Vote } from './vote';
  *           type: number
  *         author:
  *           type: string
+ *         battle:
+ *           type: string
  *         caption:
  *           type: string
  *         creationTime:

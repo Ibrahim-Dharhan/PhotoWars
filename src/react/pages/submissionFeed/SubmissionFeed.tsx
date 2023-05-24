@@ -39,7 +39,6 @@ const feedStyle = {
 const SubmissionFeed = () => {
   const { showModal } = useOutletContext() as BVSubmissionFeedState;
   const submissions = useLoaderData() as Submission[];
-  // console.log(submissions);
   
   return (
     <React.Fragment>
