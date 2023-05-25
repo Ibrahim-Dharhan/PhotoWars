@@ -44,7 +44,7 @@ const deleteFileFromS3 = async (filename) => {
   const command = new DeleteObjectCommand(deleteParams);
 
   try {
-    const response = await s3Client.send(command);
+    await s3Client.send(command);
   } catch (err) {
     console.error(err);
   }
