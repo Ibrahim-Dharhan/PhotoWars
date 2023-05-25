@@ -1,13 +1,20 @@
 'use strict';
 
 import express = require('express');
-import { checkSchema, validationResult } from 'express-validator';
+import fs = require('fs');
+import path = require('path');
+import { AWS_BUCKET_NAME, deleteFileFromS3, uploadFileToS3 } from '../../definitions/s3';
+import { checkSchema, matchedData, validationResult } from 'express-validator';
 import { Battle } from '../../definitions/schemas/mongoose/battle';
 import { Comment } from '../../definitions/schemas/mongoose/comment';
 import { Submission } from '../../definitions/schemas/mongoose/submission';
+import { upload } from '../../server';
 import { User } from '../../definitions/schemas/mongoose/user';
 import { Vote } from '../../definitions/schemas/mongoose/vote';
 import { UpdateUser } from '../../definitions/schemas/validation/updateUser';
+
+import * as constants from '../../definitions/constants';
+const IMAGE_DIR = process.env.IMAGE_DIR || constants._imageDir;
 
 const userRouter = express.Router();
 
@@ -80,6 +87,8 @@ userRouter.get('/:id', async (req, res) => {
  *                 type: string
  *               displayName:
  *                 type: string
+ *               filename:
+ *                 type: string
  *               firstName:
  *                 type: string
  *               lastName:
@@ -87,6 +96,7 @@ userRouter.get('/:id', async (req, res) => {
  *             required:
  *               - description
  *               - displayName
+ *               - filename
  *               - firstName
  *               - lastName
  *     responses:
@@ -105,9 +115,10 @@ userRouter.get('/:id', async (req, res) => {
  *       500:
  *         $ref: '#/components/responses/500'
  */
-userRouter.put('/', checkSchema(UpdateUser), async (req, res) => {
+userRouter.put('/', upload.single('file'), checkSchema(UpdateUser), async (req, res) => {
   const errors = validationResult(req);
   if (!errors.isEmpty()) {
+    await fs.promises.unlink(path.join(IMAGE_DIR, req.file.filename));
     res.status(400).json({
       errors: errors.array(),
     });
@@ -115,23 +126,44 @@ userRouter.put('/', checkSchema(UpdateUser), async (req, res) => {
   }
 
   if (!req.session.loggedIn) {
+    await fs.promises.unlink(path.join(IMAGE_DIR, req.file.filename));
     res.status(401).send('User not logged in.');
     return;
   }
+  
   const query = User.findOneAndUpdate(
     { _id: req.session.userId },
-    { $set: req.body },
-    { new: true }
+    {
+      $set: {
+        ...{filename: req.file.filename},
+        ...matchedData(req)
+      }
+    }
   );
   try {
     const userObj = await query.lean().exec();
     if (!userObj) {
+      await fs.promises.unlink(path.join(IMAGE_DIR, req.file.filename));
       res.status(404).send('Failed to find user.');
       console.error('Failed to find user.');
     } else {
-      res.status(200).json(userObj);
+      if (AWS_BUCKET_NAME) {
+        /* Uploading profile picture to S3 and delete old profile picture.  */
+        await deleteFileFromS3(userObj.filename);
+        await uploadFileToS3(req.file);
+        // await fs.promises.unlink(path.join(IMAGE_DIR, req.file.filename));
+      }
+
+      const newQuery = User.findById(req.session.userId, [
+        '-__v',
+        '-loginName',
+        '-loginPassword',
+      ]);
+      const newUserObj = await newQuery.lean().exec();
+      res.status(200).json(newUserObj);
     }
   } catch (err) {
+    await fs.promises.unlink(path.join(IMAGE_DIR, req.file.filename));
     res.status(500).send('Internal server error.');
     console.error(err);
   }
