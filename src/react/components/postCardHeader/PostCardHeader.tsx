@@ -1,4 +1,4 @@
-"use strict"
+"use strict";
 
 import React from 'react';
 import {
@@ -7,6 +7,7 @@ import {
   IconButton
 } from '@mui/material';
 import DownloadIcon from '@mui/icons-material/Download';
+import PropTypes from 'prop-types';
 import { Link, useNavigate } from 'react-router-dom';
 
 const PostCardHeader = ({
@@ -67,5 +68,9 @@ const PostCardHeader = ({
     />
   );
 }
+
+PostCardHeader.propTypes = {
+  _post: PropTypes.object
+};
 
 export { PostCardHeader };

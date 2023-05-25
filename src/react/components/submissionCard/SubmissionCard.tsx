@@ -1,7 +1,6 @@
 import React, { useContext, useEffect, useRef, useState } from 'react';
 import axios from 'axios';
 import {
-  Avatar,
   ButtonBase,
   Card,
   CardActionArea,
@@ -12,18 +11,18 @@ import {
   Typography,
 } from '@mui/material';
 import FavoriteIcon from '@mui/icons-material/Favorite';
+import { getImage } from '../../../definitions/getImage';
 import { pink } from '@mui/material/colors';
 import './submissionCard.css';
 import PropTypes from 'prop-types';
 import { UserContext } from '../../contexts/UserContext';
-import { Block } from '@mui/icons-material';
-import { auto } from 'async';
 import { PostCardHeader } from '../postCardHeader/PostCardHeader';
 
 const SubmissionCard = ({ submissionId, showModal }) => {
   const { userId, setOpen } = useContext(UserContext);
   const [caption, setCaption] = useState('');
   const [displayName, setDisplayName] = useState('');
+  const [imageUrl, setImageUrl] = useState('');
   const [filename, setFilename] = useState('');
   const [numVotes, setNumVotes] = useState(0);
   const [voted, setVoted] = useState(false);
@@ -80,6 +79,11 @@ const SubmissionCard = ({ submissionId, showModal }) => {
     };
   }, [submissionId, userId]);
 
+  /* useEffect for retriving the image.  */
+  useEffect(() => {
+    getImage(filename, setImageUrl);
+  }, [filename]);
+
   const vote = async () => {
     const path = `/submission/${submissionId}/${voted ? 'unvote' : 'vote'}`;
     try {
@@ -116,8 +120,8 @@ const SubmissionCard = ({ submissionId, showModal }) => {
           sx = {{width: "100%"}}>
           <CardMedia
             component='img'
-            image={`/image/${filename}`}
-            loading="lazy"
+            image={imageUrl}
+            loading='lazy'
             sx={{height:300, objectFit: "contain"}}
           />
         </ButtonBase>
