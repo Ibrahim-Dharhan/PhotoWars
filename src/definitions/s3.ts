@@ -7,7 +7,7 @@ import path = require('path');
 import * as constants from './constants';
 const IMAGE_DIR = process.env.IMAGE_DIR || constants._imageDir;
 import { Upload } from '@aws-sdk/lib-storage';
-import { S3Client } from '@aws-sdk/client-s3';
+import { DeleteObjectCommand, S3Client } from '@aws-sdk/client-s3';
 
 const AWS_ACCESS_KEY_ID = process.env.AWS_ACCESS_KEY_ID || null;
 const AWS_REGION = process.env.AWS_REGION || null;
@@ -36,4 +36,20 @@ const uploadFileToS3 = (file) => {
   }).done();
 };
 
-export { AWS_BUCKET_NAME, AWS_REGION, uploadFileToS3 };
+const deleteFileFromS3 = async (filename) => {
+  const deleteParams = {
+    Bucket: AWS_BUCKET_NAME,
+    Key: path.join(IMAGE_DIR, filename)
+  };
+  const command = new DeleteObjectCommand(deleteParams);
+
+  try {
+    const response = await s3Client.send(command);
+    console.log(response);
+    return response;
+  } catch (err) {
+    console.error(err);
+  }
+};
+
+export { AWS_BUCKET_NAME, AWS_REGION, uploadFileToS3, deleteFileFromS3 };

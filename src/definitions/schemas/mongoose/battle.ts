@@ -1,7 +1,9 @@
 'use strict';
 
+import async = require('async');
 import mongoose = require('mongoose');
 import { Comment } from './comment';
+import { AWS_BUCKET_NAME, deleteFileFromS3 } from '../../s3';
 import { Submission } from './submission';
 import { Vote } from './vote';
 
@@ -39,8 +41,9 @@ const battleSchema = new mongoose.Schema({
 
 /* Middleware to delete or update Battle-related documents before deletion.  */
 battleSchema.pre(['deleteMany', 'findOneAndDelete'], async function () {
-  const results = await Battle.find(this.getQuery(), '_id');
+  const results = await Battle.find(this.getQuery(), ['_id', 'filename']);
   const _ids = results.map((battle) => battle._id);
+  const filenames = results.map((battle) => battle.filename);
   /* Delete all votes on Battle.  */
   await Vote.deleteMany({
     votedModel: 'Battle',
@@ -55,6 +58,16 @@ battleSchema.pre(['deleteMany', 'findOneAndDelete'], async function () {
   await Submission.deleteMany({
     battle: { $in: _ids },
   });
+
+  /* Delete image associated with Battle.  */
+  if (AWS_BUCKET_NAME) {
+    try {
+      await async.each(filenames, deleteFileFromS3);
+    } catch (err) {
+      console.error(err);
+    }
+  }
+
 });
 
 const Battle = mongoose.model('Battle', battleSchema);
