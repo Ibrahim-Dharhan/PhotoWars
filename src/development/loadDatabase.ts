@@ -92,6 +92,13 @@ const dummyData = dummyDataFunc();
   try {
     await Promise.all(userModels.map(async (user) => {
       await User.create(user);
+      if (process.env.IMAGE_DIR) {
+        await uploadFileToS3({
+          path: path.join(IMAGE_DIR, user.filename),
+          filename: user.filename
+        });
+        console.log(`Uploaded file ${user.filename} to Amazon S3.`);
+      }
       console.log(`Added user ${user.firstName} ${user.lastName} to database.`);
     }));
   } catch (err) {
