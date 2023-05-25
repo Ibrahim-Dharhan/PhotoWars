@@ -1,13 +1,29 @@
-import React, { useEffect, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
+import {
+  Avatar,
+  Box,
+  Button,
+  Typography
+} from '@mui/material';
 import { getImage } from '../../../definitions/getImage';
-import { Typography, Avatar, Box } from '@mui/material';
+import { IUserFrontend } from '../../../definitions/schemas/mongoose/user';
+import { Link, useOutletContext } from 'react-router-dom';
+import { UserContext } from '../../contexts/UserContext';
 
-const UserHeader = ({ user }) => {
+interface UVUserHeaderState {
+  user: IUserFrontend
+}
+
+const UserHeader = () => {
+  const { user } = useOutletContext() as UVUserHeaderState;
+  const { userId } = useContext(UserContext);
   const [imageUrl, setImageUrl] = useState('');
+
   useEffect(() => {
     getImage(user.filename, setImageUrl);
-  }, user.filename);
+  }, [user.filename]);
+
   return (
     <Box display='flex' sx={{ padding: '1em' }}>
       <Avatar
@@ -32,6 +48,16 @@ const UserHeader = ({ user }) => {
           Fun Fact: {user.description}
         </Typography>
       </Box>
+      {
+        user._id === userId &&
+        <Button
+          component={Link}
+          to="edit"
+          sx={{marginBottom: 'auto', marginLeft: 'auto'}}
+        >
+          Edit
+        </Button>
+      }
     </Box>
   );
 };

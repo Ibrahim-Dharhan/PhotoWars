@@ -32,6 +32,23 @@ import { Vote } from './vote';
  *         loginPassword:
  *           type: string
  */
+interface IUserShared {
+  description: string,
+  displayName: string,
+  filename: string,
+  firstName: string,
+  lastName: string,
+}
+
+interface IUserFrontend extends IUserShared {
+  _id: string
+}
+
+interface IUserBackend extends IUserShared {
+  loginName: string,
+  loginPassword: string
+}
+
 const userSchema = new mongoose.Schema({
   description: String,
   displayName: String,
@@ -40,7 +57,7 @@ const userSchema = new mongoose.Schema({
   lastName: String,
   loginName: String,
   loginPassword: String
-});
+} as Record<keyof IUserBackend, StringConstructor>);
 
 /* Middleware to delete or update User-related documents before deletion.  */
 userSchema.pre(['findOneAndDelete'], async function() {
@@ -57,4 +74,4 @@ userSchema.pre(['findOneAndDelete'], async function() {
 
 const User = mongoose.model('User', userSchema);
 
-export { User };
+export { User, IUserFrontend };
