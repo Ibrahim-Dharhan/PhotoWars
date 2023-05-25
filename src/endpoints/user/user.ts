@@ -118,7 +118,7 @@ userRouter.get('/:id', async (req, res) => {
 userRouter.put('/', upload.single('file'), checkSchema(UpdateUser), async (req, res) => {
   const errors = validationResult(req);
   if (!errors.isEmpty()) {
-    await fs.promises.unlink(path.join(IMAGE_DIR, req.file.filename));
+    req.file && await fs.promises.unlink(path.join(IMAGE_DIR, req.file.filename));
     res.status(400).json({
       errors: errors.array(),
     });
@@ -126,7 +126,7 @@ userRouter.put('/', upload.single('file'), checkSchema(UpdateUser), async (req, 
   }
 
   if (!req.session.loggedIn) {
-    await fs.promises.unlink(path.join(IMAGE_DIR, req.file.filename));
+    req.file && await fs.promises.unlink(path.join(IMAGE_DIR, req.file.filename));
     res.status(401).send('User not logged in.');
     return;
   }
@@ -135,7 +135,7 @@ userRouter.put('/', upload.single('file'), checkSchema(UpdateUser), async (req, 
     { _id: req.session.userId },
     {
       $set: {
-        ...{filename: req.file.filename},
+        ...(req.file ? {filename: req.file.filename} : {}),
         ...matchedData(req)
       }
     }
@@ -143,11 +143,11 @@ userRouter.put('/', upload.single('file'), checkSchema(UpdateUser), async (req, 
   try {
     const userObj = await query.lean().exec();
     if (!userObj) {
-      await fs.promises.unlink(path.join(IMAGE_DIR, req.file.filename));
+      req.file && await fs.promises.unlink(path.join(IMAGE_DIR, req.file.filename));
       res.status(404).send('Failed to find user.');
       console.error('Failed to find user.');
     } else {
-      if (AWS_BUCKET_NAME) {
+      if (AWS_BUCKET_NAME && req.file) {
         /* Uploading profile picture to S3 and delete old profile picture.  */
         await deleteFileFromS3(userObj.filename);
         await uploadFileToS3(req.file);
@@ -163,7 +163,7 @@ userRouter.put('/', upload.single('file'), checkSchema(UpdateUser), async (req, 
       res.status(200).json(newUserObj);
     }
   } catch (err) {
-    await fs.promises.unlink(path.join(IMAGE_DIR, req.file.filename));
+    req.file && await fs.promises.unlink(path.join(IMAGE_DIR, req.file.filename));
     res.status(500).send('Internal server error.');
     console.error(err);
   }
