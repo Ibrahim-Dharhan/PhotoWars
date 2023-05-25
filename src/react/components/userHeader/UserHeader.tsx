@@ -1,13 +1,18 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
+import { getImage } from '../../../definitions/getImage';
 import { Typography, Avatar, Box } from '@mui/material';
 
 const UserHeader = ({ user }) => {
+  const [imageUrl, setImageUrl] = useState('');
+  useEffect(() => {
+    getImage(user.filename, setImageUrl);
+  }, user.filename);
   return (
     <Box display='flex' sx={{ padding: '1em' }}>
       <Avatar
         alt='Userpic'
-        src={`/image/${user.filename}`}
+        src={imageUrl}
         sx={{ width: '15%', height: '15%' }}
       />
       <Box paddingLeft={2}>
