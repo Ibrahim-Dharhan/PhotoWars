@@ -1,7 +1,6 @@
 import React, { useContext, useEffect, useRef, useState } from 'react';
 import axios from 'axios';
 import {
-  Avatar,
   ButtonBase,
   Card,
   CardActionArea,
@@ -12,18 +11,18 @@ import {
   Typography,
 } from '@mui/material';
 import FavoriteIcon from '@mui/icons-material/Favorite';
+import { getImage } from '../../../definitions/getImage';
 import { pink } from '@mui/material/colors';
 import './submissionCard.css';
 import PropTypes from 'prop-types';
 import { UserContext } from '../../contexts/UserContext';
-import { Block } from '@mui/icons-material';
-import { auto } from 'async';
 import { PostCardHeader } from '../postCardHeader/PostCardHeader';
 
 const SubmissionCard = ({ submissionId, showModal }) => {
   const { userId, setOpen } = useContext(UserContext);
   const [caption, setCaption] = useState('');
   const [displayName, setDisplayName] = useState('');
+  const [imageUrl, setImageUrl] = useState('');
   const [filename, setFilename] = useState('');
   const [numVotes, setNumVotes] = useState(0);
   const [voted, setVoted] = useState(false);
@@ -80,6 +79,11 @@ const SubmissionCard = ({ submissionId, showModal }) => {
     };
   }, [submissionId, userId]);
 
+  /* useEffect for retriving the image.  */
+  useEffect(() => {
+    getImage(filename, setImageUrl);
+  }, [filename]);
+
   const vote = async () => {
     const path = `/submission/${submissionId}/${voted ? 'unvote' : 'vote'}`;
     try {
@@ -92,57 +96,11 @@ const SubmissionCard = ({ submissionId, showModal }) => {
   };
 
   return (
-<<<<<<< HEAD
     <div>
     <Card variant="outlined"
     sx = {{height:475, width: "100%"}}>
       <CardActionArea component="div">
-        <CardHeader
-          avatar={
-            <Avatar
-              sx={{ width: 24, height: 24 }}
-              onClick={(event) => {
-                event.stopPropagation();
-                event.preventDefault();
-                console.log(
-                  `Go to profile page at /user/${_submission.current?.author._id}`
-                );
-                navigate(`/users/${_submission.current?.author._id}`);
-              }}
-            >
-              {displayName[0]}
-            </Avatar>
-          }
-          title={
-            <Link
-              to=''
-              onMouseDown={(event) => event.stopPropagation()}
-              onClick={(event) => {
-                event.stopPropagation();
-                event.preventDefault();
-                console.log(
-                  `Go to profile page at /user/${_submission.current?.author._id}`
-                );
-                navigate(`/users/${_submission.current?.author._id}`);
-              }}
-            >
-              {displayName}
-            </Link>
-          }
-          action={
-            <IconButton
-              onMouseDown={(event) => event.stopPropagation()}
-              onClick={handleDownload}
-            >
-              <DownloadIcon />
-            </IconButton>
-          }
-        />
-=======
-    <Card variant='outlined'>
-      <CardActionArea component='div'>
         <PostCardHeader _post={_submission} />
->>>>>>> main
         <CardContent sx={{ mt: -3 }}>
           <Typography noWrap variant="h6">
             {caption}
@@ -162,8 +120,8 @@ const SubmissionCard = ({ submissionId, showModal }) => {
           sx = {{width: "100%"}}>
           <CardMedia
             component='img'
-            image={`/image/${filename}`}
-            loading="lazy"
+            image={imageUrl}
+            loading='lazy'
             sx={{height:300, objectFit: "contain"}}
           />
         </ButtonBase>

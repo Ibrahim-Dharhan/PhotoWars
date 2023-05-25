@@ -34,6 +34,7 @@ const UserView = () => {
   const [battles, setBattles] = useState(null);
   const [submissions, setSubmissions] = useState(null);
   const [comments, setComments] = useState(null);
+
   useEffect(() => {
     let shouldUpdate = true;
     const setUserData = async () => {
@@ -58,7 +59,7 @@ const UserView = () => {
     return () => {
       shouldUpdate = false;
     };
-  });
+  }, [user._id]);
 
   return (
     <React.Fragment>

@@ -1,7 +1,9 @@
 'use strict';
 
+import async = require('async');
 import mongoose = require('mongoose');
 import { Comment } from './comment';
+import { AWS_BUCKET_NAME, deleteFileFromS3 } from '../../s3';
 import { Vote } from './vote';
 
 /**
@@ -16,6 +18,8 @@ import { Vote } from './vote';
  *         __v:
  *           type: number
  *         author:
+ *           type: string
+ *         battle:
  *           type: string
  *         caption:
  *           type: string
@@ -35,8 +39,9 @@ const submissionSchema = new mongoose.Schema({
 
 /* Middleware to delete or update Submission-related documents before deletion.  */
 submissionSchema.pre(['deleteMany', 'findOneAndDelete'], async function () {
-  const results = await Submission.find(this.getQuery(), '_id');
+  const results = await Submission.find(this.getQuery(), ['_id', 'filename']);
   const _ids = results.map((submission) => submission._id);
+  const filenames = results.map((submission) => submission.filename);
   /* Delete all votes on Submission.  */
   await Vote.deleteMany({
     votedModel: 'Submission',
@@ -47,6 +52,18 @@ submissionSchema.pre(['deleteMany', 'findOneAndDelete'], async function () {
     commentedModel: 'Submission',
     post: { $in: _ids },
   });
+  
+  /* Delete image associated with Submission.  */
+  if (AWS_BUCKET_NAME) {
+    try {
+      await async.each(filenames, async (filename, callback) => {
+        await deleteFileFromS3(filename);
+        callback();
+      });
+    } catch (err) {
+      console.error(err);
+    }
+  }
 });
 
 const Submission = mongoose.model('Submission', submissionSchema);

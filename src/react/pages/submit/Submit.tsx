@@ -41,11 +41,6 @@ const Submit = () => {
     navigate('..');
   }
 
-  function handleImageChange(event) {
-    const file = event.target.files[0];
-    setImage(file);
-  }
-
   function handleClearImage() {
     setImage(null);
     resetField('file');

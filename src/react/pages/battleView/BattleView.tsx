@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { BattleCard } from '../../components/battleCard/BattleCard';
 import { CommentModal } from '../../components/commentModal/CommentModal';
-import { Outlet, useParams, useOutletContext } from 'react-router-dom';
+import { Outlet, useParams } from 'react-router-dom';
 
 const BattleView = () => {
   const [numBVSubmissions, setNumBVSubmissions] = useState(0);
@@ -53,9 +53,5 @@ const BattleView = () => {
     </React.Fragment>
   );
 };
-
-export function useShowModal() {
-  return useOutletContext<any>();
-}
 
 export { BattleView };

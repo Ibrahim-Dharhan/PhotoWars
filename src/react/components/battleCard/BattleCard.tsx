@@ -1,8 +1,10 @@
 import React, { useContext, useEffect, useRef, useState } from 'react';
 import axios from 'axios';
-import { updateDeadline } from './timerLogic';
+import FavoriteIcon from '@mui/icons-material/Favorite';
+import ImageIcon from '@mui/icons-material/Image';
+import PropTypes from 'prop-types';
+import { blue, pink } from '@mui/material/colors';
 import {
-  Avatar,
   Box,
   Button,
   ButtonBase,
@@ -15,14 +17,12 @@ import {
   Tooltip,
   Typography,
 } from '@mui/material';
-import FavoriteIcon from '@mui/icons-material/Favorite';
-import ImageIcon from '@mui/icons-material/Image';
-import { blue, pink } from '@mui/material/colors';
-import { useLocation, useNavigate } from 'react-router-dom';
-import './battleCard.css';
-import PropTypes from 'prop-types';
-import { UserContext } from '../../contexts/UserContext';
+import { getImage } from '../../../definitions/getImage';
 import { PostCardHeader } from '../postCardHeader/PostCardHeader';
+import { updateDeadline } from './timerLogic';
+import { useLocation, useNavigate } from 'react-router-dom';
+import { UserContext } from '../../contexts/UserContext';
+import './battleCard.css';
 
 const BattleCard = ({
   battleId,
@@ -35,6 +35,7 @@ const BattleCard = ({
   const [caption, setCaption] = useState('');
   const [displayName, setDisplayName] = useState('');
   const [filename, setFilename] = useState('');
+  const [imageUrl, setImageUrl] = useState('');
   const [numSubmissions, setNumSubmissions] = useState(0);
   const [submitted, setSubmitted] = useState(false);
   const [numVotes, setNumVotes] = useState(0);
@@ -112,6 +113,11 @@ const BattleCard = ({
     };
   }, [battleId, numBVSubmissions, numSubmissions, setNumBVSubmissions, userId]);
 
+  /* useEffect for retrieving the image.  */
+  useEffect(() => {
+    getImage(filename, setImageUrl);
+  }, [filename]);
+
   const vote = async () => {
     const path = `/battle/${battleId}/${voted ? 'unvote' : 'vote'}`;
     try {
@@ -154,7 +160,7 @@ const BattleCard = ({
         >
           <CardMedia
             component='img'
-            image={`/image/${filename}`}
+            image={imageUrl}
             loading='lazy'
           />
         </ButtonBase>
