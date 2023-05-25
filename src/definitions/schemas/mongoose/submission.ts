@@ -52,10 +52,14 @@ submissionSchema.pre(['deleteMany', 'findOneAndDelete'], async function () {
     commentedModel: 'Submission',
     post: { $in: _ids },
   });
-
+  
+  /* Delete image associated with Submission.  */
   if (AWS_BUCKET_NAME) {
     try {
-      await async.each(filenames, deleteFileFromS3);
+      await async.each(filenames, async (filename, callback) => {
+        await deleteFileFromS3(filename);
+        callback();
+      });
     } catch (err) {
       console.error(err);
     }

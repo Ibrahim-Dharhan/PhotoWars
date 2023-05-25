@@ -45,8 +45,6 @@ const deleteFileFromS3 = async (filename) => {
 
   try {
     const response = await s3Client.send(command);
-    console.log(response);
-    return response;
   } catch (err) {
     console.error(err);
   }
