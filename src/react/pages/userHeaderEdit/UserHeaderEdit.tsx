@@ -16,7 +16,6 @@ interface UVUserHeaderEditState {
 
 const UserHeaderEdit = () => {
   const { user } = useOutletContext() as UVUserHeaderEditState;
-  console.log(user);
   const [imageUrl, setImageUrl] = useState('');
 
   const handleSaveOnClick = () => {
@@ -37,7 +36,9 @@ const UserHeaderEdit = () => {
       <Box paddingLeft={2}>
         <Typography
           style={{ fontWeight: 'bold', fontSize: '2.5em', marginBottom: '-5%' }}
-        >{`${user.firstName} ${user.lastName}`}</Typography>
+        >
+          {`${user.firstName} ${user.lastName}`}
+        </Typography>
         <Typography
           style={{
             fontWeight: 'lighter',
@@ -46,7 +47,9 @@ const UserHeaderEdit = () => {
             color: 'grey',
             marginBottom: '-1%',
           }}
-        >{`@${user.displayName}`}</Typography>
+        >
+          {`@${user.displayName}`}
+        </Typography>
         <Typography style={{ fontSize: '1.2em', marginLeft: '5px' }}>
           Fun Fact: {user.description}
         </Typography>
