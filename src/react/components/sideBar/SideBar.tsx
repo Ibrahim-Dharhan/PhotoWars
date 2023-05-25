@@ -1,6 +1,6 @@
 import React, { useContext } from 'react';
 import axios from 'axios';
-// import AccountCircleOutlinedIcon from '@mui/icons-material/AccountCircleOutlined';
+import AccountCircleOutlinedIcon from '@mui/icons-material/AccountCircleOutlined';
 import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
 // import EmojiEventsOutlinedIcon from '@mui/icons-material/EmojiEventsOutlined';
 import ExploreOutlinedIcon from '@mui/icons-material/ExploreOutlined';
@@ -20,6 +20,7 @@ import { UserContext } from '../../contexts/UserContext';
 
 const SideBar = () => {
   const {
+    displayName,
     setDisplayName,
     userId,
     setUserId
@@ -63,7 +64,7 @@ const SideBar = () => {
           }
         }}
       >
-        <MenuItem onClick={() =>navigate('/')}>
+        <MenuItem onClick={() => navigate('/')}>
             <Typography variant="h5">Photo Wars</Typography>
         </MenuItem>
         <MenuItem onClick={() => navigate('/')} icon={<ExploreOutlinedIcon />}>
@@ -74,8 +75,16 @@ const SideBar = () => {
         <MenuItem icon={<EmojiEventsOutlinedIcon />}>Winners</MenuItem>
         <MenuItem icon={<NotificationsOutlinedIcon />}>Notifications</MenuItem>
         <MenuItem icon={<SearchOutlinedIcon />}>Search</MenuItem>
-        <MenuItem icon={<AccountCircleOutlinedIcon />}>Profile</MenuItem>
         */}
+        {
+          userId
+          && <MenuItem
+               icon={<AccountCircleOutlinedIcon />}
+               onClick={() => navigate(`/users/${userId}`)}
+             >
+               {displayName}
+             </MenuItem>
+        }
         {userId === null ? <div /> : userId !== '' ?
           <React.Fragment>
             <MenuItem component="div" style={{ cursor: 'default' }}>
