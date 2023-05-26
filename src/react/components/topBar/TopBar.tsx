@@ -1,14 +1,17 @@
-import React, { useContext } from 'react';
+import React, { useContext, useState } from 'react';
 import axios from 'axios';
 import {
   AppBar,
   Box,
   Button,
+  Menu,
+  MenuItem,
   Stack,
   Toolbar,
   Typography
 } from '@mui/material';
 import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
+import AccountCircleOutlinedIcon from '@mui/icons-material/AccountCircleOutlined';
 import { UserContext } from '../../contexts/UserContext';
 import { LoginModal } from '../loginModal/LoginModal';
 import { Link, useNavigate } from 'react-router-dom';
@@ -20,8 +23,8 @@ const TopBar = () => {
     userId,
     setUserId
   } = useContext(UserContext);
-
   const navigate = useNavigate();
+  const [anchorElement, setAnchorElement] = useState(null);
 
   const handleLogOut = async () => {
     const path = '/account/logout';
@@ -45,10 +48,10 @@ const TopBar = () => {
           justifyContent="space-between"
           sx={{ width: '100%' }}
         >
-          <Typography>PhotoWars</Typography>
+          <Typography variant="h5">PhotoWars</Typography>
           <Box>
             {userId === null ? <div /> : userId !== '' ?
-              <React.Fragment>
+              <Stack direction="row" spacing={2}>
                   <Button
                     component={Link}
                     startIcon={<AddCircleOutlineIcon />}
@@ -57,10 +60,38 @@ const TopBar = () => {
                   >
                     Create War
                   </Button>
-                  <Button variant="contained" onClick={handleLogOut}>
-                    Log Out
+                  <Button
+                    onClick={(event) => setAnchorElement(event.target)}
+                    startIcon={<AccountCircleOutlinedIcon />}
+                  >
+                    {displayName}
                   </Button>
-              </React.Fragment>
+                  <Menu
+                    sx={{ mt: '45px' }}
+                    anchorEl={anchorElement}
+                    anchorOrigin={{
+                      horizontal: 'right',
+                      vertical: 'top'
+                    }}
+                    keepMounted
+                    transformOrigin={{
+                      horizontal: 'right',
+                      vertical: 'top'
+                    }}
+                    open={Boolean(anchorElement)}
+                    onClose={() => setAnchorElement(null)}
+                  >
+                    <MenuItem
+                      key={'logout'} 
+                      onClick={() => {
+                        handleLogOut();
+                        setAnchorElement(null);
+                      }}
+                    >
+                      Log Out
+                    </MenuItem>
+                  </Menu>
+              </Stack>
               :
               <LoginModal />
             }
