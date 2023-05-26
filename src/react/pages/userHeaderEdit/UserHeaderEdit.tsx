@@ -127,7 +127,7 @@ const UserHeaderEdit = () => {
         <Controller
           name="firstName"
           control={control}
-          defaultValue={user.firstName}
+          defaultValue={user.firstName || ''}
           render={({ field }) => (
             <TextField
               label="First Name"
@@ -139,7 +139,7 @@ const UserHeaderEdit = () => {
         <Controller
           name="lastName"
           control={control}
-          defaultValue={user.lastName}
+          defaultValue={user.lastName || ''}
           render={({ field }) => (
             <TextField
               label="Last Name"
@@ -177,7 +177,7 @@ const UserHeaderEdit = () => {
         <Controller
           name="description"
           control={control}
-          defaultValue={user.description}
+          defaultValue={user.description || ''}
           render={({ field }) => (
             <TextField
               variant="outlined"
