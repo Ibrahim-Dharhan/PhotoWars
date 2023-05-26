@@ -23,7 +23,7 @@ const UserHeader = () => {
   useEffect(() => {
     let shouldUpdate = true;
     const setImage = async () => {
-      const newImageUrl = await getImageUrl(user.filename, setImageUrl);
+      const newImageUrl = await getImageUrl(user.filename);
       if (shouldUpdate) {
         setImageUrl(newImageUrl);
       }

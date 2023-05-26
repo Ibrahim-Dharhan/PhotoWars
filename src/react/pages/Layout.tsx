@@ -3,9 +3,27 @@ import { Outlet } from 'react-router-dom';
 import { UserContext } from '../contexts/UserContext';
 
 const Layout = () => {
-  const [displayName, setDisplayName] = useState(null);
+  const [displayName, setDN] = useState(null);
   const [open, setOpen] = useState(false);
-  const [userId, setUserId] = useState(null);
+  const [userId, setUI] = useState(null);
+
+  const saveToUserInLocalStorage = (properties) => {
+    let storedUser = localStorage.getItem('user');
+    storedUser = storedUser ? JSON.parse(storedUser) : {};
+    Object.assign(storedUser, properties);
+    localStorage.setItem('user', JSON.stringify(storedUser));
+  }
+
+  const setDisplayName = (displayName) => {
+    setDN(displayName);
+    saveToUserInLocalStorage({displayName: displayName});
+  };
+
+  const setUserId = (userId) => {
+    setUI(userId);
+    saveToUserInLocalStorage({_id: userId});
+  };
+
   const contextValue = { displayName, setDisplayName, open, setOpen, userId, setUserId };
   useEffect(() => {
     let name = '';
