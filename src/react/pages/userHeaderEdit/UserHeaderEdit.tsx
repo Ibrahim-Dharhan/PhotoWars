@@ -4,7 +4,6 @@ import PhotoCamera from '@mui/icons-material/PhotoCamera';
 import PropTypes from 'prop-types';
 import {
   Avatar,
-  Badge,
   Box,
   Button,
   Grid,
@@ -12,11 +11,10 @@ import {
   InputAdornment,
   Stack,
   TextField,
-  Typography
 } from '@mui/material';
 import { Controller, useForm } from 'react-hook-form';
 import { getImageUrl } from '../../../definitions/getImageUrl';
-import { Link, useOutletContext, useNavigate } from 'react-router-dom';
+import { useOutletContext, useNavigate } from 'react-router-dom';
 import { IUserFrontend } from '../../../definitions/schemas/mongoose/user';
 import { UserContext } from '../../contexts/UserContext';
 
@@ -35,7 +33,6 @@ const UserHeaderEdit = () => {
     control,
     handleSubmit,
     reset: clearForm,
-    resetField
   } = useForm({ mode: 'onChange' });
 
   const handleSave = async (data) => {
@@ -58,11 +55,6 @@ const UserHeaderEdit = () => {
     }
   };
 
-  const handleResetImage = () => {
-    setImage(null);
-    resetField('file');
-  }
-
   useEffect(() => {
     let shouldUpdate = true;
     const setImage = async () => {
@@ -84,7 +76,7 @@ const UserHeaderEdit = () => {
         name="file"
         control={control}
         defaultValue=""
-        render={({ field, fieldState: { error } }) => (
+        render={({ field }) => (
           <Grid
             sx={{
               minWidth: '15%',
@@ -136,7 +128,7 @@ const UserHeaderEdit = () => {
           name="firstName"
           control={control}
           defaultValue={user.firstName}
-          render={({ field, fieldState: { error } }) => (
+          render={({ field }) => (
             <TextField
               label="First Name"
               variant="outlined"
@@ -148,7 +140,7 @@ const UserHeaderEdit = () => {
           name="lastName"
           control={control}
           defaultValue={user.lastName}
-          render={({ field, fieldState: { error } }) => (
+          render={({ field }) => (
             <TextField
               label="Last Name"
               variant="outlined"
@@ -161,8 +153,17 @@ const UserHeaderEdit = () => {
           name="displayName"
           control={control}
           defaultValue={user.displayName}
+          rules={{
+            required: 'Display name required',
+            minLength: {
+              value: 3,
+              message: 'Must be at least 3 characters long.'
+            }
+          }}
           render={({ field, fieldState: { error } }) => (
             <TextField
+              error={!!error}
+              helperText={error ? error.message : null}
               variant="outlined"
               InputProps={{
                 startAdornment: (
@@ -177,7 +178,7 @@ const UserHeaderEdit = () => {
           name="description"
           control={control}
           defaultValue={user.description}
-          render={({ field, fieldState: { error } }) => (
+          render={({ field }) => (
             <TextField
               variant="outlined"
               InputProps={{

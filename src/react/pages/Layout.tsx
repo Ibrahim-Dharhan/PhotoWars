@@ -36,7 +36,7 @@ const Layout = () => {
     }
     setDisplayName(name);
     setUserId(id);
-  }, []);
+  });
   return (
     <UserContext.Provider value={contextValue}>
       <Outlet />
