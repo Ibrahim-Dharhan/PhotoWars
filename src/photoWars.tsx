@@ -19,6 +19,8 @@ import {
   submissionFeedLoader,
 } from './react/pages/submissionFeed/SubmissionFeed';
 import { Submit } from './react/pages/submit/Submit';
+import { UserHeader } from './react/pages/userHeader/UserHeader';
+import { UserHeaderEdit } from './react/pages/userHeaderEdit/UserHeaderEdit';
 import { UserView, userViewLoader } from './react/pages/userView/UserView';
 import theme from './theme';
 
@@ -45,7 +47,18 @@ const PhotoWars = () => {
             path='users/:id'
             element={<UserView />}
             loader={userViewLoader}
-          />
+          >
+            <Route
+              path="edit"
+              element={<UserHeaderEdit />}
+              errorElement={<div>Error editing user information.</div>}
+            />
+            <Route
+              index
+              element={<UserHeader />}
+              errorElement={<div>Error loading user information.</div>}
+            />
+          </Route>
           <Route
             index
             element={<Feed />}
