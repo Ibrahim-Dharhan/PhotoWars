@@ -82,6 +82,15 @@ const TopBar = () => {
                     onClose={() => setAnchorElement(null)}
                   >
                     <MenuItem
+                      key={'profile'} 
+                      onClick={() => {
+                        navigate(`/users/${userId}`)
+                        setAnchorElement(null);
+                      }}
+                    >
+                      Profile
+                    </MenuItem>
+                    <MenuItem
                       key={'logout'} 
                       onClick={() => {
                         handleLogOut();
