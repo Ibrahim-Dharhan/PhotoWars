@@ -11,9 +11,6 @@ import {
   TextField,
   Typography
 } from '@mui/material';
-import {
-  MenuItem
-} from 'react-pro-sidebar';
 import { Controller, useForm } from 'react-hook-form';
 import { UserContext } from '../../contexts/UserContext';
 
@@ -209,7 +206,6 @@ const LoginModal = () => {
       </Box>
       </Fade>
     </Modal>
-    <MenuItem>
       <Grid container wrap="nowrap" spacing={1}>
         <Grid item>
           <Button
@@ -234,7 +230,6 @@ const LoginModal = () => {
           </Button>
         </Grid>
       </Grid>
-    </MenuItem>
     </React.Fragment>
   );
 }
