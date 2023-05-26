@@ -17,7 +17,7 @@ import {
   Tooltip,
   Typography,
 } from '@mui/material';
-import { getImage } from '../../../definitions/getImage';
+import { getImageUrl } from '../../../definitions/getImageUrl';
 import { PostCardHeader } from '../postCardHeader/PostCardHeader';
 import { updateDeadline } from './timerLogic';
 import { useLocation, useNavigate } from 'react-router-dom';
@@ -115,7 +115,17 @@ const BattleCard = ({
 
   /* useEffect for retrieving the image.  */
   useEffect(() => {
-    getImage(filename, setImageUrl);
+    let shouldUpdate = true;
+    const setImage = async () => {
+      const newImageUrl = await getImageUrl(filename);
+      if (shouldUpdate) {
+        setImageUrl(newImageUrl);
+      }
+    };
+    setImage();
+    return () => {
+      shouldUpdate = false;
+    };
   }, [filename]);
 
   const vote = async () => {
@@ -155,7 +165,7 @@ const BattleCard = ({
         <ButtonBase
           onClick={() => {
             showModal &&
-            showModal('battle', battleId, displayName, caption, filename)
+            showModal('battle', battleId, displayName, caption, filename);
           }}
         >
           <CardMedia

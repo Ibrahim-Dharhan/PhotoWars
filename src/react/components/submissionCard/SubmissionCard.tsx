@@ -11,7 +11,7 @@ import {
   Typography,
 } from '@mui/material';
 import FavoriteIcon from '@mui/icons-material/Favorite';
-import { getImage } from '../../../definitions/getImage';
+import { getImageUrl } from '../../../definitions/getImageUrl';
 import { pink } from '@mui/material/colors';
 import './submissionCard.css';
 import PropTypes from 'prop-types';
@@ -81,7 +81,17 @@ const SubmissionCard = ({ submissionId, showModal }) => {
 
   /* useEffect for retriving the image.  */
   useEffect(() => {
-    getImage(filename, setImageUrl);
+    let shouldUpdate = true;
+    const setImage = async () => {
+      const newImageUrl = await getImageUrl(filename);
+      if (shouldUpdate) {
+        setImageUrl(newImageUrl);
+      }
+    };
+    setImage();
+    return () => {
+      shouldUpdate = false;
+    };
   }, [filename]);
 
   const vote = async () => {
@@ -97,60 +107,60 @@ const SubmissionCard = ({ submissionId, showModal }) => {
 
   return (
     <div>
-    <Card variant="outlined"
-    sx = {{height:475, width: "100%"}}>
-      <CardActionArea component="div">
-        <PostCardHeader _post={_submission} />
-        <CardContent sx={{ mt: -3 }}>
-          <Typography noWrap variant="h6">
-            {caption}
-          </Typography>
-        </CardContent>
-        <ButtonBase
-          onClick={() => 
-            showModal &&
-            showModal(
-              'submission',
-              submissionId,
-              displayName,
-              caption,
-              filename
-            )
-          }
-          sx = {{width: "100%"}}>
-          <CardMedia
-            component='img'
-            image={imageUrl}
-            loading='lazy'
-            sx={{height:300, objectFit: "contain"}}
-          />
-        </ButtonBase>
-        <CardActions disableSpacing>
-          <IconButton
-            onMouseDown={(event) => event.stopPropagation()}
-            onClick={(event) => {
-              event.stopPropagation();
-              event.preventDefault();
-            }}
-          ></IconButton>
-          <IconButton
-            onMouseDown={(event) => event.stopPropagation()}
-            onClick={(event) => {
-              event.stopPropagation();
-              event.preventDefault();
-              if (userId !== '') {
-                vote();
-              } else {
-                setOpen(true);
-              }
-            }}
+      <Card variant='outlined' sx={{ height: 475, width: '100%' }}>
+        <CardActionArea component='div'>
+          <PostCardHeader _post={_submission} />
+          <CardContent sx={{ mt: -3 }}>
+            <Typography noWrap variant='h6'>
+              {caption}
+            </Typography>
+          </CardContent>
+          <ButtonBase
+            onClick={() =>
+              showModal &&
+              showModal(
+                'submission',
+                submissionId,
+                displayName,
+                caption,
+                filename
+              )
+            }
+            sx={{ width: '100%' }}
           >
-            <FavoriteIcon sx={{ pr: 1, color: voted && pink[500] }} />
-            <Typography>{numVotes}</Typography>
-          </IconButton>
-        </CardActions>
-      </CardActionArea>
-    </Card>
+            <CardMedia
+              component='img'
+              image={imageUrl}
+              loading='lazy'
+              sx={{ height: 300, objectFit: 'contain' }}
+            />
+          </ButtonBase>
+          <CardActions disableSpacing>
+            <IconButton
+              onMouseDown={(event) => event.stopPropagation()}
+              onClick={(event) => {
+                event.stopPropagation();
+                event.preventDefault();
+              }}
+            ></IconButton>
+            <IconButton
+              onMouseDown={(event) => event.stopPropagation()}
+              onClick={(event) => {
+                event.stopPropagation();
+                event.preventDefault();
+                if (userId !== '') {
+                  vote();
+                } else {
+                  setOpen(true);
+                }
+              }}
+            >
+              <FavoriteIcon sx={{ pr: 1, color: voted && pink[500] }} />
+              <Typography>{numVotes}</Typography>
+            </IconButton>
+          </CardActions>
+        </CardActionArea>
+      </Card>
     </div>
   );
 };

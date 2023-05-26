@@ -44,7 +44,6 @@ imageRouter.get('/:filename', async (req, res) => {
         'x-sent': true
       }
     };
-
     res.sendFile(filename, options, (err) => {
       if (err) {
         console.error('Failed to send file.', err);
