@@ -6,7 +6,7 @@ import {
   Button,
   Typography
 } from '@mui/material';
-import { getImage } from '../../../definitions/getImage';
+import { getImageUrl } from '../../../definitions/getImageUrl';
 import { IUserFrontend } from '../../../definitions/schemas/mongoose/user';
 import { Link, useOutletContext } from 'react-router-dom';
 import { UserContext } from '../../contexts/UserContext';
@@ -21,7 +21,17 @@ const UserHeader = () => {
   const [imageUrl, setImageUrl] = useState('');
 
   useEffect(() => {
-    getImage(user.filename, setImageUrl);
+    let shouldUpdate = true;
+    const setImage = async () => {
+      const newImageUrl = await getImageUrl(user.filename, setImageUrl);
+      if (shouldUpdate) {
+        setImageUrl(newImageUrl);
+      }
+    };
+    setImage();
+    return () => {
+      shouldUpdate = false;
+    };
   }, [user.filename]);
 
   return (

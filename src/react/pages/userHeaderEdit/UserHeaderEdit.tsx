@@ -15,7 +15,7 @@ import {
   Typography
 } from '@mui/material';
 import { Controller, useForm } from 'react-hook-form';
-import { getImage } from '../../../definitions/getImage';
+import { getImageUrl } from '../../../definitions/getImageUrl';
 import { Link, useOutletContext, useNavigate } from 'react-router-dom';
 import { IUserFrontend } from '../../../definitions/schemas/mongoose/user';
 import { UserContext } from '../../contexts/UserContext';
@@ -64,7 +64,17 @@ const UserHeaderEdit = () => {
   }
 
   useEffect(() => {
-    getImage(user.filename, setImageUrl);
+    let shouldUpdate = true;
+    const setImage = async () => {
+      const newImageUrl = await getImageUrl(user.filename, setImageUrl);
+      if (shouldUpdate) {
+        setImageUrl(newImageUrl);
+      }
+    };
+    setImage();
+    return () => {
+      shouldUpdate = false;
+    };
   }, [user.filename]);
 
   return (
