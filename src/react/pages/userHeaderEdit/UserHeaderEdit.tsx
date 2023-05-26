@@ -14,7 +14,7 @@ import {
 } from '@mui/material';
 import { Controller, useForm } from 'react-hook-form';
 import { getImageUrl } from '../../../definitions/getImageUrl';
-import { useOutletContext, useNavigate } from 'react-router-dom';
+import { Link, useOutletContext, useNavigate } from 'react-router-dom';
 import { IUserFrontend } from '../../../definitions/schemas/mongoose/user';
 import { UserContext } from '../../contexts/UserContext';
 
@@ -191,15 +191,19 @@ const UserHeaderEdit = () => {
           )}
         />
       </Stack>
-      <Button
-        type="submit"
-        sx={{
-          marginBottom: 'auto',
-          marginLeft: 'auto',
-        }}
-      >
-        Save
-      </Button>
+      <Stack>
+        <Button
+          type="submit"
+        >
+          Save
+        </Button>
+        <Button
+          component={Link}
+          to=".."
+        >
+          Cancel
+        </Button>
+      </Stack>
     </Box>
     </form>
   );

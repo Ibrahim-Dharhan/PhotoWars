@@ -48,7 +48,17 @@ const TopBar = () => {
           justifyContent="space-between"
           sx={{ width: '100%' }}
         >
-          <Typography variant="h5">PhotoWars</Typography>
+          <Typography
+            onClick={() => navigate('/')}
+            sx={{
+              '&:hover': {
+                cursor: 'pointer'
+              }
+            }}
+            variant="h5"
+          >
+            PhotoWars
+          </Typography>
           <Box>
             {userId === null ? <div /> : userId !== '' ?
               <Stack direction="row" spacing={2}>
