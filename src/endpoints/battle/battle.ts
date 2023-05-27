@@ -80,8 +80,8 @@ battleRouter.get('/random', async (req, res) => {
       }
     };
     const count = await Battle.countDocuments(filter).exec();
-    const random = Math.floor(Math.random() * count);
-    const query = Battle.findOne(filter, ['_id']).skip(random);
+    const numToSkip = Math.floor(today.getTime() / (3600 * 24 * 1000)) % count;
+    const query = Battle.findOne(filter, ['_id']).skip(numToSkip);
     const result = await query.exec();
     res.status(200).send(result);
   } catch (err) {
