@@ -185,9 +185,6 @@ const BattleCard = ({
         }}
       >
         <PostCardHeader _post={_battle} />
-        <CardContent sx={{ mt: -3 }}>
-          <Typography variant="h6">{caption}</Typography>
-        </CardContent>
         <ButtonBase
           onClick={() => {
             showModal &&
@@ -201,6 +198,9 @@ const BattleCard = ({
             loading='lazy'
           />
         </ButtonBase>
+        <CardContent sx={{ mb: -3 }}>
+          <Typography variant="h6">{caption}</Typography>
+        </CardContent>
         <CardActions disableSpacing>
           <IconButton
             onMouseDown={(event) => event.stopPropagation()}

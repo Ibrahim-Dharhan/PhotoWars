@@ -14,6 +14,13 @@ const theme = createTheme({
         },
       }, 
     }, 
+    MuiCard: {
+      styleOverrides: {
+        root: {
+          borderRadius: 12,
+        },
+      },
+    },
   },
   typography: {
     "fontFamily": `"Rubik", "Helvetica", "Arial", sans-serif`,
