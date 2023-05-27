@@ -1,57 +1,36 @@
-import React, { useContext, useEffect, useRef, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import axios from 'axios';
-import ModeCommentOutlinedIcon from '@mui/icons-material/ModeCommentOutlined';
-import FavoriteIcon from '@mui/icons-material/Favorite';
-import ImageIcon from '@mui/icons-material/Image';
 import PropTypes from 'prop-types';
-import { blue, pink } from '@mui/material/colors';
 import {
   Box,
   Button,
-  ButtonBase,
   Card,
   CardActionArea,
   CardActions,
   CardContent,
   CardHeader,
   CardMedia,
-  IconButton,
   Tooltip,
   Typography,
 } from '@mui/material';
 import { getImageUrl } from '../../../definitions/getImageUrl';
-import { PostCardHeader } from '../postCardHeader/PostCardHeader';
-import { updateDeadline } from './timerLogic';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { UserContext } from '../../contexts/UserContext';
 
 const DailyBattleCard = ({
   battleId,
-  numBVSubmissions,
-  setNumBVSubmissions,
-  showModal,
 }) => {
-  const { userId, setOpen } = useContext(UserContext);
+  const { userId } = useContext(UserContext);
 
   const [caption, setCaption] = useState('');
-  const [displayName, setDisplayName] = useState('');
   const [filename, setFilename] = useState('');
   const [imageUrl, setImageUrl] = useState('');
-  const [numSubmissions, setNumSubmissions] = useState(0);
   const [submitted, setSubmitted] = useState(false);
-  const [numComments, setNumComments] = useState(0);
-  const [commented, setCommented] = useState(false);
-  const [numVotes, setNumVotes] = useState(0);
-  const [voted, setVoted] = useState(false);
-  const [timeRemaining, setTimeRemaining] = useState('--:--:--');
-
-  const _battle = useRef(null);
-  const _timerEvent = useRef(null);
 
   const location = useLocation();
   const navigate = useNavigate();
 
-  /* useEffect for updating caption, display name, and image.  */
+  /* useEffect for updating caption and image.  */
   useEffect(() => {
     let shouldUpdate = true;
     const setBattleInformation = async () => {
@@ -61,14 +40,7 @@ const DailyBattleCard = ({
 
       if (shouldUpdate) {
         setCaption(battle.caption);
-        setDisplayName(battle.author.displayName);
         setFilename(battle.filename);
-        _battle.current = battle;
-        updateDeadline(
-          new Date(battle.deadline),
-          _timerEvent,
-          setTimeRemaining
-        );
       }
     };
     try {
@@ -89,9 +61,6 @@ const DailyBattleCard = ({
       const submissionsRes = await axios.get(submissionsPath);
 
       if (shouldUpdate) {
-        if (setNumBVSubmissions)
-          setNumBVSubmissions(submissionsRes.data.length);
-        setNumSubmissions(submissionsRes.data.length);
         setSubmitted(
           submissionsRes.data
             .map((submission) => submission.author)
@@ -101,36 +70,6 @@ const DailyBattleCard = ({
     };
     try {
       getSubmissions();
-    } catch (err) {
-      console.error(err.data);
-    }
-    return () => {
-      shouldUpdate = false;
-    };
-  }, [battleId, numBVSubmissions, numSubmissions, setNumBVSubmissions, userId]);
-
-  /* useEffect for updating comment and vote count.  */
-  useEffect(() => {
-    let shouldUpdate = true;
-    const getCommentsAndVotes = async () => {
-      const commentsPath = `/comment/${battleId}`;
-      const commentsRes = await axios.get(commentsPath);
-      const { numComments, commentedOn } = commentsRes.data;
-
-      const votesPath = `/vote/${battleId}`;
-      const votesRes = await axios.get(votesPath);
-      const { numVotes, votedOn } = votesRes.data;
-
-      if (shouldUpdate) {
-        setCommented(commentedOn);
-        setNumComments(numComments);
-
-        setVoted(votedOn);
-        setNumVotes(numVotes);
-      }
-    };
-    try {
-      getCommentsAndVotes();
     } catch (err) {
       console.error(err.data);
     }
