@@ -18,7 +18,7 @@ const Feed = () => {
 
   return (
     <React.Fragment>
-      <Stack spacing={1}>
+      <Stack spacing={1} alignItems="center">
         {battleIdsRecent.map((battleId) => {
           return (<BattleCard battleId={battleId} key={battleId} showModal={null}/>);
         })}
