@@ -44,7 +44,6 @@ const TopBar = () => {
       elevation={1}
       position="fixed"
       sx={{
-        backgroundColor: "white",
         zIndex: (theme) => theme.zIndex.drawer + 1
       }}
     >
@@ -63,7 +62,6 @@ const TopBar = () => {
               }
             }}
             variant="h5"
-            color="black"
           >
             PhotoWars
           </Typography>

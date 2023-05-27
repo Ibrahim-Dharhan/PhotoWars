@@ -14,11 +14,15 @@ const theme = createTheme({
     }, 
   },
   palette: {
+    mode: 'dark',
+    background: {
+      paper: '#27243A'
+    },
     primary: {
-      main: '#4F00D0',
+      main: '#763DF0',
     },
     secondary: {
-      main: '#79DFD9',
+      main: '#FFD338',
     },
     error: {
       main: red.A400,
