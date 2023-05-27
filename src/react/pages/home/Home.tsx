@@ -3,7 +3,7 @@ import { RightBar } from '../../components/rightBar/RightBar';
 import { SideBar } from '../../components/sideBar/SideBar';
 import { TopBar } from '../../components/topBar/TopBar';
 import { Outlet } from 'react-router-dom';
-import { Grid, Stack, Toolbar } from '@mui/material';
+import { Stack, Toolbar } from '@mui/material';
 
 const Home = () => {
   return (
