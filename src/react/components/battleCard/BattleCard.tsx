@@ -109,28 +109,44 @@ const BattleCard = ({
     };
   }, [battleId, numBVSubmissions, numSubmissions, setNumBVSubmissions, userId]);
 
-  /* useEffect for updating comment and vote count.  */
+  /* useEffect for updating comment count.  */
   useEffect(() => {
     let shouldUpdate = true;
-    const getCommentsAndVotes = async () => {
+    const getComments = async () => {
       const commentsPath = `/comment/${battleId}`;
       const commentsRes = await axios.get(commentsPath);
       const { numComments, commentedOn } = commentsRes.data;
 
+      if (shouldUpdate) {
+        setCommented(commentedOn);
+        setNumComments(numComments);
+      }
+    };
+    try {
+      getComments();
+    } catch (err) {
+      console.error(err.data);
+    }
+    return () => {
+      shouldUpdate = false;
+    };
+  }, [battleId, userId]);
+
+  /* useEffect for updating vote count.  */
+  useEffect(() => {
+    let shouldUpdate = true;
+    const getVotes = async () => {
       const votesPath = `/vote/${battleId}`;
       const votesRes = await axios.get(votesPath);
       const { numVotes, votedOn } = votesRes.data;
 
       if (shouldUpdate) {
-        setCommented(commentedOn);
-        setNumComments(numComments);
-
         setVoted(votedOn);
         setNumVotes(numVotes);
       }
     };
     try {
-      getCommentsAndVotes();
+      getVotes();
     } catch (err) {
       console.error(err.data);
     }
@@ -148,7 +164,11 @@ const BattleCard = ({
         setImageUrl(newImageUrl);
       }
     };
-    setImage();
+    try {
+      setImage();
+    } catch (err) {
+      console.error(err.data);
+    }
     return () => {
       shouldUpdate = false;
     };

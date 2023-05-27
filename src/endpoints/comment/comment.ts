@@ -1,7 +1,9 @@
 "use strict"
 
 import express = require('express');
+import { checkSchema, validationResult } from 'express-validator';
 import { Comment } from '../../definitions/schemas/mongoose/comment';
+import { ValidObjectId } from '../../definitions/schemas/validation/validObjectId';
 import { voteOn, unvoteOn } from '../../definitions/schemas/mongoose/vote';
 
 const commentRouter = express.Router();
@@ -63,9 +65,17 @@ const commentRouter = express.Router();
  *       500:
  *         $ref: '#/components/responses/500'
  */
-commentRouter.delete('/:id', async (req, res) => {
+commentRouter.delete('/:id', checkSchema(ValidObjectId), async (req, res) => {
   if (!req.session.loggedIn) {
     res.status(401).send('User is not logged in.');
+    return;
+  }
+
+  const errors = validationResult(req);
+  if (!errors.isEmpty()) {
+    res.status(404).json({
+      errors: errors.array(),
+    });
     return;
   }
 
@@ -129,9 +139,17 @@ commentRouter.delete('/:id', async (req, res) => {
  *       500:
  *         $ref: '#/components/responses/500'
  */
-commentRouter.put('/:id', async (req, res) => {
+commentRouter.put('/:id', checkSchema(ValidObjectId), async (req, res) => {
   if (!req.session.loggedIn) {
     res.status(401).send('User is not logged in.');
+    return;
+  }
+
+  const errors = validationResult(req);
+  if (!errors.isEmpty()) {
+    res.status(404).json({
+      errors: errors.array(),
+    });
     return;
   }
 
@@ -173,9 +191,17 @@ commentRouter.put('/:id', async (req, res) => {
  *       500:
  *         $ref: '#/components/responses/500'
  */
-commentRouter.put('/:id/vote', async (req, res) => {
+commentRouter.put('/:id/vote', checkSchema(ValidObjectId), async (req, res) => {
   if (!req.session.loggedIn) {
     res.status(401).send('Must be logged in to perform this action.');
+    return;
+  }
+
+  const errors = validationResult(req);
+  if (!errors.isEmpty()) {
+    res.status(404).json({
+      errors: errors.array(),
+    });
     return;
   }
 
@@ -214,9 +240,17 @@ commentRouter.put('/:id/vote', async (req, res) => {
  *       500:
  *         $ref: '#/components/responses/500'
  */
-commentRouter.put('/:id/unvote', async (req, res) => {
+commentRouter.put('/:id/unvote', checkSchema(ValidObjectId), async (req, res) => {
   if (!req.session.loggedIn) {
     res.status(401).send('Must be logged in to perform this action.');
+    return;
+  }
+
+  const errors = validationResult(req);
+  if (!errors.isEmpty()) {
+    res.status(404).json({
+      errors: errors.array(),
+    });
     return;
   }
 
@@ -260,7 +294,14 @@ commentRouter.put('/:id/unvote', async (req, res) => {
  *       500:
  *         $ref: '#/components/responses/500'
 */
-commentRouter.get('/:id', async (req, res) => {
+commentRouter.get('/:id', checkSchema(ValidObjectId), async (req, res) => {
+  const errors = validationResult(req);
+  if (!errors.isEmpty()) {
+    res.status(404).json({
+      errors: errors.array(),
+    });
+    return;
+  }
   const commentModelId = req.params.id;
   const numCommentsQuery = Comment.countDocuments({ post: commentModelId });
   const commentedOnQuery = Comment.findOne({ post: commentModelId, author: req.session.userId });

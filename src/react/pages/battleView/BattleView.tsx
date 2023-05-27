@@ -1,10 +1,23 @@
 import React, { useState } from 'react';
+import axios from 'axios';
 import {
   Stack
 } from '@mui/material';
 import { BattleCard } from '../../components/battleCard/BattleCard';
 import { CommentModal } from '../../components/commentModal/CommentModal';
-import { Outlet, useParams } from 'react-router-dom';
+import { Outlet, redirect, useParams } from 'react-router-dom';
+
+const battleViewLoader = async ({ params }) => {
+  const id = params.id
+  const path = `/battle/${id}`;
+  try {
+    const res = await axios.get(path);
+  } catch (err) {
+    if (err.response.status === 404) {
+      return redirect('/404');
+    }
+  }
+}
 
 const BattleView = () => {
   const [numBVSubmissions, setNumBVSubmissions] = useState(0);
@@ -62,4 +75,4 @@ const BattleView = () => {
   );
 };
 
-export { BattleView };
+export { BattleView, battleViewLoader };
