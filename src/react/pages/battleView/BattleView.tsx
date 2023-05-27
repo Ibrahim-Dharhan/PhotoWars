@@ -17,6 +17,7 @@ const battleViewLoader = async ({ params }) => {
       return redirect('/404');
     }
   }
+  return null;
 }
 
 const BattleView = () => {
