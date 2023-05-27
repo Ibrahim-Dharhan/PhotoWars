@@ -9,7 +9,7 @@ const Home = () => {
   return (
   <Stack spacing={2}>
     <TopBar />
-    <Stack direction='row' spacing={4}>
+    <Stack direction="row" justifyContent="space-around" spacing={4}>
       <SideBar />
       <Stack>
         <Toolbar />

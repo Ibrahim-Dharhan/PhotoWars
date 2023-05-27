@@ -3,57 +3,53 @@ import React, { useContext, useEffect, useState } from 'react';
 import axios from 'axios';
 import {
   Box,
-  Button,
   Drawer,
   Toolbar
 } from '@mui/material';
+import { useLocation } from 'react-router-dom';
 import { BattleCard } from '../battleCard/BattleCard';
-// import { UserContext } from '../../contexts/UserContext';
 
 const RightBar = () => {
-  // const { userId } = useContext(UserContext);
-  const [battleId, setBattleId] = useState('64544bf83f9238e774994e02');
-  const drawerWidth = 240;
+  const [battleId, setBattleId] = useState(null);
+  const location = useLocation();
 
   useEffect(() => {
     let shouldUpdate = true;
-    const setBattleId = async () => {
+    const getBattleId = async () => {
       const path = '/battle/random';
       const res = await axios.get(path);
       const randomBattleId = res.data?._id;
       if (shouldUpdate) {
-        // setBattleId(randomBattleId);
-        console.log('Setting battle id', randomBattleId);
+        setBattleId(randomBattleId);
       }
     };
 
     try {
-      setBattleId();
+      getBattleId();
     } catch (err) {
       console.error(err.data);
     }
     return () => {
       shouldUpdate = false;
     };
-  }, [battleId]);
+  }, [battleId]); 
 
   return (
     <Drawer
       anchor="right"
       variant="permanent"
-      alignSelf="right"
       sx={{
-        width: drawerWidth,
+        width: '15%',
         ['& .MuiDrawer-paper']: {
           boxSizing: 'border-box',
-          width: drawerWidth
+          width: '15%'
         }
       }}
     >
       <Toolbar />
-      <Box sx={{ overflow: 'auto', padding: '5px' }}>
+      <Box sx={{ padding: '5px' }}>
         {
-          battleId !== null &&
+          battleId && location.pathname === '/' &&
           <BattleCard
             battleId={battleId}
             showModal={null}
