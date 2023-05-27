@@ -70,7 +70,6 @@ const TopBar = () => {
               <Stack direction="row" spacing={2}>
                   <Button
                     component={Link}
-                    startIcon={<AddCircleOutlineIcon />}
                     to="/create"
                     variant="contained"
                   >

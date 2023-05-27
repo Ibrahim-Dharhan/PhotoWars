@@ -3,12 +3,14 @@ import { createTheme } from '@mui/material/styles';
 
 // Create a theme instance.
 const theme = createTheme({
+  
   components: {
     MuiButton: {
       styleOverrides: {
         root: {
           borderRadius: 28,
-          padding: "8px 20px"
+          padding: "8px 20px",
+          textTransform: 'none',
         },
       }, 
     }, 
