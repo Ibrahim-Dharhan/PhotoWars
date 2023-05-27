@@ -2,7 +2,15 @@ import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import { BattleCard } from '../../components/battleCard/BattleCard';
 import { Outlet, useLoaderData, useNavigate } from 'react-router-dom';
-import { Box, Card, Grid, Toolbar, Button, Typography } from '@mui/material';
+import {
+  Box,
+  Button,
+  Card,
+  Grid,
+  Stack,
+  Toolbar,
+  Typography
+} from '@mui/material';
 import { IUserFrontend } from '../../../definitions/schemas/mongoose/user';
 import { SubmissionCard } from '../../components/submissionCard/SubmissionCard';
 import CommentCard from '../../components/commentCard/CommentCard';
@@ -87,7 +95,7 @@ const UserView = () => {
               </Button>
             </Toolbar>
           </Grid>
-          <Grid item xs={12}>
+          <Stack alignItems="center">
             {feed === 'battles' && battles ? (
               battles.length > 0 ? (
                 battles.map((battle) => {
@@ -143,7 +151,7 @@ const UserView = () => {
             ) : (
               <></>
             )}
-          </Grid>
+          </Stack>
         </Grid>
       </Card>
     </React.Fragment>
