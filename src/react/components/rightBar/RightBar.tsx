@@ -7,7 +7,7 @@ import {
   Toolbar
 } from '@mui/material';
 import { useLocation } from 'react-router-dom';
-import { BattleCard } from '../battleCard/BattleCard';
+import { DailyBattleCard } from '../dailyBattleCard/DailyBattleCard';
 
 const RightBar = () => {
   const [battleId, setBattleId] = useState(null);
@@ -39,10 +39,10 @@ const RightBar = () => {
       anchor="right"
       variant="permanent"
       sx={{
-        width: '15%',
+        width: '20%',
         ['& .MuiDrawer-paper']: {
           boxSizing: 'border-box',
-          width: '15%'
+          width: '20%'
         }
       }}
     >
@@ -50,9 +50,8 @@ const RightBar = () => {
       <Box sx={{ padding: '5px' }}>
         {
           battleId && location.pathname === '/' &&
-          <BattleCard
+          <DailyBattleCard
             battleId={battleId}
-            showModal={null}
           />
         }
       </Box>
