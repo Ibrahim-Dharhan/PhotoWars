@@ -8,10 +8,10 @@ import {
   Toolbar
 } from '@mui/material';
 import { BattleCard } from '../battleCard/BattleCard';
-import { UserContext } from '../../contexts/UserContext';
+// import { UserContext } from '../../contexts/UserContext';
 
 const RightBar = () => {
-  const { userId } = useContext(UserContext);
+  // const { userId } = useContext(UserContext);
   const [battleId, setBattleId] = useState('64544bf83f9238e774994e02');
   const drawerWidth = 240;
 
@@ -35,7 +35,7 @@ const RightBar = () => {
     return () => {
       shouldUpdate = false;
     };
-  }, [battleId, userId]);
+  }, [battleId]);
 
   return (
     <Drawer

@@ -15,6 +15,7 @@ const Home = () => {
         <Toolbar />
         <Outlet />
       </Stack>
+      <RightBar />
     </Stack>
   </Stack>
   );
