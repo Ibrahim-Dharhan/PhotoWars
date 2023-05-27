@@ -10,7 +10,6 @@ import {
   Toolbar,
   Typography
 } from '@mui/material';
-import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
 import AccountCircleOutlinedIcon from '@mui/icons-material/AccountCircleOutlined';
 import { UserContext } from '../../contexts/UserContext';
 import { LoginModal } from '../loginModal/LoginModal';
@@ -59,11 +58,12 @@ const TopBar = () => {
             sx={{
               '&:hover': {
                 cursor: 'pointer'
-              }
+              },
+              fontWeight: 800
             }}
             variant="h5"
           >
-            PhotoWars
+            PHOTOWARS
           </Typography>
           <Box>
             {userId === null ? <div /> : userId !== '' ?
