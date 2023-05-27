@@ -42,9 +42,17 @@ const accountRouter = express.Router();
 accountRouter.post('/login', async (req, res) => {
   const loginName = req.body.loginName;
   const loginPassword = req.body.loginPassword;
-  console.log(`Logging in as ${loginName} with password ${loginPassword}`);
-  const query = User.findOne({ loginName: loginName,
-                               loginPassword: loginPassword });
+  const query = User.findOne(
+    {
+      loginName: loginName,
+      loginPassword: loginPassword
+    },
+    [
+      '-loginName',
+      '-loginPassword',
+      '-__v'
+    ]
+  );
 
   try {
     const result = await query.lean().exec();
@@ -52,8 +60,6 @@ accountRouter.post('/login', async (req, res) => {
       /* Found user matching login credentials.  */
       req.session.loggedIn = true;
       req.session.userId = result._id.toString();
-      // TODO: Change response message.
-      console.log("Successful login");
       res.status(200).json(result);
     } else {
       /* Did not find a user with credentials.  */
@@ -130,9 +136,14 @@ accountRouter.post('/new', checkSchema(NewUser), async (req, res) => {
     });
     return;
   }
-  console.log(`Creating user ${req.body.displayName}`);
   try {
-    const userObj = await User.create(req.body);
+    const userObj = await User.create({
+      ...req.body,
+      ...{
+        firstName: 'first',
+        lastName: 'last'
+      }
+    });
     req.session.loggedIn = true;
     req.session.userId = userObj._id.toString();
     res.status(200).json(userObj.toObject());
