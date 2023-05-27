@@ -9,7 +9,7 @@
     "build": "webpack --config webpack.config.ts",
     "start": "nodemon server.ts",
     "watch": "npm run build && webpack serve --config webpack.config.ts",
-    "load": "ts-node ./development/loadDatabase.ts && mkdir -p public/images && cp development/images/* public/images/",
+    "load": "mkdir -p public/images && cp development/images/* public/images/ && ts-node ./development/loadDatabase.ts",
     "clear": "ts-node ./development/clearDatabase.ts"
   },
   "author": "",
@@ -40,6 +40,8 @@
     "webpack-dev-server": "^4.13.3"
   },
   "dependencies": {
+    "@aws-sdk/client-s3": "^3.338.0",
+    "@aws-sdk/lib-storage": "^3.338.0",
     "@emotion/react": "^11.10.8",
     "@emotion/styled": "^11.10.8",
     "@mui/icons-material": "^5.11.16",
@@ -53,7 +55,6 @@
     "@types/react-dom": "^18.0.11",
     "@types/react-router-dom": "^5.3.3",
     "async": "^3.2.4",
-    "aws-sdk": "^2.1380.0",
     "axios": "^1.4.0",
     "connect-mongo": "^5.0.0",
     "dayjs": "^1.11.7",

@@ -1,9 +1,17 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import { BattleCard } from '../../components/battleCard/BattleCard';
-import { useLoaderData, useNavigate } from 'react-router-dom';
-import { Box, Card, Grid, Toolbar, Button, Typography } from '@mui/material';
-import { UserHeader } from '../../components/userHeader/UserHeader';
+import { Outlet, useLoaderData, useNavigate } from 'react-router-dom';
+import {
+  Box,
+  Button,
+  Card,
+  Grid,
+  Stack,
+  Toolbar,
+  Typography
+} from '@mui/material';
+import { IUserFrontend } from '../../../definitions/schemas/mongoose/user';
 import { SubmissionCard } from '../../components/submissionCard/SubmissionCard';
 import CommentCard from '../../components/commentCard/CommentCard';
 
@@ -14,26 +22,15 @@ const userViewLoader = async ({ params }) => {
   return res.data;
 };
 
-interface User {
-  _id: string;
-  __v: number;
-  description: string;
-  displayName: string;
-  filename: string;
-  firstName: string;
-  lastName: string;
-  loginName: string;
-  loginPassword: string;
-}
-
 const UserView = () => {
   const navigate = useNavigate();
 
-  const user = useLoaderData() as User;
+  const user = useLoaderData() as IUserFrontend;
   const [feed, setFeed] = useState('battles');
   const [battles, setBattles] = useState(null);
   const [submissions, setSubmissions] = useState(null);
   const [comments, setComments] = useState(null);
+
   useEffect(() => {
     let shouldUpdate = true;
     const setUserData = async () => {
@@ -41,11 +38,9 @@ const UserView = () => {
       const resBattles = await axios.get(pathBattle);
       const pathSubmissions = `/user/${user._id}/submissions`;
       const resSubmissions = await axios.get(pathSubmissions);
-      const pathComments = `/user/${user._id}/comments`;
-      const resComments = await axios.get(pathComments);
+      const pathComments = `/user/${user._id}/comments`; const resComments = await axios.get(pathComments);
       if (shouldUpdate) {
         setBattles(resBattles.data);
-        console.log(resBattles.data);
         setSubmissions(resSubmissions.data);
         setComments(resComments.data);
       }
@@ -58,12 +53,12 @@ const UserView = () => {
     return () => {
       shouldUpdate = false;
     };
-  });
+  }, [user._id]);
 
   return (
-    <React.Fragment>
-      <Card sx={{ padding: '1em', width: '100$' }}>
-        <UserHeader user={user} />
+      <Stack alignItems="center">
+      <Card sx={{ padding: '1em', maxWidth: '60%' }}>
+        <Outlet context={{user}} />
         <Grid container spacing={2}>
           <Grid item xs={12}>
             <Toolbar
@@ -100,7 +95,12 @@ const UserView = () => {
               </Button>
             </Toolbar>
           </Grid>
-          <Grid item xs={12}>
+          <Stack
+            alignItems="center"
+            sx={{
+              width: '100%'
+            }}
+          >
             {feed === 'battles' && battles ? (
               battles.length > 0 ? (
                 battles.map((battle) => {
@@ -156,10 +156,10 @@ const UserView = () => {
             ) : (
               <></>
             )}
-          </Grid>
+          </Stack>
         </Grid>
       </Card>
-    </React.Fragment>
+      </Stack>
   );
 };
 

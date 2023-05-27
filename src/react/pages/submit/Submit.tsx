@@ -34,24 +34,22 @@ const Submit = () => {
     const form = new FormData();
     form.append('caption', data.caption);
     form.append('file', image);
-    const res = await axios.post(path, form);
-    console.log(res.data);
     clearForm();
+    try {
+      await axios.post(path, form);
+    } catch (err) {
+      console.error(err);
+    }
     setNumBVSubmissions(numBVSubmissions + 1);
     navigate('..');
   }
 
-  function handleImageChange(event) {
-    const file = event.target.files[0];
-    setImage(file);
-  }
-
-  function handleClearImage() {
+  const handleClearImage = () => {
     setImage(null);
     resetField('file');
   }
 
-  function handleImageDrop(event) {
+  const handleImageDrop = (event) => {
     event.preventDefault();
     const file = event.dataTransfer.files[0];
     setImage(file);

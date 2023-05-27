@@ -56,6 +56,42 @@ battleRouter.get('/all', async (req, res) => {
 
 /**
  * @openapi
+ * /battle/random:
+ *   get:
+ *     summary: Retrieve a random, open battle.
+ *     responses:
+ *       200:
+ *         description: Resource successfully retrieved.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: string
+ *       500:
+ *         $ref: '#/components/responses/500'
+ */
+battleRouter.get('/random', async (req, res) => {
+  try {
+    const today = new Date();
+    const tomorrow = new Date();
+    tomorrow.setDate(today.getDate() + 1);
+    const filter = {
+      deadline: {
+        $gte: tomorrow
+      }
+    };
+    const count = await Battle.countDocuments(filter).exec();
+    const numToSkip = Math.floor(today.getTime() / (3600 * 24 * 1000)) % count;
+    const query = Battle.findOne(filter, ['_id']).skip(numToSkip);
+    const result = await query.exec();
+    res.status(200).send(result);
+  } catch (err) {
+    res.status(500).send('Internal server error.');
+    console.error(err);
+  }
+});
+
+/**
+ * @openapi
  * /battle/{id}:
  *   get:
  *     summary: Return information about a battle.
@@ -245,8 +281,7 @@ battleRouter.post(
       });
       /* Uploading to S3.  */
       if (AWS_BUCKET_NAME) {
-        const s3Result = await uploadFileToS3(req.file);
-        console.log(s3Result);
+        await uploadFileToS3(req.file);
         // await fs.promises.unlink(path.join(IMAGE_DIR, req.file.filename));
       }
       res.status(200).json(newBattleObj);

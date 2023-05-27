@@ -1,7 +1,10 @@
 import React, { useState } from 'react';
+import {
+  Stack
+} from '@mui/material';
 import { BattleCard } from '../../components/battleCard/BattleCard';
 import { CommentModal } from '../../components/commentModal/CommentModal';
-import { Outlet, useParams, useOutletContext } from 'react-router-dom';
+import { Outlet, useParams } from 'react-router-dom';
 
 const BattleView = () => {
   const [numBVSubmissions, setNumBVSubmissions] = useState(0);
@@ -33,7 +36,12 @@ const BattleView = () => {
   };
   
   return (
-    <React.Fragment>
+    <Stack
+      alignItems="center"
+      sx={{
+        width: "100%"
+      }}
+    >
       <BattleCard
         battleId={id}
         numBVSubmissions={numBVSubmissions}
@@ -50,12 +58,8 @@ const BattleView = () => {
         caption={modalCaption}
         filename={modalImage}
       />
-    </React.Fragment>
+    </Stack>
   );
 };
-
-export function useShowModal() {
-  return useOutletContext<any>();
-}
 
 export { BattleView };

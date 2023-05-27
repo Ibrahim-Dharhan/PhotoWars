@@ -1,12 +1,16 @@
 "use strict";
 
 import mongoose = require('mongoose');
-
+import dotenv = require('dotenv');
+import path = require('path');
+dotenv.config();
+import { uploadFileToS3 } from '../definitions/s3';
 import * as constants from '../definitions/constants';
 
 const MONGODB_URI = process.env.MONGODB_URI
                     || 'mongodb://127.0.0.1:27017/'
                        + constants._mongoDatabaseName;
+const IMAGE_DIR = process.env.IMAGE_DIR || constants._imageDir;
 mongoose.connect(MONGODB_URI);
 
 /* Mongoose schemas.  */
@@ -41,6 +45,13 @@ const dummyData = dummyDataFunc();
   try {
     await Promise.all(battleModels.map(async (battle) => {
       await Battle.create(battle);
+      if (process.env.IMAGE_DIR) {
+        await uploadFileToS3({
+          path: path.join(IMAGE_DIR, battle.filename),
+          filename: battle.filename
+        });
+        console.log(`Uploaded file ${battle.filename} to Amazon S3.`);
+      }
       console.log(`Added battle "${battle.caption}" to database.`);
     }));
   } catch (err) {
@@ -63,6 +74,13 @@ const dummyData = dummyDataFunc();
   try {
     await Promise.all(submissionModels.map(async (submission) => {
       await Submission.create(submission);
+      if (process.env.IMAGE_DIR) {
+        await uploadFileToS3({
+          path: path.join(IMAGE_DIR, submission.filename),
+          filename: submission.filename
+        });
+        console.log(`Uploaded file ${submission.filename} to Amazon S3.`);
+      }
       console.log(`Added submission "${submission.caption}" to database.`);
     }));
   } catch (err) {
@@ -74,6 +92,13 @@ const dummyData = dummyDataFunc();
   try {
     await Promise.all(userModels.map(async (user) => {
       await User.create(user);
+      if (process.env.IMAGE_DIR) {
+        await uploadFileToS3({
+          path: path.join(IMAGE_DIR, user.filename),
+          filename: user.filename
+        });
+        console.log(`Uploaded file ${user.filename} to Amazon S3.`);
+      }
       console.log(`Added user ${user.firstName} ${user.lastName} to database.`);
     }));
   } catch (err) {
