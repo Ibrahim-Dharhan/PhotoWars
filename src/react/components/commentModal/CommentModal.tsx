@@ -16,6 +16,7 @@ import {
 } from '@mui/material';
 import '../submissionCard/submissionCard.css';
 import PropTypes from 'prop-types';
+import { getImageUrl } from '../../../definitions/getImageUrl';
 import { useNavigate } from 'react-router-dom';
 import './style.css';
 
@@ -56,6 +57,7 @@ const CommentModal = ({
   filename,
 }) => {
   const [comments, setComments] = useState([]);
+  const [imageUrl, setImageUrl] = useState('');
   const navigate = useNavigate();
 
   /* useEffect for updating comments.  */
@@ -81,6 +83,21 @@ const CommentModal = ({
     };
   }, [id, open, variant]);
 
+  /* useEffect for retrieving the image.  */
+  useEffect(() => {
+    let shouldUpdate = true;
+    const setImage = async () => {
+      const newImageUrl = await getImageUrl(filename);
+      if (shouldUpdate) {
+        setImageUrl(newImageUrl);
+      }
+    };
+    setImage();
+    return () => {
+      shouldUpdate = false;
+    };
+  }, [filename]);
+
   return (
     <Modal
       open={open}
@@ -94,7 +111,7 @@ const CommentModal = ({
             <Card>
               <CardMedia
                 component='img'
-                image={`/image/${filename}`}
+                image={imageUrl}
                 loading='lazy'
               />
             </Card>

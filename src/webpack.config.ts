@@ -5,6 +5,7 @@ import HtmlWebpackPlugin = require('html-webpack-plugin');
 import NodemonPlugin = require('nodemon-webpack-plugin');
 
 module.exports = {
+  devtool: "source-map",
   mode: "development",
   entry: {
     photoWars: "./photoWars.tsx",

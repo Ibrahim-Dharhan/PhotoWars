@@ -1,24 +1,26 @@
 import React from 'react';
 import { SideBar } from '../../components/sideBar/SideBar';
+import { TopBar } from '../../components/topBar/TopBar';
 import { Outlet } from 'react-router-dom';
-import { Grid, Stack } from '@mui/material';
-import { ProSidebarProvider } from 'react-pro-sidebar';
+import { Grid, Stack, Toolbar } from '@mui/material';
 
 const Home = () => {
   return (
+  <React.Fragment>
+    <TopBar />
+    <Toolbar />
     <Stack direction='row'>
-      <ProSidebarProvider>
-        <SideBar />
-      </ProSidebarProvider>
+      <SideBar />
       
       <Grid container spacing={1} sx={{ pt:2 }}>
-        <Grid item xl={2} /> 
-        <Grid item xl={8}> 
+        <Grid item sm={1} lg={2} /> 
+        <Grid item sm={10} lg={8}> 
           <Outlet />
         </Grid>
-        <Grid item xl={2} />
+        <Grid item sm={1} lg={2} />
       </Grid>
     </Stack>
+  </React.Fragment>
   );
 };
 

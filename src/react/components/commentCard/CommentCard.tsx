@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
+import { getImageUrl } from '../../../definitions/getImageUrl';
 import { Card, CardMedia, Grid, Typography } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
 import PropTypes from 'prop-types';
@@ -7,19 +8,20 @@ import './style.css';
 
 const CommentCard = ({ comment }) => {
   const navigate = useNavigate();
-  const [img, setImg] = useState('');
+  const [filename, setFilename] = useState('');
+  const [imageUrl, setImageUrl] = useState('');
   const [caption, setCaption] = useState('');
   const [battleView, setBattleView] = useState('');
   useEffect(() => {
     let shouldUpdate = true;
-    const setImgPath = async () => {
+    const setCommentInfo = async () => {
       const path =
         comment.commentedModel === 'Battle'
           ? `/battle/${comment.post}`
           : `/submission/${comment.post}`;
       const res = await axios.get(path);
       if (shouldUpdate) {
-        setImg(res.data.filename);
+        setFilename(res.data.filename);
         setCaption(res.data.caption);
         const linkToView = `/battles/${
           comment.commentedModel === 'Battle' ? res.data._id : res.data.battle
@@ -28,7 +30,7 @@ const CommentCard = ({ comment }) => {
       }
     };
     try {
-      setImgPath();
+      setCommentInfo();
     } catch (err) {
       console.error(err.data);
     }
@@ -36,6 +38,22 @@ const CommentCard = ({ comment }) => {
       shouldUpdate = false;
     };
   });
+
+  /* useEffect for retrieving the image.  */
+  useEffect(() => {
+    let shouldUpdate = true;
+    const setImage = async () => {
+      const newImageUrl = await getImageUrl(filename);
+      if (shouldUpdate) {
+        setImageUrl(newImageUrl);
+      }
+    };
+    setImage();
+    return () => {
+      shouldUpdate = false;
+    };
+  }, [filename]);
+
   return (
     <Card
       className='comment-card'
@@ -49,7 +67,7 @@ const CommentCard = ({ comment }) => {
         <Grid item xs={4}>
           <CardMedia
             component='img'
-            src={`/image/${img}`}
+            src={imageUrl}
             sx={{ height: 'auto' }}
           />
         </Grid>

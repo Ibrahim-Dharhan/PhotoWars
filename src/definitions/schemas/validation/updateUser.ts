@@ -11,12 +11,13 @@ const UpdateUser = {
       },
     },
     displayNameNotInUse: {
-      custom: async (displayName) => {
+      custom: async (displayName, { req }) => {
+        const userId = req.session.userId;
         const query = User.findOne({ 
           displayName: displayName
         });
         const userObj = await query.lean().exec();
-        if (userObj) {
+        if (userObj && userObj._id.toString() !== userId) {
           return Promise.reject('Display name already in use.');
         }
       }

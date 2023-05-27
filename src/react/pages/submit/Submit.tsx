@@ -41,12 +41,12 @@ const Submit = () => {
     navigate('..');
   }
 
-  function handleClearImage() {
+  const handleClearImage = () => {
     setImage(null);
     resetField('file');
   }
 
-  function handleImageDrop(event) {
+  const handleImageDrop = (event) => {
     event.preventDefault();
     const file = event.dataTransfer.files[0];
     setImage(file);
