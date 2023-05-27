@@ -92,57 +92,9 @@ const SubmissionCard = ({ submissionId, showModal }) => {
   };
 
   return (
-<<<<<<< HEAD
-    <div>
-    <Card variant="outlined"
-    sx = {{height:475, width: "100%"}}>
-      <CardActionArea component="div">
-        <CardHeader
-          avatar={
-            <Avatar
-              sx={{ width: 24, height: 24 }}
-              onClick={(event) => {
-                event.stopPropagation();
-                event.preventDefault();
-                console.log(
-                  `Go to profile page at /user/${_submission.current?.author._id}`
-                );
-                navigate(`/users/${_submission.current?.author._id}`);
-              }}
-            >
-              {displayName[0]}
-            </Avatar>
-          }
-          title={
-            <Link
-              to=''
-              onMouseDown={(event) => event.stopPropagation()}
-              onClick={(event) => {
-                event.stopPropagation();
-                event.preventDefault();
-                console.log(
-                  `Go to profile page at /user/${_submission.current?.author._id}`
-                );
-                navigate(`/users/${_submission.current?.author._id}`);
-              }}
-            >
-              {displayName}
-            </Link>
-          }
-          action={
-            <IconButton
-              onMouseDown={(event) => event.stopPropagation()}
-              onClick={handleDownload}
-            >
-              <DownloadIcon />
-            </IconButton>
-          }
-        />
-=======
     <Card variant='outlined'>
       <CardActionArea component='div'>
         <PostCardHeader _post={_submission} />
->>>>>>> main
         <CardContent sx={{ mt: -3 }}>
           <Typography noWrap variant="h6">
             {caption}
@@ -193,7 +145,6 @@ const SubmissionCard = ({ submissionId, showModal }) => {
         </CardActions>
       </CardActionArea>
     </Card>
-    </div>
   );
 };
 
