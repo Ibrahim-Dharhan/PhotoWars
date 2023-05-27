@@ -45,7 +45,6 @@ const LoginModal = () => {
 
   const handleFormSubmit = async (data) => {
     try {
-      console.log(data);
       const path = registering ? '/account/new' : '/account/login';
       const res = await axios.post(path, data);
       const user = res.data;

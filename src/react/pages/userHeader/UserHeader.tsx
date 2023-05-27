@@ -5,9 +5,11 @@ import {
   Box,
   Button,
   Grid,
+  Stack,
   Typography
 } from '@mui/material';
 import { getImageUrl } from '../../../definitions/getImageUrl';
+import { DeleteDialog } from '../../components/deleteDialog/DeleteDialog';
 import { IUserFrontend } from '../../../definitions/schemas/mongoose/user';
 import { Link, useOutletContext } from 'react-router-dom';
 import { UserContext } from '../../contexts/UserContext';
@@ -20,6 +22,13 @@ const UserHeader = () => {
   const { user } = useOutletContext() as UVUserHeaderState;
   const { userId } = useContext(UserContext);
   const [imageUrl, setImageUrl] = useState('');
+  const [openDeleteDialog, setOpenDeleteDialog] = useState(false);
+
+  const handleDelete = async (event) => {
+    event.stopPropagation();
+    event.preventDefault();
+    setOpenDeleteDialog(true);
+  };
 
   useEffect(() => {
     let shouldUpdate = true;
@@ -76,13 +85,31 @@ const UserHeader = () => {
       </Box>
       {
         user._id === userId &&
-        <Button
-          component={Link}
-          to="edit"
+        <Stack
+          direction="row"
           sx={{marginBottom: 'auto', marginLeft: 'auto'}}
         >
-          Edit
-        </Button>
+          <Button
+            onMouseDown={(event) => event.stopPropagation()}
+            onClick={handleDelete}
+            sx={{ color: 'red', padding: '0px' }}
+          >
+            Delete
+          </Button>
+          <DeleteDialog
+            openDeleteDialog={openDeleteDialog}
+            setOpenDeleteDialog={setOpenDeleteDialog}
+            postId={null}
+            variant={'user'}
+          />
+          <Button
+            component={Link}
+            to="edit"
+            sx={{ padding: '0px' }}
+          >
+            Edit
+          </Button>
+        </Stack>
       }
     </Box>
   );
