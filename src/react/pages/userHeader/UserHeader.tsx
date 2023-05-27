@@ -4,6 +4,7 @@ import {
   Avatar,
   Box,
   Button,
+  Grid,
   Typography
 } from '@mui/material';
 import { getImageUrl } from '../../../definitions/getImageUrl';
@@ -36,11 +37,26 @@ const UserHeader = () => {
 
   return (
     <Box display='flex' sx={{ padding: '1em' }}>
-      <Avatar
-        alt='Userpic'
-        src={imageUrl}
-        sx={{ width: '15%', height: '15%' }}
-      />
+      <Grid
+        sx={{
+          minWidth: '15%',
+          minHeight: '15%',
+          position: 'relative'
+        }}
+      >
+        <Avatar
+          src={imageUrl || null}
+          sx={{
+            position: 'absolute',
+            minWidth: '100%',
+            height: 'auto',
+            aspectRatio: '1',
+            top: '50%',
+            left: '50%',
+            transform: 'translate(-50%, -50%)'
+          }}
+        />
+      </Grid>
       <Box paddingLeft={2}>
         <Typography
           style={{ fontWeight: 'bold', fontSize: '2.5em', marginBottom: '-5%' }}

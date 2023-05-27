@@ -14,7 +14,7 @@ import {
 } from '@mui/material';
 import { Controller, useForm } from 'react-hook-form';
 import { getImageUrl } from '../../../definitions/getImageUrl';
-import { useOutletContext, useNavigate } from 'react-router-dom';
+import { Link, useOutletContext, useNavigate } from 'react-router-dom';
 import { IUserFrontend } from '../../../definitions/schemas/mongoose/user';
 import { UserContext } from '../../contexts/UserContext';
 
@@ -127,7 +127,7 @@ const UserHeaderEdit = () => {
         <Controller
           name="firstName"
           control={control}
-          defaultValue={user.firstName}
+          defaultValue={user.firstName || ''}
           render={({ field }) => (
             <TextField
               label="First Name"
@@ -139,7 +139,7 @@ const UserHeaderEdit = () => {
         <Controller
           name="lastName"
           control={control}
-          defaultValue={user.lastName}
+          defaultValue={user.lastName || ''}
           render={({ field }) => (
             <TextField
               label="Last Name"
@@ -177,7 +177,7 @@ const UserHeaderEdit = () => {
         <Controller
           name="description"
           control={control}
-          defaultValue={user.description}
+          defaultValue={user.description || ''}
           render={({ field }) => (
             <TextField
               variant="outlined"
@@ -191,15 +191,19 @@ const UserHeaderEdit = () => {
           )}
         />
       </Stack>
-      <Button
-        type="submit"
-        sx={{
-          marginBottom: 'auto',
-          marginLeft: 'auto',
-        }}
-      >
-        Save
-      </Button>
+      <Stack>
+        <Button
+          type="submit"
+        >
+          Save
+        </Button>
+        <Button
+          component={Link}
+          to=".."
+        >
+          Cancel
+        </Button>
+      </Stack>
     </Box>
     </form>
   );

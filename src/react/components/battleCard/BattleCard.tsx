@@ -1,5 +1,6 @@
 import React, { useContext, useEffect, useRef, useState } from 'react';
 import axios from 'axios';
+import ModeCommentOutlinedIcon from '@mui/icons-material/ModeCommentOutlined';
 import FavoriteIcon from '@mui/icons-material/Favorite';
 import ImageIcon from '@mui/icons-material/Image';
 import PropTypes from 'prop-types';
@@ -38,6 +39,8 @@ const BattleCard = ({
   const [imageUrl, setImageUrl] = useState('');
   const [numSubmissions, setNumSubmissions] = useState(0);
   const [submitted, setSubmitted] = useState(false);
+  const [numComments, setNumComments] = useState(0);
+  const [commented, setCommented] = useState(false);
   const [numVotes, setNumVotes] = useState(0);
   const [voted, setVoted] = useState(false);
   const [timeRemaining, setTimeRemaining] = useState('--:--:--');
@@ -78,21 +81,14 @@ const BattleCard = ({
     };
   }, [battleId]);
 
-  /* useEffect for updating vote and submission count.  */
+  /* useEffect for updating submission count.  */
   useEffect(() => {
     let shouldUpdate = true;
-    const getSubmissionsAndVotes = async () => {
-      const votesPath = `/vote/${battleId}`;
-      const votesRes = await axios.get(votesPath);
-      const { numVotes, votedOn } = votesRes.data;
-
+    const getSubmissions = async () => {
       const submissionsPath = `/battle/${battleId}/submissions`;
       const submissionsRes = await axios.get(submissionsPath);
 
       if (shouldUpdate) {
-        setVoted(votedOn);
-        setNumVotes(numVotes);
-
         if (setNumBVSubmissions)
           setNumBVSubmissions(submissionsRes.data.length);
         setNumSubmissions(submissionsRes.data.length);
@@ -104,7 +100,7 @@ const BattleCard = ({
       }
     };
     try {
-      getSubmissionsAndVotes();
+      getSubmissions();
     } catch (err) {
       console.error(err.data);
     }
@@ -112,6 +108,37 @@ const BattleCard = ({
       shouldUpdate = false;
     };
   }, [battleId, numBVSubmissions, numSubmissions, setNumBVSubmissions, userId]);
+
+  /* useEffect for updating comment and vote count.  */
+  useEffect(() => {
+    let shouldUpdate = true;
+    const getCommentsAndVotes = async () => {
+      const commentsPath = `/comment/${battleId}`;
+      const commentsRes = await axios.get(commentsPath);
+      const { numComments, commentedOn } = commentsRes.data;
+
+      const votesPath = `/vote/${battleId}`;
+      const votesRes = await axios.get(votesPath);
+      const { numVotes, votedOn } = votesRes.data;
+
+      if (shouldUpdate) {
+        setCommented(commentedOn);
+        setNumComments(numComments);
+
+        setVoted(votedOn);
+        setNumVotes(numVotes);
+      }
+    };
+    try {
+      getCommentsAndVotes();
+    } catch (err) {
+      console.error(err.data);
+    }
+    return () => {
+      shouldUpdate = false;
+    };
+
+  });
 
   /* useEffect for retrieving the image.  */
   useEffect(() => {
@@ -204,6 +231,17 @@ const BattleCard = ({
           >
             <FavoriteIcon sx={{ pr: 1, color: voted && pink[500] }} />
             <Typography>{numVotes}</Typography>
+          </IconButton>
+          <IconButton
+            onMouseDown={(event) => event.stopPropagation()}
+            onClick={(event) => {
+              event.preventDefault();
+            }}
+          >
+            <ModeCommentOutlinedIcon
+              sx={{ pr: 1, color: commented && pink[500] }}
+            />
+            <Typography>{numComments}</Typography>
           </IconButton>
           <Box display='flex' marginLeft='auto' alignItems='center'>
             {timeRemaining === '00d:00h:00m:00s' ? (
