@@ -1,4 +1,7 @@
 import React, { useState } from 'react';
+import {
+  Stack
+} from '@mui/material';
 import { BattleCard } from '../../components/battleCard/BattleCard';
 import { CommentModal } from '../../components/commentModal/CommentModal';
 import { Outlet, useParams } from 'react-router-dom';
@@ -33,7 +36,12 @@ const BattleView = () => {
   };
   
   return (
-    <React.Fragment>
+    <Stack
+      alignItems="center"
+      sx={{
+        width: "100%"
+      }}
+    >
       <BattleCard
         battleId={id}
         numBVSubmissions={numBVSubmissions}
@@ -50,7 +58,7 @@ const BattleView = () => {
         caption={modalCaption}
         filename={modalImage}
       />
-    </React.Fragment>
+    </Stack>
   );
 };
 

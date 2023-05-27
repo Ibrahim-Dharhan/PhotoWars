@@ -2,7 +2,15 @@ import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import { BattleCard } from '../../components/battleCard/BattleCard';
 import { Outlet, useLoaderData, useNavigate } from 'react-router-dom';
-import { Box, Card, Grid, Toolbar, Button, Typography } from '@mui/material';
+import {
+  Box,
+  Button,
+  Card,
+  Grid,
+  Stack,
+  Toolbar,
+  Typography
+} from '@mui/material';
 import { IUserFrontend } from '../../../definitions/schemas/mongoose/user';
 import { SubmissionCard } from '../../components/submissionCard/SubmissionCard';
 import CommentCard from '../../components/commentCard/CommentCard';
@@ -48,8 +56,8 @@ const UserView = () => {
   }, [user._id]);
 
   return (
-    <React.Fragment>
-      <Card sx={{ padding: '1em', width: '100$' }}>
+      <Stack alignItems="center">
+      <Card sx={{ padding: '1em', maxWidth: '60%' }}>
         <Outlet context={{user}} />
         <Grid container spacing={2}>
           <Grid item xs={12}>
@@ -87,7 +95,12 @@ const UserView = () => {
               </Button>
             </Toolbar>
           </Grid>
-          <Grid item xs={12}>
+          <Stack
+            alignItems="center"
+            sx={{
+              width: '100%'
+            }}
+          >
             {feed === 'battles' && battles ? (
               battles.length > 0 ? (
                 battles.map((battle) => {
@@ -143,10 +156,10 @@ const UserView = () => {
             ) : (
               <></>
             )}
-          </Grid>
+          </Stack>
         </Grid>
       </Card>
-    </React.Fragment>
+      </Stack>
   );
 };
 

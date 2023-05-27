@@ -14,11 +14,9 @@ import {
   Modal,
   Typography,
 } from '@mui/material';
-import '../submissionCard/submissionCard.css';
 import PropTypes from 'prop-types';
 import { getImageUrl } from '../../../definitions/getImageUrl';
 import { useNavigate } from 'react-router-dom';
-import './style.css';
 
 const style = {
   position: 'absolute',

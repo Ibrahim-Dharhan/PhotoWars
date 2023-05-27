@@ -45,9 +45,6 @@ const PostCardHeader = ({
             onClick={(event) => {
               event.stopPropagation();
               event.preventDefault();
-              console.log(
-                `Go to profile page at /user/${_post.current?.author._id}`
-              );
               navigate(`/users/${_post.current?.author._id}`);
             }}
         >
@@ -61,9 +58,6 @@ const PostCardHeader = ({
           onClick={(event) => {
             event.stopPropagation();
             event.preventDefault();
-            console.log(
-              `Go to profile page at /user/${_post.current?.author._id}`
-            );
             navigate(`/users/${_post.current?.author._id}`);
           }}
         >

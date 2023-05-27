@@ -56,6 +56,42 @@ battleRouter.get('/all', async (req, res) => {
 
 /**
  * @openapi
+ * /battle/random:
+ *   get:
+ *     summary: Retrieve a random, open battle.
+ *     responses:
+ *       200:
+ *         description: Resource successfully retrieved.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: string
+ *       500:
+ *         $ref: '#/components/responses/500'
+ */
+battleRouter.get('/random', async (req, res) => {
+  try {
+    const today = new Date();
+    const tomorrow = new Date();
+    tomorrow.setDate(today.getDate() + 1);
+    const filter = {
+      deadline: {
+        $gte: tomorrow
+      }
+    };
+    const count = await Battle.countDocuments(filter).exec();
+    const random = Math.floor(Math.random() * count);
+    const query = Battle.findOne(filter, ['_id']).skip(random);
+    const result = await query.exec();
+    res.status(200).send(result);
+  } catch (err) {
+    res.status(500).send('Internal server error.');
+    console.error(err);
+  }
+});
+
+/**
+ * @openapi
  * /battle/{id}:
  *   get:
  *     summary: Return information about a battle.

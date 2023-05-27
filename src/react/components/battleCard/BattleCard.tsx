@@ -166,7 +166,7 @@ const BattleCard = ({
   };
 
   return (
-    <Card variant='outlined'>
+    <Card variant="outlined">
       <CardActionArea
         component='div'
         onClick={() => {
@@ -186,13 +186,14 @@ const BattleCard = ({
       >
         <PostCardHeader _post={_battle} />
         <CardContent sx={{ mt: -3 }}>
-          <Typography variant='h6'>{caption}</Typography>
+          <Typography variant="h6">{caption}</Typography>
         </CardContent>
         <ButtonBase
           onClick={() => {
             showModal &&
             showModal('battle', battleId, displayName, caption, filename);
           }}
+          sx={{ width: '100%' }}
         >
           <CardMedia
             component='img'
