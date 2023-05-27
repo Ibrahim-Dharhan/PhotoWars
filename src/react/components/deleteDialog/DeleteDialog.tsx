@@ -11,6 +11,7 @@ import {
 } from '@mui/material';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { UserContext } from '../../contexts/UserContext';
+import PropTypes from 'prop-types';
 
 const DeleteDialog = ({
   openDeleteDialog,
@@ -78,5 +79,12 @@ const DeleteDialog = ({
     </React.Fragment>
   );
 }
+
+DeleteDialog.propTypes = {
+  openDeleteDialog: PropTypes.bool,
+  setOpenDeleteDialog: PropTypes.func,
+  postId: PropTypes.string,
+  variant: PropTypes.string
+};
 
 export { DeleteDialog };
