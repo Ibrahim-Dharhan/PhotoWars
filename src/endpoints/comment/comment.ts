@@ -263,7 +263,7 @@ commentRouter.put('/:id/unvote', async (req, res) => {
 commentRouter.get('/:id', async (req, res) => {
   const commentModelId = req.params.id;
   const numCommentsQuery = Comment.countDocuments({ post: commentModelId });
-  const commentedOnQuery = Comment.findOne({ post: commentModelId, user: req.session.userId });
+  const commentedOnQuery = Comment.findOne({ post: commentModelId, author: req.session.userId });
 
   try {
     const numComments = await numCommentsQuery.exec();

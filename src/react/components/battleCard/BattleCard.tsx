@@ -238,7 +238,9 @@ const BattleCard = ({
               event.preventDefault();
             }}
           >
-            <ModeCommentOutlinedIcon sx={{ pr: 1, color: commented && pink[500] }} />
+            <ModeCommentOutlinedIcon
+              sx={{ pr: 1, color: commented && pink[500] }}
+            />
             <Typography>{numComments}</Typography>
           </IconButton>
           <Box display='flex' marginLeft='auto' alignItems='center'>
