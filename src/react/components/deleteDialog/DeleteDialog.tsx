@@ -10,6 +10,7 @@ import {
   DialogTitle,
 } from '@mui/material';
 import { useLocation, useNavigate } from 'react-router-dom';
+import { UserContext } from '../../contexts/UserContext';
 
 const DeleteDialog = ({
   openDeleteDialog,
@@ -20,6 +21,7 @@ const DeleteDialog = ({
   const location = useLocation();
   const navigate = useNavigate();
   const [deleting, setDeleting] = useState(false);
+  const { setDisplayName, setUserId } = useContext(UserContext);
 
   const handleClose = () => {
     !deleting && setOpenDeleteDialog(false);
@@ -29,12 +31,20 @@ const DeleteDialog = ({
     const path = `/${variant}${postId ? '/' : ''}${postId || ''}`;
     try {
       !deleting && await axios.delete(path);
-      setDeleting(true);
       if (location.pathname.startsWith(`/${variant}`)) {
         navigate('/');
       } else {
         navigate(0);
       }
+      if (variant === 'user') {
+        /* Log user out and update state.  */
+        const path = '/account/logout';
+        await axios.post(path);
+        setDisplayName('');
+        setUserId('');
+        localStorage.removeItem('user');
+      }
+      setDeleting(true);
     } catch (err) {
       console.error(err);
     }
