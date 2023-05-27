@@ -18,17 +18,20 @@ import { useNavigate } from 'react-router-dom';
 const Create = () => {
   const [image, setImage] = useState(null);
   const [length, setLength] = useState(null);
-  const { control,
+  const navigate = useNavigate();
+  const {
+    control,
     handleSubmit,
+    reset: clearForm,
     resetField,
   } = useForm({ mode: 'onChange' });
-  const navigate = useNavigate();
+
   const handleFormSubmit = async (data) => {
-    console.log(data);
     const formData = new FormData();
     formData.append("caption", data.caption);
     formData.append("file", image);
     formData.append("deadline", length.toISOString());
+    clearForm();
     try {
       await axios.post('/battle/new', formData, {
         headers: {
@@ -41,12 +44,12 @@ const Create = () => {
     }
   };
 
-  function handleClearImage() {
+  const handleClearImage = () => {
     setImage(null);
     resetField('file');
   }
 
-  function handleImageDrop(event) {
+  const handleImageDrop = (event) => {
     event.preventDefault();
     const file = event.dataTransfer.files[0];
     setImage(file);
