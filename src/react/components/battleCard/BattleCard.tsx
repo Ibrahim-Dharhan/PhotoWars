@@ -166,11 +166,7 @@ const BattleCard = ({
   };
 
   return (
-    <Card variant='outlined'
-      sx={{
-        maxWidth: '60%'
-      }}
-    >
+    <Card variant="outlined">
       <CardActionArea
         component='div'
         onClick={() => {

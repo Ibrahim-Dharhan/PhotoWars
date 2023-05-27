@@ -56,8 +56,8 @@ const UserView = () => {
   }, [user._id]);
 
   return (
-    <React.Fragment>
-      <Card sx={{ padding: '1em', width: '100$' }}>
+      <Stack alignItems="center">
+      <Card sx={{ padding: '1em', maxWidth: '60%' }}>
         <Outlet context={{user}} />
         <Grid container spacing={2}>
           <Grid item xs={12}>
@@ -95,7 +95,12 @@ const UserView = () => {
               </Button>
             </Toolbar>
           </Grid>
-          <Stack alignItems="center">
+          <Stack
+            alignItems="center"
+            sx={{
+              width: '100%'
+            }}
+          >
             {feed === 'battles' && battles ? (
               battles.length > 0 ? (
                 battles.map((battle) => {
@@ -154,7 +159,7 @@ const UserView = () => {
           </Stack>
         </Grid>
       </Card>
-    </React.Fragment>
+      </Stack>
   );
 };
 
