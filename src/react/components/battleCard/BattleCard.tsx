@@ -2,10 +2,12 @@ import React, { useContext, useEffect, useRef, useState } from 'react';
 import axios from 'axios';
 import ModeCommentOutlinedIcon from '@mui/icons-material/ModeCommentOutlined';
 import FavoriteIcon from '@mui/icons-material/Favorite';
+import LockIcon from '@mui/icons-material/Lock';
 import ImageIcon from '@mui/icons-material/Image';
 import PropTypes from 'prop-types';
 import { blue, pink } from '@mui/material/colors';
 import {
+  Badge,
   Box,
   Button,
   ButtonBase,
@@ -205,9 +207,9 @@ const BattleCard = ({
           <IconButton
             onMouseDown={(event) => event.stopPropagation()}
             onClick={(event) => {
-              event.stopPropagation();
               event.preventDefault();
             }}
+            disableRipple
           >
             <ImageIcon
               sx={{
@@ -222,14 +224,19 @@ const BattleCard = ({
             onClick={(event) => {
               event.stopPropagation();
               event.preventDefault();
-              if (userId !== '') {
+              if (userId !== '' && timeRemaining !== '00d:00h:00m:00s') {
                 vote();
               } else {
                 setOpen(true);
               }
             }}
+            disableRipple={timeRemaining === '00d:00h:00m:00s'}
           >
-            <FavoriteIcon sx={{ pr: 1, color: voted && pink[500] }} />
+            {
+              timeRemaining !== '00d:00h:00m:00s'
+              ? <FavoriteIcon sx={{ pr: 1, color: voted && pink[500] }} />
+              : <LockIcon sx={{ pr: 1, color: voted && pink[500] }} />
+            }
             <Typography>{numVotes}</Typography>
           </IconButton>
           <IconButton
