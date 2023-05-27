@@ -137,8 +137,7 @@ const BattleCard = ({
     return () => {
       shouldUpdate = false;
     };
-
-  });
+  }, [battleId, userId]);
 
   /* useEffect for retrieving the image.  */
   useEffect(() => {

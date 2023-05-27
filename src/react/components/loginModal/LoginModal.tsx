@@ -72,7 +72,6 @@ const LoginModal = () => {
       }}
     >
       <Fade in={open} onExited={clearForm}>
-      <Box>
       <form onSubmit={handleSubmit(handleFormSubmit)}>
         <Stack
           sx={style}
@@ -203,7 +202,6 @@ const LoginModal = () => {
           }
         </Stack>
       </form>
-      </Box>
       </Fade>
     </Modal>
       <Grid container wrap="nowrap" spacing={1}>
