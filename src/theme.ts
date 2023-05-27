@@ -13,6 +13,9 @@ const theme = createTheme({
       }, 
     }, 
   },
+  typography: {
+    "fontFamily": `"Rubik", "Helvetica", "Arial", sans-serif`,
+  },
   palette: {
     mode: 'dark',
     background: {
