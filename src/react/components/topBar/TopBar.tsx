@@ -10,7 +10,6 @@ import {
   Toolbar,
   Typography
 } from '@mui/material';
-import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
 import AccountCircleOutlinedIcon from '@mui/icons-material/AccountCircleOutlined';
 import { UserContext } from '../../contexts/UserContext';
 import { LoginModal } from '../loginModal/LoginModal';
@@ -44,7 +43,6 @@ const TopBar = () => {
       elevation={1}
       position="fixed"
       sx={{
-        backgroundColor: "white",
         zIndex: (theme) => theme.zIndex.drawer + 1
       }}
     >
@@ -60,19 +58,18 @@ const TopBar = () => {
             sx={{
               '&:hover': {
                 cursor: 'pointer'
-              }
+              },
+              fontWeight: 800
             }}
             variant="h5"
-            color="black"
           >
-            PhotoWars
+            PHOTOWARS
           </Typography>
           <Box>
             {userId === null ? <div /> : userId !== '' ?
               <Stack direction="row" spacing={2}>
                   <Button
                     component={Link}
-                    startIcon={<AddCircleOutlineIcon />}
                     to="/create"
                     variant="contained"
                   >
@@ -81,6 +78,7 @@ const TopBar = () => {
                   <Button
                     onClick={(event) => setAnchorElement(event.target)}
                     startIcon={<AccountCircleOutlinedIcon />}
+                    variant="secondary"
                   >
                     {displayName}
                   </Button>

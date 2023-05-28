@@ -104,14 +104,11 @@ const UserView = () => {
             {feed === 'battles' && battles ? (
               battles.length > 0 ? (
                 battles.map((battle) => {
-                  const [submitted, setSubmitted] = useState(false);
                   return (
                     <BattleCard
                       key={battle._id}
                       battleId={battle._id}
                       showModal={null}
-                      submitted={submitted}
-                      setSubmitted={setSubmitted}
                     />
                   );
                 })

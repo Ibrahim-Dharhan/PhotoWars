@@ -7,7 +7,6 @@ import ImageIcon from '@mui/icons-material/Image';
 import PropTypes from 'prop-types';
 import { blue, pink } from '@mui/material/colors';
 import {
-  Badge,
   Box,
   Button,
   ButtonBase,
@@ -29,8 +28,6 @@ import './battleCard.css';
 
 const BattleCard = ({
   battleId,
-  submitted,
-  setSubmitted,
   showModal,
 }) => {
   const { userId, setOpen } = useContext(UserContext);
@@ -42,6 +39,7 @@ const BattleCard = ({
   const [numComments, setNumComments] = useState(0);
   const [commented, setCommented] = useState(false);
   const [numVotes, setNumVotes] = useState(0);
+  const [submitted, setSubmitted] = useState(false);
   const [voted, setVoted] = useState(false);
   const [timeRemaining, setTimeRemaining] = useState('--:--:--');
   const [expired, setExpired] = useState(true);
@@ -88,7 +86,7 @@ const BattleCard = ({
     return () => {
       shouldUpdate = false;
     };
-  }, [battleId, submitted, userId]);
+  }, [battleId, expired, location, userId]);
 
   /* useEffect for retrieving the image.  */
   useEffect(() => {
@@ -140,9 +138,6 @@ const BattleCard = ({
         }}
       >
         <PostCardHeader _post={_battle} />
-        <CardContent sx={{ mt: -3 }}>
-          <Typography variant="h6">{caption}</Typography>
-        </CardContent>
         <ButtonBase
           onClick={() => {
             showModal &&
@@ -156,6 +151,9 @@ const BattleCard = ({
             loading='lazy'
           />
         </ButtonBase>
+        <CardContent sx={{ mb: -3 }}>
+          <Typography variant="h6">{caption}</Typography>
+        </CardContent>
         <CardActions disableSpacing>
           <IconButton
             onMouseDown={(event) => event.stopPropagation()}

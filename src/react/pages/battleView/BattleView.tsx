@@ -11,7 +11,7 @@ const battleViewLoader = async ({ params }) => {
   const id = params.id
   const path = `/battle/${id}`;
   try {
-    const res = await axios.get(path);
+    await axios.get(path);
   } catch (err) {
     if (err.response.status === 404) {
       return redirect('/404');
@@ -23,7 +23,6 @@ const battleViewLoader = async ({ params }) => {
 const BattleView = () => {
   const { id } = useParams();
 
-  const [submitted, setSubmitted] = useState(false);
   const [modalOpen, setModalOpen] = useState(false);
   const [modalVariant, setModalVariant] = useState('');
   const [modalId, setModalId] = useState('');
@@ -58,11 +57,9 @@ const BattleView = () => {
     >
       <BattleCard
         battleId={id}
-        submitted={submitted}
-        setSubmitted={setSubmitted}
         showModal={showModal}
       />
-      <Outlet context={{ setSubmitted, showModal }}/>
+      <Outlet context={{ showModal }}/>
       <CommentModal 
         open={modalOpen}
         handleClose={closeModal}
