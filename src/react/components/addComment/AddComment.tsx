@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState } from 'react';
 import {
   Avatar,
   Box,
@@ -6,36 +6,29 @@ import {
   Card,
   Stack,
   TextField,
-} from "@mui/material";
+} from '@mui/material';
 import PropTypes from 'prop-types';
 
 
 const AddComment = ({ postComment }) => {
-  const [commentText, setCommentText] = useState("");
+  const [commentText, setCommentText] = useState('');
 
   return (
     <Card>
-      <Box sx={{ p: "15px" }}>
-        <Stack direction="row" spacing={2} alignItems="flex-start">
+      <Box sx={{ p: '15px' }}>
+        <Stack direction='row' spacing={2} alignItems='flex-start'>
           <Avatar/>
           <TextField
             fullWidth
-            placeholder="Add a comment"
+            placeholder='Add a comment'
             value={commentText}
             onChange={(e) => {
               setCommentText(e.target.value);
             }}
           />
           <Button
-            size="large"
-            sx={{
-              bgcolor: "custom.moderateBlue",
-              color: "neutral.white",
-              p: "8px 25px",
-              "&:hover": {
-                bgcolor: "custom.lightGrayishBlue",
-              },
-            }}
+            size='large'
+            variant='contained'
             onClick={(e) => {
               if (commentText.trim()) {
                 console.log(commentText.trim());
@@ -43,7 +36,7 @@ const AddComment = ({ postComment }) => {
               } else {
                 e.preventDefault();
               }
-              setCommentText("");
+              setCommentText('');
             }}
           >
             Send
