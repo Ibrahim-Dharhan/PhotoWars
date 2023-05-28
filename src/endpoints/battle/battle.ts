@@ -133,6 +133,9 @@ battleRouter.get('/:id', checkSchema(ValidObjectId), async (req, res) => {
   const numCommentsQuery = Comment.countDocuments({ post: battleId });
   const commentedOnQuery = Comment.findOne({ post: battleId,
                                              author: req.session.userId });
+  const numSubmissionsQuery = Submission.countDocuments({ battle: battleId });
+  const submittedToQuery = Submission.findOne({ battle: battleId,
+                                             author: req.session.userId });
   const numVotesQuery = Vote.countDocuments({ post: battleId });
   const votedOnQuery = Vote.findOne({ post: battleId,
                                       user: req.session.userId });
@@ -142,6 +145,8 @@ battleRouter.get('/:id', checkSchema(ValidObjectId), async (req, res) => {
       /* Found battle matching battle id.  */
       const numComments = await numCommentsQuery.exec();
       const commentedOn = !!(await commentedOnQuery.lean().exec());
+      const numSubmissions = await numSubmissionsQuery.exec();
+      const submittedTo = !!(await submittedToQuery.lean().exec());
       const numVotes = await numVotesQuery.exec();
       const votedOn = !!(await votedOnQuery.lean().exec());
       result = {
@@ -149,6 +154,8 @@ battleRouter.get('/:id', checkSchema(ValidObjectId), async (req, res) => {
         ...{
           numComments: numComments,
           commentedOn: commentedOn,
+          numSubmissions: numSubmissions,
+          submittedTo: submittedTo,
           numVotes: numVotes,
           votedOn: votedOn
         }

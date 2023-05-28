@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import axios from 'axios';
 import { BattleCard } from '../../components/battleCard/BattleCard';
 import { useLoaderData } from 'react-router-dom';
@@ -22,8 +22,15 @@ const Feed = () => {
       <Stack alignItems='center' spacing={1}>
         <Stack sx={{ maxWidth: '60%' }}>
           {battleIdsRecent.map((battleId) => {
+            const [submitted, setSubmitted] = useState(false);
             return (
-              <BattleCard battleId={battleId} key={battleId} showModal={null} />
+              <BattleCard
+                battleId={battleId}
+                key={battleId}
+                showModal={null}
+                submitted={submitted}
+                setSubmitted={setSubmitted}
+              />
             );
           })}
         </Stack>

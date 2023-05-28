@@ -21,9 +21,9 @@ const battleViewLoader = async ({ params }) => {
 }
 
 const BattleView = () => {
-  const [numBVSubmissions, setNumBVSubmissions] = useState(0);
   const { id } = useParams();
 
+  const [submitted, setSubmitted] = useState(false);
   const [modalOpen, setModalOpen] = useState(false);
   const [modalVariant, setModalVariant] = useState('');
   const [modalId, setModalId] = useState('');
@@ -58,11 +58,11 @@ const BattleView = () => {
     >
       <BattleCard
         battleId={id}
-        numBVSubmissions={numBVSubmissions}
-        setNumBVSubmissions={setNumBVSubmissions}
+        submitted={submitted}
+        setSubmitted={setSubmitted}
         showModal={showModal}
       />
-      <Outlet context={{numBVSubmissions, setNumBVSubmissions, showModal}}/>
+      <Outlet context={{ setSubmitted, showModal }}/>
       <CommentModal 
         open={modalOpen}
         handleClose={closeModal}
