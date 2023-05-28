@@ -3,8 +3,6 @@ import axios from 'axios';
 import {
   Avatar,
   Box,
-  Card,
-  CardMedia,
   Divider,
   Grid,
   List,
@@ -18,7 +16,7 @@ import PropTypes from 'prop-types';
 import { getImageUrl } from '../../../definitions/getImageUrl';
 import { useNavigate } from 'react-router-dom';
 
-const style = {
+const modalStyle = {
   position: 'absolute',
   top: '50%',
   left: '50%',
@@ -27,7 +25,7 @@ const style = {
   height: '80%',
   bgcolor: 'background.paper',
   boxShadow: 24,
-  borderRadius: '2px',
+  borderRadius: '12px',
   p: 2,
 };
 
@@ -104,7 +102,7 @@ const CommentModal = ({
       aria-labelledby='modal-modal-title'
       aria-describedby='modal-modal-description'
     >
-      <Box sx={style}>
+      <Box sx={modalStyle}>
         <Grid direction='row' container spacing={1} sx={{height: "100%"}}>
           <Grid item xs={6}>
             <Box sx={{height:'100%', display: 'flex'}} alignItems='center'>
