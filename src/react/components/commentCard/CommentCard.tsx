@@ -39,7 +39,7 @@ const CommentCard = ({ commentId }) => {
     return () => {
       shouldUpdate = false;
     };
-  }, [commentId, loggedInUser._id]);
+  }, [commentId, comment.commentedModel, loggedInUser._id]);
 
   /* useEffect for retrieving the image.  */
   useEffect(() => {
@@ -83,7 +83,7 @@ const CommentCard = ({ commentId }) => {
 };
 
 CommentCard.propTypes = {
-  comment: PropTypes.object,
+  commentId: PropTypes.string
 };
 
 export default CommentCard;
