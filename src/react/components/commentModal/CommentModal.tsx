@@ -15,6 +15,7 @@ import {
 import PropTypes from 'prop-types';
 import { getImageUrl } from '../../../definitions/getImageUrl';
 import { useNavigate } from 'react-router-dom';
+import AddComment from '../addComment/AddComment';
 
 const modalStyle = {
   position: 'absolute',
@@ -55,23 +56,25 @@ const CommentModal = ({
 }) => {
   const [comments, setComments] = useState([]);
   const [imageUrl, setImageUrl] = useState('');
+
   const navigate = useNavigate();
+
+  const getComments = async (shouldUpdate: boolean) => {
+    const path = `/${variant}/${id}/comments`;
+    const res = await axios.get(path);
+    const retrievedComments: Comment[] = res.data;
+
+    if (shouldUpdate) {
+      setComments(retrievedComments);
+    }
+  };
 
   /* useEffect for updating comments.  */
   useEffect(() => {
     if (!open) return;
     let shouldUpdate = true;
-    const getComments = async () => {
-      const path = `/${variant}/${id}/comments`;
-      const res = await axios.get(path);
-      const retrievedComments: Comment[] = res.data;
-
-      if (shouldUpdate) {
-        setComments(retrievedComments);
-      }
-    };
     try {
-      getComments();
+      getComments(shouldUpdate);
     } catch (err) {
       console.error(err.data);
     }
@@ -94,6 +97,17 @@ const CommentModal = ({
       shouldUpdate = false;
     };
   }, [filename]);
+
+  /* Handler for posting a new comment. */
+  const handlePostComment = async (newComment: String) => {
+    const path = `/${variant}/${id}/comment`;
+    try {
+      const res = await axios.post(path, {comment: newComment});
+      getComments(true);
+    } catch (err) {
+      console.error(err.response.data);
+    }
+  }
 
   return (
     <Modal
@@ -184,6 +198,9 @@ const CommentModal = ({
                 );
               })}
             </List>
+            <AddComment 
+              postComment={handlePostComment}
+            />
           </Grid>
         </Grid>
       </Box>

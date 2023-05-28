@@ -1,4 +1,4 @@
-import React, { useContext, useState } from "react";
+import React, { useState } from "react";
 import {
   Avatar,
   Box,
@@ -7,26 +7,19 @@ import {
   Stack,
   TextField,
 } from "@mui/material";
-import { UserContext } from '../../contexts/UserContext';
+import PropTypes from 'prop-types';
 
-const AddComment = () => {
-  const { userId, setOpen } = useContext(UserContext);
-  const { addComment } = useContext(CommentContext);
+
+const AddComment = ({ postComment }) => {
   const [commentText, setCommentText] = useState("");
 
   return (
     <Card>
       <Box sx={{ p: "15px" }}>
         <Stack direction="row" spacing={2} alignItems="flex-start">
-          <Avatar
-            src={IMGOBJ.juliusomo}
-            variant="rounded"
-            alt="user-avatar"
-          />
+          <Avatar/>
           <TextField
-            multiline
             fullWidth
-            minRows={4}
             placeholder="Add a comment"
             value={commentText}
             onChange={(e) => {
@@ -44,9 +37,12 @@ const AddComment = () => {
               },
             }}
             onClick={(e) => {
-              !commentText.trim()
-                ? e.preventDefault()
-                : addComment(commentText.trim());
+              if (commentText.trim()) {
+                console.log(commentText.trim());
+                postComment(commentText.trim());
+              } else {
+                e.preventDefault();
+              }
               setCommentText("");
             }}
           >
@@ -56,6 +52,10 @@ const AddComment = () => {
       </Box>
     </Card>
   );
+};
+
+AddComment.propTypes = {
+  handlePostComment: PropTypes.func
 };
 
 export default AddComment;
