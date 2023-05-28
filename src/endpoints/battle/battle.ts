@@ -10,6 +10,7 @@ import { NewSubmission } from '../../definitions/schemas/validation/newSubmissio
 import { Submission } from '../../definitions/schemas/mongoose/submission';
 import { Comment } from '../../definitions/schemas/mongoose/comment';
 import { UpdateBattle } from '../../definitions/schemas/validation/updateBattle';
+import { ValidObjectId } from '../../definitions/schemas/validation/validObjectId';
 import { upload } from '../../server';
 import { AWS_BUCKET_NAME, uploadFileToS3 } from '../../definitions/s3';
 import { voteOn, unvoteOn } from '../../definitions/schemas/mongoose/vote';
@@ -117,7 +118,15 @@ battleRouter.get('/random', async (req, res) => {
  *       500:
  *         $ref: '#/components/responses/500'
  */
-battleRouter.get('/:id', async (req, res) => {
+battleRouter.get('/:id', checkSchema(ValidObjectId), async (req, res) => {
+  const errors = validationResult(req);
+  if (!errors.isEmpty()) {
+    res.status(404).json({
+      errors: errors.array(),
+    });
+    return;
+  }
+
   const battleId = req.params.id;
   const query = Battle.findById(battleId);
   try {
@@ -173,17 +182,22 @@ battleRouter.get('/:id', async (req, res) => {
  *       500:
  *         $ref: '#/components/responses/500'
  */
-battleRouter.put('/:id', checkSchema(UpdateBattle), async (req, res) => {
-  const errors = validationResult(req);
-  if (!errors.isEmpty()) {
-    res.status(400).json({
-      errors: errors.array(),
-    });
+battleRouter.put('/:id', checkSchema({...ValidObjectId, ...UpdateBattle}), async (req, res) => {
+  if (!req.session.loggedIn) {
+    res.status(401).send('Not logged in.');
     return;
   }
 
-  if (!req.session.loggedIn) {
-    res.status(401).send('Not logged in.');
+  const errors = validationResult(req);
+  if (!errors.isEmpty()) {
+    if (errors[0].path === 'id') {
+      res.status(404);
+    } else {
+      res.status(400);
+    }
+    res.json({
+      errors: errors.array(),
+    });
     return;
   }
 
@@ -343,25 +357,30 @@ battleRouter.post(
 battleRouter.post(
   '/:id/submit',
   upload.single('file'),
-  checkSchema(NewSubmission),
+  checkSchema({...ValidObjectId, ...NewSubmission}),
   async (req, res) => {
     if (!req.file) {
       res.status(400).send('Invalid file.');
       return;
     }
 
-    const errors = validationResult(req);
-    if (!errors.isEmpty()) {
-      await fs.promises.unlink(path.join('.', IMAGE_DIR, req.file.filename));
-      res.status(400).json({
-        errors: errors.array(),
-      });
-      return;
-    }
-
     if (!req.session.loggedIn) {
       await fs.promises.unlink(path.join('.', IMAGE_DIR, req.file.filename));
       res.status(401).send('Not logged in.');
+      return;
+    }
+
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+      await fs.promises.unlink(path.join('.', IMAGE_DIR, req.file.filename));
+      if (errors[0].path === 'id') {
+        res.status(404);
+      } else {
+        res.status(400);
+      }
+      res.json({
+        errors: errors.array(),
+      });
       return;
     }
 
@@ -413,9 +432,17 @@ battleRouter.post(
  *       500:
  *         $ref: '#/components/responses/500'
  */
-battleRouter.put('/:id/vote', async (req, res) => {
+battleRouter.put('/:id/vote', checkSchema(ValidObjectId), async (req, res) => {
   if (!req.session.loggedIn) {
     res.status(401).send('Must be logged in to perform this action.');
+    return;
+  }
+
+  const errors = validationResult(req);
+  if (!errors.isEmpty()) {
+    res.status(404).json({
+      errors: errors.array(),
+    });
     return;
   }
 
@@ -453,9 +480,17 @@ battleRouter.put('/:id/vote', async (req, res) => {
  *       500:
  *         $ref: '#/components/responses/500'
  */
-battleRouter.put('/:id/unvote', async (req, res) => {
+battleRouter.put('/:id/unvote', checkSchema(ValidObjectId), async (req, res) => {
   if (!req.session.loggedIn) {
     res.status(401).send('Must be logged in to perform this action.');
+    return;
+  }
+
+  const errors = validationResult(req);
+  if (!errors.isEmpty()) {
+    res.status(404).json({
+      errors: errors.array(),
+    });
     return;
   }
 
@@ -497,7 +532,15 @@ battleRouter.put('/:id/unvote', async (req, res) => {
  *       500:
  *         $ref: '#/components/responses/500'
  */
-battleRouter.get('/:id/comments', async (req, res) => {
+battleRouter.get('/:id/comments', checkSchema(ValidObjectId), async (req, res) => {
+  const errors = validationResult(req);
+  if (!errors.isEmpty()) {
+    res.status(404).json({
+      errors: errors.array(),
+    });
+    return;
+  }
+
   const battleId = req.params.id;
   const query = Comment.find({
     commentedModel: 'Battle',
@@ -544,11 +587,20 @@ battleRouter.get('/:id/comments', async (req, res) => {
  *       500:
  *         $ref: '#/components/responses/500'
  */
-battleRouter.post('/:id/comment', async (req, res) => {
+battleRouter.post('/:id/comment', checkSchema(ValidObjectId), async (req, res) => {
   if (!req.session.loggedIn) {
     res.status(401).send('Not logged in.');
     return;
   }
+
+  const errors = validationResult(req);
+  if (!errors.isEmpty()) {
+    res.status(404).json({
+      errors: errors.array(),
+    });
+    return;
+  }
+
   if (req.body.comment === '') {
     res.status(400).send('Missing information to create a new comment.');
     return;
@@ -587,11 +639,20 @@ battleRouter.post('/:id/comment', async (req, res) => {
  *       500:
  *         $ref: '#/components/responses/500'
  */
-battleRouter.delete('/:id', async (req, res) => {
+battleRouter.delete('/:id', checkSchema(ValidObjectId), async (req, res) => {
   if (!req.session.loggedIn) {
     res.status(401).send('User not logged in.');
     return;
   }
+
+  const errors = validationResult(req);
+  if (!errors.isEmpty()) {
+    res.status(404).json({
+      errors: errors.array(),
+    });
+    return;
+  }
+
   const battleId = req.params.id;
   /* Delete battle.  */
   const query = Battle.findOneAndDelete({
@@ -633,7 +694,15 @@ battleRouter.delete('/:id', async (req, res) => {
  *       500:
  *         $ref: '#/components/responses/500'
  */
-battleRouter.get('/:id/submissions', async (req, res) => {
+battleRouter.get('/:id/submissions', checkSchema(ValidObjectId), async (req, res) => {
+  const errors = validationResult(req);
+  if (!errors.isEmpty()) {
+    res.status(404).json({
+      errors: errors.array(),
+    });
+    return;
+  }
+
   const battleId = req.params.id;
   try {
     const battleObj = await Battle.findById(battleId).lean().exec();

@@ -11,13 +11,15 @@ import {
   Typography,
 } from '@mui/material';
 import FavoriteIcon from '@mui/icons-material/Favorite';
+import LockIcon from '@mui/icons-material/Lock';
 import ModeCommentOutlinedIcon from '@mui/icons-material/ModeCommentOutlined';
 import { getImageUrl } from '../../../definitions/getImageUrl';
 import { pink } from '@mui/material/colors';
-import './submissionCard.css';
-import PropTypes from 'prop-types';
 import { UserContext } from '../../contexts/UserContext';
 import { PostCardHeader } from '../postCardHeader/PostCardHeader';
+import { updateDeadline } from '../../../definitions/timerLogic';
+import PropTypes from 'prop-types';
+import './submissionCard.css';
 
 const SubmissionCard = ({ submissionId, showModal }) => {
   const { userId, setOpen } = useContext(UserContext);
@@ -27,11 +29,13 @@ const SubmissionCard = ({ submissionId, showModal }) => {
   const [filename, setFilename] = useState('');
   const [numComments, setNumComments] = useState(0);
   const [commented, setCommented] = useState(false);
+  const [expired, setExpired] = useState(true);
   const [numVotes, setNumVotes] = useState(0);
   const [voted, setVoted] = useState(false);
 
   const _isAuthor = useRef(false);
   const _submission = useRef(null);
+  const _timerEvent = useRef(null);
 
   /* useEffect for updating caption, display name, and image.  */
   useEffect(() => {
@@ -47,6 +51,12 @@ const SubmissionCard = ({ submissionId, showModal }) => {
         setFilename(submission.filename);
         _isAuthor.current = submission.author._id;
         _submission.current = submission;
+        updateDeadline(
+          new Date(submission.battle.deadline),
+          _timerEvent,
+          null,
+          setExpired
+        );
       }
     };
     try {
@@ -150,21 +160,19 @@ const SubmissionCard = ({ submissionId, showModal }) => {
             onClick={(event) => {
               event.stopPropagation();
               event.preventDefault();
-            }}
-          ></IconButton>
-          <IconButton
-            onMouseDown={(event) => event.stopPropagation()}
-            onClick={(event) => {
-              event.stopPropagation();
-              event.preventDefault();
-              if (userId !== '') {
+              if (userId !== '' && !expired) {
                 vote();
               } else {
                 setOpen(true);
               }
             }}
+            disableRipple={expired}
           >
-            <FavoriteIcon sx={{ pr: 1, color: voted && pink[500] }} />
+            {
+              expired
+              ? <LockIcon sx={{ pr: 1, color: voted && pink[500] }} />
+              : <FavoriteIcon sx={{ pr: 1, color: voted && pink[500] }} />
+            }
             <Typography>{numVotes}</Typography>
           </IconButton>
           <IconButton

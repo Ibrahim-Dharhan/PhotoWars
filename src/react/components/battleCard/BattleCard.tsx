@@ -2,10 +2,12 @@ import React, { useContext, useEffect, useRef, useState } from 'react';
 import axios from 'axios';
 import ModeCommentOutlinedIcon from '@mui/icons-material/ModeCommentOutlined';
 import FavoriteIcon from '@mui/icons-material/Favorite';
+import LockIcon from '@mui/icons-material/Lock';
 import ImageIcon from '@mui/icons-material/Image';
 import PropTypes from 'prop-types';
 import { blue, pink } from '@mui/material/colors';
 import {
+  Badge,
   Box,
   Button,
   ButtonBase,
@@ -20,7 +22,7 @@ import {
 } from '@mui/material';
 import { getImageUrl } from '../../../definitions/getImageUrl';
 import { PostCardHeader } from '../postCardHeader/PostCardHeader';
-import { updateDeadline } from './timerLogic';
+import { updateDeadline } from '../../../definitions/timerLogic';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { UserContext } from '../../contexts/UserContext';
 import './battleCard.css';
@@ -44,6 +46,7 @@ const BattleCard = ({
   const [numVotes, setNumVotes] = useState(0);
   const [voted, setVoted] = useState(false);
   const [timeRemaining, setTimeRemaining] = useState('--:--:--');
+  const [expired, setExpired] = useState(true);
 
   const _battle = useRef(null);
   const _timerEvent = useRef(null);
@@ -67,7 +70,8 @@ const BattleCard = ({
         updateDeadline(
           new Date(battle.deadline),
           _timerEvent,
-          setTimeRemaining
+          setTimeRemaining,
+          setExpired
         );
       }
     };
@@ -109,28 +113,44 @@ const BattleCard = ({
     };
   }, [battleId, numBVSubmissions, numSubmissions, setNumBVSubmissions, userId]);
 
-  /* useEffect for updating comment and vote count.  */
+  /* useEffect for updating comment count.  */
   useEffect(() => {
     let shouldUpdate = true;
-    const getCommentsAndVotes = async () => {
+    const getComments = async () => {
       const commentsPath = `/comment/${battleId}`;
       const commentsRes = await axios.get(commentsPath);
       const { numComments, commentedOn } = commentsRes.data;
 
+      if (shouldUpdate) {
+        setCommented(commentedOn);
+        setNumComments(numComments);
+      }
+    };
+    try {
+      getComments();
+    } catch (err) {
+      console.error(err.data);
+    }
+    return () => {
+      shouldUpdate = false;
+    };
+  }, [battleId, userId]);
+
+  /* useEffect for updating vote count.  */
+  useEffect(() => {
+    let shouldUpdate = true;
+    const getVotes = async () => {
       const votesPath = `/vote/${battleId}`;
       const votesRes = await axios.get(votesPath);
       const { numVotes, votedOn } = votesRes.data;
 
       if (shouldUpdate) {
-        setCommented(commentedOn);
-        setNumComments(numComments);
-
         setVoted(votedOn);
         setNumVotes(numVotes);
       }
     };
     try {
-      getCommentsAndVotes();
+      getVotes();
     } catch (err) {
       console.error(err.data);
     }
@@ -148,7 +168,11 @@ const BattleCard = ({
         setImageUrl(newImageUrl);
       }
     };
-    setImage();
+    try {
+      setImage();
+    } catch (err) {
+      console.error(err.data);
+    }
     return () => {
       shouldUpdate = false;
     };
@@ -205,9 +229,9 @@ const BattleCard = ({
           <IconButton
             onMouseDown={(event) => event.stopPropagation()}
             onClick={(event) => {
-              event.stopPropagation();
               event.preventDefault();
             }}
+            disableRipple
           >
             <ImageIcon
               sx={{
@@ -222,14 +246,19 @@ const BattleCard = ({
             onClick={(event) => {
               event.stopPropagation();
               event.preventDefault();
-              if (userId !== '') {
+              if (userId !== '' && !expired) {
                 vote();
               } else {
                 setOpen(true);
               }
             }}
+            disableRipple={expired}
           >
-            <FavoriteIcon sx={{ pr: 1, color: voted && pink[500] }} />
+            {
+              expired
+              ? <LockIcon sx={{ pr: 1, color: voted && pink[500] }} />
+              : <FavoriteIcon sx={{ pr: 1, color: voted && pink[500] }} />
+            }
             <Typography>{numVotes}</Typography>
           </IconButton>
           <IconButton
