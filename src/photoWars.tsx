@@ -9,7 +9,7 @@ import {
 } from 'react-router-dom';
 
 /* Importing Components */
-import { BattleView } from './react/pages/battleView/BattleView';
+import { BattleView, battleViewLoader } from './react/pages/battleView/BattleView';
 import { Create } from './react/pages/create/Create';
 import { Feed, feedLoader } from './react/pages/feed/Feed';
 import { Home } from './react/pages/home/Home';
@@ -32,6 +32,7 @@ const PhotoWars = () => {
           <Route
             path='battles/:id'
             element={<BattleView />}
+            loader={battleViewLoader}
             errorElement={<div>Error viewing battle</div>}
           >
             <Route
@@ -66,7 +67,8 @@ const PhotoWars = () => {
             errorElement={<div>Error fetching battles</div>}
           />
         </Route>
-        <Route path='*' element={<div>404 Not Found</div>} />
+        <Route path="/404" element={<div>404 Not Found</div>} />
+        <Route path="*" element={<div>404 Not Found</div>} />
       </Route>
     )
   );

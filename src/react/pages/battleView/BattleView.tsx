@@ -1,13 +1,26 @@
 import React, { useState } from 'react';
+import axios from 'axios';
 import {
   Stack
 } from '@mui/material';
 import { BattleCard } from '../../components/battleCard/BattleCard';
 import { CommentModal } from '../../components/commentModal/CommentModal';
-import { Outlet, useParams } from 'react-router-dom';
+import { Outlet, redirect, useParams } from 'react-router-dom';
+
+const battleViewLoader = async ({ params }) => {
+  const id = params.id
+  const path = `/battle/${id}`;
+  try {
+    await axios.get(path);
+  } catch (err) {
+    if (err.response.status === 404) {
+      return redirect('/404');
+    }
+  }
+  return null;
+}
 
 const BattleView = () => {
-  const [numBVSubmissions, setNumBVSubmissions] = useState(0);
   const { id } = useParams();
 
   const [modalOpen, setModalOpen] = useState(false);
@@ -44,11 +57,9 @@ const BattleView = () => {
     >
       <BattleCard
         battleId={id}
-        numBVSubmissions={numBVSubmissions}
-        setNumBVSubmissions={setNumBVSubmissions}
         showModal={showModal}
       />
-      <Outlet context={{numBVSubmissions, setNumBVSubmissions, showModal}}/>
+      <Outlet context={{ showModal }}/>
       <CommentModal 
         open={modalOpen}
         handleClose={closeModal}
@@ -62,4 +73,4 @@ const BattleView = () => {
   );
 };
 
-export { BattleView };
+export { BattleView, battleViewLoader };

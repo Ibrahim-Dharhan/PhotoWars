@@ -1,48 +1,62 @@
 "use strict"
 
 import express = require('express');
+import { checkSchema, validationResult } from 'express-validator';
 import { Comment } from '../../definitions/schemas/mongoose/comment';
-import { voteOn, unvoteOn } from '../../definitions/schemas/mongoose/vote';
+import { ValidObjectId } from '../../definitions/schemas/validation/validObjectId';
+import { Vote, voteOn, unvoteOn } from '../../definitions/schemas/mongoose/vote';
 
 const commentRouter = express.Router();
 
-// /**
-//  * @openapi
-//  * /comment/{id}:
-//  *   get:
-//  *     summary: Get comment information.
-//  *     parameters:
-//  *       - $ref: '#/components/parameters/idParam'
-//  *     responses:
-//  *       200:
-//  *         description: Resource successfully retrieved.
-//  *         content:
-//  *           application/json:
-//  *             schema:
-//  *               $ref: '#/components/schemas/Comment'
-//  *       404:
-//  *         $ref: '#/components/responses/404NotFound'
-//  *       500:
-//  *         $ref: '#/components/responses/500'
-// */
-// commentRouter.get('/:id', async (req, res) => {
-//   const commentId = req.params.id;
-//   const query = Comment.findById(commentId);
-// 
-//   try {
-//     const result = await query.lean().exec();
-//     if (result) {
-//       /* Found comment with id.  */
-//       res.status(200).json(result);
-//     } else {
-//       /* Did not find comment with id.  */
-//       res.status(404).send(`Comment with ID ${commentId} not found.`);
-//     }
-//   } catch (err) {
-//     res.status(500).send('Internal server error.');
-//     console.error('Failed to query database.');
-//   }
-// });
+/**
+ * @openapi
+ * /comment/{id}:
+ *   get:
+ *     summary: Get comment information.
+ *     parameters:
+ *       - $ref: '#/components/parameters/idParam'
+ *     responses:
+ *       200:
+ *         description: Resource successfully retrieved.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/Comment'
+ *       404:
+ *         $ref: '#/components/responses/404NotFound'
+ *       500:
+ *         $ref: '#/components/responses/500'
+*/
+commentRouter.get('/:id', async (req, res) => {
+  const commentId = req.params.id;
+  const query = Comment.findById(commentId);
+  const numVotesQuery = Vote.countDocuments({ post: commentId });
+  const votedOnQuery = Vote.findOne({ post: commentId,
+                                      user: req.session.userId });
+
+  try {
+    let result = await query.lean().exec();
+    const numVotes = await numVotesQuery.exec();
+    const votedOn = !!(await votedOnQuery.lean().exec());
+    if (result) {
+      /* Found comment with id.  */
+      result = {
+        ...result,
+        ...{
+          numVotes: numVotes,
+          votedOn: votedOn
+        }
+      };
+      res.status(200).json(result);
+    } else {
+      /* Did not find comment with id.  */
+      res.status(404).send(`Comment with ID ${commentId} not found.`);
+    }
+  } catch (err) {
+    res.status(500).send('Internal server error.');
+    console.error('Failed to query database.');
+  }
+});
 
 /**
  * @openapi
@@ -63,9 +77,17 @@ const commentRouter = express.Router();
  *       500:
  *         $ref: '#/components/responses/500'
  */
-commentRouter.delete('/:id', async (req, res) => {
+commentRouter.delete('/:id', checkSchema(ValidObjectId), async (req, res) => {
   if (!req.session.loggedIn) {
     res.status(401).send('User is not logged in.');
+    return;
+  }
+
+  const errors = validationResult(req);
+  if (!errors.isEmpty()) {
+    res.status(404).json({
+      errors: errors.array(),
+    });
     return;
   }
 
@@ -129,9 +151,17 @@ commentRouter.delete('/:id', async (req, res) => {
  *       500:
  *         $ref: '#/components/responses/500'
  */
-commentRouter.put('/:id', async (req, res) => {
+commentRouter.put('/:id', checkSchema(ValidObjectId), async (req, res) => {
   if (!req.session.loggedIn) {
     res.status(401).send('User is not logged in.');
+    return;
+  }
+
+  const errors = validationResult(req);
+  if (!errors.isEmpty()) {
+    res.status(404).json({
+      errors: errors.array(),
+    });
     return;
   }
 
@@ -173,9 +203,17 @@ commentRouter.put('/:id', async (req, res) => {
  *       500:
  *         $ref: '#/components/responses/500'
  */
-commentRouter.put('/:id/vote', async (req, res) => {
+commentRouter.put('/:id/vote', checkSchema(ValidObjectId), async (req, res) => {
   if (!req.session.loggedIn) {
     res.status(401).send('Must be logged in to perform this action.');
+    return;
+  }
+
+  const errors = validationResult(req);
+  if (!errors.isEmpty()) {
+    res.status(404).json({
+      errors: errors.array(),
+    });
     return;
   }
 
@@ -214,9 +252,17 @@ commentRouter.put('/:id/vote', async (req, res) => {
  *       500:
  *         $ref: '#/components/responses/500'
  */
-commentRouter.put('/:id/unvote', async (req, res) => {
+commentRouter.put('/:id/unvote', checkSchema(ValidObjectId), async (req, res) => {
   if (!req.session.loggedIn) {
     res.status(401).send('Must be logged in to perform this action.');
+    return;
+  }
+
+  const errors = validationResult(req);
+  if (!errors.isEmpty()) {
+    res.status(404).json({
+      errors: errors.array(),
+    });
     return;
   }
 
@@ -232,43 +278,6 @@ commentRouter.put('/:id/unvote', async (req, res) => {
     await unvoteOn('Comment', commentId, req.session.userId);
     res.status(200).send('Successfully unvoted comment.');
 
-  } catch (err) {
-    res.status(500).send('Internal server error.');
-    console.error(err);
-  }
-});
-
-/**
- * @openapi
- * /comment/{id}:
- *   get:
- *     summary: Get number of comments for a post.
- *     parameters:
- *       - $ref: '#/components/parameters/idParam'
- *     responses:
- *       200:
- *         description: Resource successfully retrieved.
- *         content:
- *           application/json:
- *             schema:
- *               type: object
- *               properties:
- *                 numComments:
- *                   type: number
- *                 commentedOn:
- *                   type: boolean
- *       500:
- *         $ref: '#/components/responses/500'
-*/
-commentRouter.get('/:id', async (req, res) => {
-  const commentModelId = req.params.id;
-  const numCommentsQuery = Comment.countDocuments({ post: commentModelId });
-  const commentedOnQuery = Comment.findOne({ post: commentModelId, author: req.session.userId });
-
-  try {
-    const numComments = await numCommentsQuery.exec();
-    const commentedOn = !!(await commentedOnQuery.lean().exec());
-    res.status(200).json({ numComments: numComments, commentedOn: commentedOn });
   } catch (err) {
     res.status(500).send('Internal server error.');
     console.error(err);
