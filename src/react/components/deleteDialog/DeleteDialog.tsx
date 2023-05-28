@@ -17,7 +17,7 @@ const DeleteDialog = ({
   openDeleteDialog,
   setOpenDeleteDialog,
   postId,
-  variant
+  postType
 }) => {
   const location = useLocation();
   const navigate = useNavigate();
@@ -29,15 +29,15 @@ const DeleteDialog = ({
   };
 
   const handleDelete = async () => {
-    const path = `/${variant}${postId ? '/' : ''}${postId || ''}`;
+    const path = `/${postType}${postId ? '/' : ''}${postId || ''}`;
     try {
       !deleting && await axios.delete(path);
-      if (location.pathname.startsWith(`/${variant}`)) {
+      if (location.pathname.startsWith(`/${postType}`)) {
         navigate('/');
       } else {
         navigate(0);
       }
-      if (variant === 'user') {
+      if (postType === 'user') {
         /* Log user out and update state.  */
         const path = '/account/logout';
         await axios.post(path);
@@ -66,7 +66,7 @@ const DeleteDialog = ({
         </DialogTitle>
         <DialogContent>
           <DialogContentText>
-            Do you want to delete this {variant}? This action cannot be undone.
+            Do you want to delete this {postType}? This action cannot be undone.
           </DialogContentText>
         </DialogContent>
         <DialogActions>
@@ -84,7 +84,7 @@ DeleteDialog.propTypes = {
   openDeleteDialog: PropTypes.bool,
   setOpenDeleteDialog: PropTypes.func,
   postId: PropTypes.string,
-  variant: PropTypes.string
+  postType: PropTypes.string
 };
 
 export { DeleteDialog };

@@ -85,7 +85,7 @@ const PostCardHeader = ({
             openDeleteDialog={openDeleteDialog}
             setOpenDeleteDialog={setOpenDeleteDialog}
             postId={_post.current?._id}
-            variant={_post.current?.battle ? 'submission' : 'battle'}
+            postType={_post.current?.battle ? 'submission' : 'battle'}
           />
           <IconButton
             onMouseDown={(event) => event.stopPropagation()}
