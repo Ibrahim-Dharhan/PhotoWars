@@ -18,10 +18,11 @@ import { pink } from '@mui/material/colors';
 import { UserContext } from '../../contexts/UserContext';
 import { PostCardHeader } from '../postCardHeader/PostCardHeader';
 import { updateDeadline } from '../../../definitions/timerLogic';
+import { createSearchParams, useNavigate } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import './submissionCard.css';
 
-const SubmissionCard = ({ submissionId, showModal }) => {
+const SubmissionCard = ({ submissionId, setVariant }) => {
   const { userId, setOpen } = useContext(UserContext);
   const [caption, setCaption] = useState('');
   const [displayName, setDisplayName] = useState('');
@@ -36,6 +37,8 @@ const SubmissionCard = ({ submissionId, showModal }) => {
   const _isAuthor = useRef(false);
   const _submission = useRef(null);
   const _timerEvent = useRef(null);
+
+  const navigate = useNavigate();
 
   /* useEffect for updating caption, display name, and image.  */
   useEffect(() => {
@@ -89,6 +92,15 @@ const SubmissionCard = ({ submissionId, showModal }) => {
     };
   }, [filename]);
 
+  const openCommentModal = () => {
+    navigate({
+      pathname: `comments/${submissionId}`,
+      search: createSearchParams({
+        variant: 'submission'
+      }).toString()
+    });
+  }
+
   const vote = async () => {
     const path = `/submission/${submissionId}/${voted ? 'unvote' : 'vote'}`;
     try {
@@ -110,16 +122,9 @@ const SubmissionCard = ({ submissionId, showModal }) => {
           </Typography>
         </CardContent>
         <ButtonBase
-          onClick={() =>
-            showModal &&
-            showModal(
-              'submission',
-              submissionId,
-              displayName,
-              caption,
-              filename
-            )
-          }
+          onClick={() => {
+            setVariant && openCommentModal();
+          }}
           sx={{ width: '100%' }}
         >
           <CardMedia
@@ -155,14 +160,7 @@ const SubmissionCard = ({ submissionId, showModal }) => {
             onClick={(event) => {
               event.stopPropagation();
               event.preventDefault();
-              showModal &&
-              showModal(
-                'submission',
-                submissionId,
-                displayName,
-                caption,
-                filename
-              )
+              setVariant && openCommentModal();
             }}
           >
             <ModeCommentOutlinedIcon
@@ -178,7 +176,7 @@ const SubmissionCard = ({ submissionId, showModal }) => {
 
 SubmissionCard.propTypes = {
   submissionId: PropTypes.string,
-  showModal: PropTypes.func,
+  setVariant: PropTypes.func,
 };
 
 export { SubmissionCard };

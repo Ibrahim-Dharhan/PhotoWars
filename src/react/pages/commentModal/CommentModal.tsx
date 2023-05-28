@@ -14,7 +14,8 @@ import {
 } from '@mui/material';
 import PropTypes from 'prop-types';
 import { getImageUrl } from '../../../definitions/getImageUrl';
-import { useNavigate } from 'react-router-dom';
+import { redirect, useLoaderData, useNavigate, useOutletContext, useParams } from 'react-router-dom';
+import { VariantContext } from '../battleView/BattleView';
 
 const modalStyle = {
   position: 'absolute',
@@ -29,75 +30,81 @@ const modalStyle = {
   p: 2,
 };
 
+const commentModalLoader = async ({ params, request }) => {
+  const postId = params.postId;
+  const variant = (new URL(request.url)).searchParams.get('variant');
+  if (!variant) return redirect('..');
+  const commentsPath = `/${variant}/${postId}/comments`;
+  const postPath = `/${variant}/${postId}`;
+  try {
+    const commentsRes = await axios.get(commentsPath);
+    const postRes = await axios.get(postPath);
+    return {comments: commentsRes.data, post: postRes.data};
+  } catch (err) {
+    if (err.response.status === 404) {
+      return redirect('/404');
+    }
+  }
+};
+
 interface Author {
   _id: string;
+  description: string;
   displayName: string;
+  filename: string;
+  firstName: string;
+  lastName: string;
 }
 
 interface Comment {
   _id: string;
   __v: number;
-  author: Author;
+  author: Author | null;
   commentedModel: string;
   creationTime: string;
   post: string;
   text: string;
 }
 
-const CommentModal = ({
-  open,
-  handleClose,
-  variant,
-  id,
-  displayName,
-  caption,
-  filename,
-}) => {
-  const [comments, setComments] = useState([]);
+interface Post {
+  _id: string;
+  author: Author | null;
+  caption: string;
+  filename: string;
+}
+
+const CommentModal = () => {
+  const { variant } = useOutletContext<VariantContext>();
+  const { comments, post } = useLoaderData() as {comments: Comment[], post: Post};
   const [imageUrl, setImageUrl] = useState('');
   const navigate = useNavigate();
-
-  /* useEffect for updating comments.  */
-  useEffect(() => {
-    if (!open) return;
-    let shouldUpdate = true;
-    const getComments = async () => {
-      const path = `/${variant}/${id}/comments`;
-      const res = await axios.get(path);
-      const retrievedComments: Comment[] = res.data;
-
-      if (shouldUpdate) {
-        setComments(retrievedComments);
-      }
-    };
-    try {
-      getComments();
-    } catch (err) {
-      console.error(err.data);
-    }
-    return () => {
-      shouldUpdate = false;
-    };
-  }, [id, open, variant]);
 
   /* useEffect for retrieving the image.  */
   useEffect(() => {
     let shouldUpdate = true;
     const setImage = async () => {
-      const newImageUrl = await getImageUrl(filename);
+      const newImageUrl = await getImageUrl(post.filename);
       if (shouldUpdate) {
         setImageUrl(newImageUrl);
       }
     };
-    setImage();
+    try {
+      setImage();
+    } catch (err) {
+      console.error(err);
+    }
     return () => {
       shouldUpdate = false;
     };
-  }, [filename]);
+  }, [post.filename]);
+
+  const handleClose = () => {
+    navigate('..');
+  };
 
   return (
     <Modal
-      open={open}
+      open={true}
       onClose={handleClose}
       aria-labelledby='modal-modal-title'
       aria-describedby='modal-modal-description'
@@ -114,7 +121,7 @@ const CommentModal = ({
               <ListItem alignItems='flex-start'>
                 <ListItemAvatar>
                   <Avatar>
-                    {displayName[0]}
+                    {post.author?.displayName[0]}
                   </Avatar>
                 </ListItemAvatar>
                 <ListItemText
@@ -126,7 +133,7 @@ const CommentModal = ({
                         variant='h6'
                         color='text.primary'
                       >
-                        {caption}
+                        {post.caption}
                       </Typography>
                     </React.Fragment>
                   }
@@ -138,7 +145,7 @@ const CommentModal = ({
                         variant='body2'
                         color='text.primary'
                       >
-                        Created by {displayName}
+                        Created by {post.author?.displayName}
                       </Typography>
                     </React.Fragment>
                   }
@@ -154,9 +161,6 @@ const CommentModal = ({
                       onClick={(event) => {
                         event.stopPropagation();
                         event.preventDefault();
-                        console.log(
-                          `Go to profile page at /user/${comment.author._id}`
-                        );
                         navigate(`/users/${comment.author._id}`);
                       }}
                     >
@@ -201,4 +205,4 @@ CommentModal.propTypes = {
   filename: PropTypes.string,
 };
 
-export { CommentModal };
+export { CommentModal, commentModalLoader };
