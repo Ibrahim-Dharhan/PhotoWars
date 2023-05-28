@@ -2,7 +2,7 @@ import React from 'react';
 import axios from 'axios';
 import { BattleCard } from '../../components/battleCard/BattleCard';
 import { useLoaderData } from 'react-router-dom';
-import Stack from '@mui/material/Stack';
+import { ImageList } from '@mui/material';
 
 const feedLoader = async ({ request }) => {
   const url = new URL(request.url);
@@ -19,9 +19,8 @@ const Feed = () => {
 
   return (
     <React.Fragment>
-      <Stack alignItems='center' spacing={1}>
-        <Stack sx={{ maxWidth: '60%' }}>
-          {battleIdsRecent.map((battleId) => {
+      <ImageList variant="masonry" cols={3} gap={24}>
+         {battleIdsRecent.map((battleId) => {
             return (
               <BattleCard
                 battleId={battleId}
@@ -30,8 +29,7 @@ const Feed = () => {
               />
             );
           })}
-        </Stack>
-      </Stack>
+      </ImageList>
     </React.Fragment>
   );
 };

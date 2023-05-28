@@ -1,6 +1,6 @@
 import React from 'react';
 import { createRoot } from 'react-dom/client';
-import { CssBaseline, ThemeProvider } from '@mui/material';
+import { CssBaseline, ThemeProvider, Box } from '@mui/material';
 import {
   createBrowserRouter,
   createRoutesFromElements,
@@ -76,7 +76,14 @@ const PhotoWars = () => {
     <React.StrictMode>
       <CssBaseline />
       <ThemeProvider theme={theme}>
+      <Box
+        sx={{
+          minHeight: '100vh',
+          backgroundColor: theme.palette.background.default,
+        }}
+      >
         <RouterProvider router={router} />
+        </Box>
       </ThemeProvider>
     </React.StrictMode>
   );

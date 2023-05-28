@@ -5,7 +5,7 @@ import {
   Avatar,
   Button,
   CardHeader,
-  IconButton
+  IconButton,
 } from '@mui/material';
 import DownloadIcon from '@mui/icons-material/Download';
 import PropTypes from 'prop-types';
@@ -59,6 +59,10 @@ const PostCardHeader = ({
             event.stopPropagation();
             event.preventDefault();
             navigate(`/users/${_post.current?.author._id}`);
+          }}
+          style={{ 
+            textDecoration: 'none',
+            color: 'inherit'
           }}
         >
           {_post.current?.author.displayName}
