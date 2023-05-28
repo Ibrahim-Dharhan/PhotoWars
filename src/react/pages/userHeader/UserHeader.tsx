@@ -100,7 +100,7 @@ const UserHeader = () => {
             openDeleteDialog={openDeleteDialog}
             setOpenDeleteDialog={setOpenDeleteDialog}
             postId={null}
-            variant={'user'}
+            postType={'user'}
           />
           <Button
             component={Link}

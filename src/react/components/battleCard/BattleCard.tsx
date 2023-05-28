@@ -22,17 +22,15 @@ import {
 import { getImageUrl } from '../../../definitions/getImageUrl';
 import { PostCardHeader } from '../postCardHeader/PostCardHeader';
 import { updateDeadline } from '../../../definitions/timerLogic';
-import { useLocation, useNavigate } from 'react-router-dom';
+import { createSearchParams, useLocation, useNavigate } from 'react-router-dom';
 import { UserContext } from '../../contexts/UserContext';
 import './battleCard.css';
 
 const BattleCard = ({
   battleId,
-  showModal,
 }) => {
   const { userId, setOpen } = useContext(UserContext);
   const [caption, setCaption] = useState('');
-  const [displayName, setDisplayName] = useState('');
   const [filename, setFilename] = useState('');
   const [imageUrl, setImageUrl] = useState('');
   const [numSubmissions, setNumSubmissions] = useState(0);
@@ -60,7 +58,6 @@ const BattleCard = ({
 
       if (shouldUpdate) {
         setCaption(battle.caption);
-        setDisplayName(battle.author.displayName);
         setFilename(battle.filename);
         setNumComments(battle.numComments);
         setCommented(battle.commentedOn);
@@ -107,6 +104,15 @@ const BattleCard = ({
     };
   }, [filename]);
 
+  const openCommentModal = () => {
+    navigate({
+      pathname: `comments/${battleId}`,
+      search: createSearchParams({
+        postType: 'battle'
+      }).toString()
+    });
+  }
+
   const vote = async () => {
     const path = `/battle/${battleId}/${voted ? 'unvote' : 'vote'}`;
     try {
@@ -140,8 +146,7 @@ const BattleCard = ({
         <PostCardHeader _post={_battle} />
         <ButtonBase
           onClick={() => {
-            showModal &&
-            showModal('battle', battleId, displayName, caption, filename);
+            openCommentModal();
           }}
           sx={{ width: '100%' }}
         >
@@ -193,7 +198,9 @@ const BattleCard = ({
           <IconButton
             onMouseDown={(event) => event.stopPropagation()}
             onClick={(event) => {
+              event.stopPropagation();
               event.preventDefault();
+              openCommentModal();
             }}
           >
             <ModeCommentOutlinedIcon
@@ -249,8 +256,7 @@ const BattleCard = ({
 };
 
 BattleCard.propTypes = {
-  battleId: PropTypes.string,
-  showModal: PropTypes.func,
+  battleId: PropTypes.string
 };
 
 export { BattleCard };

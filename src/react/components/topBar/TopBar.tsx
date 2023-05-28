@@ -78,7 +78,6 @@ const TopBar = () => {
                   <Button
                     onClick={(event) => setAnchorElement(event.target)}
                     startIcon={<AccountCircleOutlinedIcon />}
-                    variant="secondary"
                   >
                     {displayName}
                   </Button>
