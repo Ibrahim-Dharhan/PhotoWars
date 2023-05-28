@@ -95,64 +95,66 @@ const UserView = () => {
               </Button>
             </Toolbar>
           </Grid>
-          <Stack
-            alignItems="center"
-            sx={{
-              width: '100%'
-            }}
-          >
-            {feed === 'battles' && battles ? (
-              battles.length > 0 ? (
-                battles.map((battle) => {
-                  return (
-                    <BattleCard
-                      key={battle._id}
-                      battleId={battle._id}
-                    />
-                  );
-                })
-              ) : (
-                <Typography textAlign={'center'}>
-                  This user has no battles!
-                </Typography>
-              )
-            ) : feed === 'submissions' && submissions ? (
-              submissions.length > 0 ? (
-                submissions.map((submission) => {
-                  return (
-                    <Box
-                      onClick={(event) => {
-                        event.stopPropagation();
-                        navigate(`/battles/${submission.battle}`);
-                      }}
-                      key={submission._id}
-                      sx={{ marginBottom: '5px' }}
-                    >
-                      <SubmissionCard
-                        submissionId={submission._id}
+          <Grid item xs={12}>
+            <Stack
+              alignItems="center"
+              sx={{
+                width: '100%'
+              }}
+            >
+              {feed === 'battles' && battles ? (
+                battles.length > 0 ? (
+                  battles.map((battle) => {
+                    return (
+                      <BattleCard
+                        key={battle._id}
+                        battleId={battle._id}
                       />
-                    </Box>
-                  );
-                })
+                    );
+                  })
+                ) : (
+                  <Typography textAlign={'center'}>
+                    This user has no battles!
+                  </Typography>
+                )
+              ) : feed === 'submissions' && submissions ? (
+                submissions.length > 0 ? (
+                  submissions.map((submission) => {
+                    return (
+                      <Box
+                        onClick={(event) => {
+                          event.stopPropagation();
+                          navigate(`/battles/${submission.battle}`);
+                        }}
+                        key={submission._id}
+                        sx={{ marginBottom: '5px' }}
+                      >
+                        <SubmissionCard
+                          submissionId={submission._id}
+                        />
+                      </Box>
+                    );
+                  })
+                ) : (
+                  <Typography textAlign={'center'}>
+                    This user has no submissions!
+                  </Typography>
+                )
+              ) : feed === 'comments' && comments ? (
+                comments.length > 0 ? (
+                  comments.map((comment) => {
+                    return <CommentCard key={comment._id} comment={comment} />;
+                  })
+                ) : (
+                  <Typography textAlign={'center'}>
+                    This user has no comments!
+                  </Typography>
+                )
               ) : (
-                <Typography textAlign={'center'}>
-                  This user has no submissions!
-                </Typography>
-              )
-            ) : feed === 'comments' && comments ? (
-              comments.length > 0 ? (
-                comments.map((comment) => {
-                  return <CommentCard key={comment._id} comment={comment} />;
-                })
-              ) : (
-                <Typography textAlign={'center'}>
-                  This user has no comments!
-                </Typography>
-              )
-            ) : (
-              <></>
-            )}
-          </Stack>
+                <></>
+              )}
+            </Stack>
+          </Grid>
         </Grid>
       </Card>
       </Stack>
