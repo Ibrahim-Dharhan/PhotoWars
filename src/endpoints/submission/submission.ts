@@ -32,7 +32,11 @@ submissionRouter.get('/:id', async (req, res) => {
   const submissionId = req.params.id;
   const query = Submission.findById(submissionId);
   try {
-    const result = await query.populate('author').lean().exec();
+    const result = await query
+                         .populate('author')
+                         .populate('battle', ['deadline'])
+                         .lean()
+                         .exec();
     if (result) {
       /* Found submission matching submissionId.  */
       res.status(200).json(result);

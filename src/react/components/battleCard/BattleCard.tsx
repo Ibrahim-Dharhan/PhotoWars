@@ -22,7 +22,7 @@ import {
 } from '@mui/material';
 import { getImageUrl } from '../../../definitions/getImageUrl';
 import { PostCardHeader } from '../postCardHeader/PostCardHeader';
-import { updateDeadline } from './timerLogic';
+import { updateDeadline } from '../../../definitions/timerLogic';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { UserContext } from '../../contexts/UserContext';
 import './battleCard.css';
@@ -46,7 +46,7 @@ const BattleCard = ({
   const [numVotes, setNumVotes] = useState(0);
   const [voted, setVoted] = useState(false);
   const [timeRemaining, setTimeRemaining] = useState('--:--:--');
-  const [expired, setExpired] = useState(false);
+  const [expired, setExpired] = useState(true);
 
   const _battle = useRef(null);
   const _timerEvent = useRef(null);
@@ -253,7 +253,7 @@ const BattleCard = ({
             <Typography>{numComments}</Typography>
           </IconButton>
           <Box display='flex' marginLeft='auto' alignItems='center'>
-            {expired ? (
+            {timeRemaining === '00d:00h:00m:00s' ? (
               <Typography>Finished</Typography>
             ) : (
               <>

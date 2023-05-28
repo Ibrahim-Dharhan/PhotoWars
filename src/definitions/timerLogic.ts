@@ -17,9 +17,9 @@ const startTimer = (deadline, setTimeRemaining, setExpired) => {
     const hh = `${hours < 10 ? '0' : ''}${hours}h:`;
     const mm = `${minutes < 10 ? '0' : ''}${minutes}m:`;
     const ss = `${seconds < 10 ? '0' : ''}${seconds}s`;
-    setTimeRemaining(dd + hh + mm + ss);
+    setTimeRemaining && setTimeRemaining(dd + hh + mm + ss);
   } else {
-    setTimeRemaining('00d:00h:00m:00s');
+    setTimeRemaining && setTimeRemaining('00d:00h:00m:00s');
     setExpired(true);
   }
 };
