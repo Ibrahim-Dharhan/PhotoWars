@@ -5,7 +5,7 @@ import FavoriteIcon from '@mui/icons-material/Favorite';
 import LockIcon from '@mui/icons-material/Lock';
 import ImageIcon from '@mui/icons-material/Image';
 import PropTypes from 'prop-types';
-import { blue, pink } from '@mui/material/colors';
+import { blue, pink, grey } from '@mui/material/colors';
 import {
   Box,
   Button,
@@ -155,13 +155,11 @@ const BattleCard = ({
         </ButtonBase>
         <CardContent sx={{ mb: -2 }}>
           <Typography variant="h6">
-            <Box sx={{ lineHeight: '24px' }}>
-              {caption}
-            </Box>
+            {caption}
           </Typography>
         </CardContent>
         <CardActions disableSpacing>
-          <IconButton
+          <IconButton 
             onMouseDown={(event) => event.stopPropagation()}
             onClick={(event) => {
               event.preventDefault();
@@ -171,10 +169,10 @@ const BattleCard = ({
             <ImageIcon
               sx={{
                 pr: 1,
-                color: submitted && blue[500],
+                color: submitted ? blue[500] : grey[400],
               }}
             />
-            <Typography>{numSubmissions}</Typography>
+            <Typography sx={{ color: grey[400] }}>{numSubmissions}</Typography>
           </IconButton>
           <IconButton
             onMouseDown={(event) => event.stopPropagation()}
@@ -191,10 +189,10 @@ const BattleCard = ({
           >
             {
               expired
-                ? <LockIcon sx={{ pr: 1, color: voted && pink[500] }} />
-                : <FavoriteIcon sx={{ pr: 1, color: voted && pink[500] }} />
+                ? <LockIcon sx={{ pr: 1, color: voted ? pink[500] : grey[400] }} />
+                : <FavoriteIcon sx={{ pr: 1, color: voted ? pink[500] : grey[400] }} />
             }
-            <Typography>{numVotes}</Typography>
+            <Typography sx={{ color: grey[400] }}>{numVotes}</Typography>
           </IconButton>
           <IconButton
             onMouseDown={(event) => event.stopPropagation()}
@@ -203,13 +201,13 @@ const BattleCard = ({
             }}
           >
             <ModeCommentOutlinedIcon
-              sx={{ pr: 1, color: commented && pink[500] }}
+              sx={{ pr: 1, color: commented ? pink[500] : grey[400]}}
             />
-            <Typography>{numComments}</Typography>
+            <Typography sx={{ color: grey[400] }}>{numComments}</Typography>
           </IconButton>
           <Box display='flex' marginLeft='auto' alignItems='center'>
             {timeRemaining === '00d:00h:00m:00s' ? (
-              <Typography>Finished</Typography>
+              <Typography variant="caption" sx={{ color: grey[400], pr: 1 }}>Finished</Typography>
             ) : (
               <>
                 <Typography sx={{ pr: 2 }}>{timeRemaining}</Typography>

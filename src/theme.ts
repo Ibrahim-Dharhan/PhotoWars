@@ -3,7 +3,6 @@ import { createTheme } from '@mui/material/styles';
 
 // Create a theme instance.
 const theme = createTheme({
-  
   components: {
     MuiButton: {
       styleOverrides: {
@@ -34,6 +33,12 @@ const theme = createTheme({
   },
   typography: {
     "fontFamily": `"Rubik", "Helvetica", "Arial", sans-serif`,
+    h6: {
+      lineHeight: '24px'
+    },
+    subtitle1: {
+      color: "#C4C2CE"
+    }
   },
   palette: {
     mode: 'dark',
