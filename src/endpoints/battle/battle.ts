@@ -9,6 +9,7 @@ import { NewBattle } from '../../definitions/schemas/validation/newBattle';
 import { NewSubmission } from '../../definitions/schemas/validation/newSubmission';
 import { Submission } from '../../definitions/schemas/mongoose/submission';
 import { Comment } from '../../definitions/schemas/mongoose/comment';
+import { Vote } from '../../definitions/schemas/mongoose/vote';
 import { UpdateBattle } from '../../definitions/schemas/validation/updateBattle';
 import { ValidObjectId } from '../../definitions/schemas/validation/validObjectId';
 import { upload } from '../../server';
@@ -129,10 +130,29 @@ battleRouter.get('/:id', checkSchema(ValidObjectId), async (req, res) => {
 
   const battleId = req.params.id;
   const query = Battle.findById(battleId);
+  const numCommentsQuery = Comment.countDocuments({ post: battleId });
+  const commentedOnQuery = Comment.findOne({ post: battleId,
+                                             author: req.session.userId });
+  const numVotesQuery = Vote.countDocuments({ post: battleId });
+  const votedOnQuery = Vote.findOne({ post: battleId,
+                                      user: req.session.userId });
   try {
-    const result = await query.populate('author').lean().exec();
+    let result = await query.populate('author').lean().exec();
     if (result) {
       /* Found battle matching battle id.  */
+      const numComments = await numCommentsQuery.exec();
+      const commentedOn = !!(await commentedOnQuery.lean().exec());
+      const numVotes = await numVotesQuery.exec();
+      const votedOn = !!(await votedOnQuery.lean().exec());
+      result = {
+        ...result,
+        ...{
+          numComments: numComments,
+          commentedOn: commentedOn,
+          numVotes: numVotes,
+          votedOn: votedOn
+        }
+      };
       res.status(200).json(result);
     } else {
       /* Did not find a battle with matching battle id.  */

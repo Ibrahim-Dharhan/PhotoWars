@@ -34,9 +34,11 @@ submissionRouter.get('/:id', async (req, res) => {
   const submissionId = req.params.id;
   const query = Submission.findById(submissionId);
   const numCommentsQuery = Comment.countDocuments({ post: submissionId });
-  const commentedOnQuery = Comment.findOne({ post: submissionId, author: req.session.userId });
+  const commentedOnQuery = Comment.findOne({ post: submissionId,
+                                             author: req.session.userId });
   const numVotesQuery = Vote.countDocuments({ post: submissionId });
-  const votedOnQuery = Vote.findOne({ post: submissionId, user: req.session.userId });
+  const votedOnQuery = Vote.findOne({ post: submissionId,
+                                      user: req.session.userId });
   try {
     let result = await query
                          .populate('author')

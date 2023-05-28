@@ -34,9 +34,7 @@ const BattleCard = ({
   showModal,
 }) => {
   const { userId, setOpen } = useContext(UserContext);
-
-  const [caption, setCaption] = useState('');
-  const [displayName, setDisplayName] = useState('');
+const [caption, setCaption] = useState(''); const [displayName, setDisplayName] = useState('');
   const [filename, setFilename] = useState('');
   const [imageUrl, setImageUrl] = useState('');
   const [numSubmissions, setNumSubmissions] = useState(0);
@@ -66,6 +64,10 @@ const BattleCard = ({
         setCaption(battle.caption);
         setDisplayName(battle.author.displayName);
         setFilename(battle.filename);
+        setNumComments(battle.numComments);
+        setCommented(battle.commentedOn);
+        setNumVotes(battle.numVotes);
+        setVoted(battle.votedOn);
         _battle.current = battle;
         updateDeadline(
           new Date(battle.deadline),
@@ -113,52 +115,6 @@ const BattleCard = ({
       shouldUpdate = false;
     };
   }, [battleId, numBVSubmissions, numSubmissions, setNumBVSubmissions, userId]);
-
-  /* useEffect for updating comment count.  */
-  useEffect(() => {
-    let shouldUpdate = true;
-    const getComments = async () => {
-      const commentsPath = `/comment/${battleId}`;
-      const commentsRes = await axios.get(commentsPath);
-      const { numComments, commentedOn } = commentsRes.data;
-
-      if (shouldUpdate) {
-        setCommented(commentedOn);
-        setNumComments(numComments);
-      }
-    };
-    try {
-      getComments();
-    } catch (err) {
-      console.error(err.data);
-    }
-    return () => {
-      shouldUpdate = false;
-    };
-  }, [battleId, userId]);
-
-  /* useEffect for updating vote count.  */
-  useEffect(() => {
-    let shouldUpdate = true;
-    const getVotes = async () => {
-      const votesPath = `/vote/${battleId}`;
-      const votesRes = await axios.get(votesPath);
-      const { numVotes, votedOn } = votesRes.data;
-
-      if (shouldUpdate) {
-        setVoted(votedOn);
-        setNumVotes(numVotes);
-      }
-    };
-    try {
-      getVotes();
-    } catch (err) {
-      console.error(err.data);
-    }
-    return () => {
-      shouldUpdate = false;
-    };
-  }, [battleId, userId]);
 
   /* useEffect for retrieving the image.  */
   useEffect(() => {
