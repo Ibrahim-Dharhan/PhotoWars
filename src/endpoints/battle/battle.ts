@@ -22,7 +22,7 @@ const battleRouter = express.Router();
  * @openapi
  * /battle/all:
  *   get:
- *     summary: Get all battle IDs.
+ *     summary: Get all battle IDs, filtering for open comps only if needed.
  *     responses:
  *       200:
  *         description: Resource successfully retrieved.
@@ -38,7 +38,15 @@ const battleRouter = express.Router();
  *         $ref: '#/components/responses/500'
  */
 battleRouter.get('/all', async (req, res) => {
-  const query = Battle.find();
+  let deadline = new Date(0);
+  if (req.query.openCompetitionsOnly === 'true') {
+    const today = new Date();
+    const futureDeadline = new Date();
+    futureDeadline.setHours(today.getHours() + 1);
+    deadline = futureDeadline;
+  }
+  const filter = { deadline: { $gte: deadline } };
+  const query = Battle.find(filter);
   try {
     const result = await query.distinct('_id').exec();
     if (result) {
@@ -76,8 +84,8 @@ battleRouter.get('/random', async (req, res) => {
     tomorrow.setDate(today.getDate() + 1);
     const filter = {
       deadline: {
-        $gte: tomorrow
-      }
+        $gte: tomorrow,
+      },
     };
     const count = await Battle.countDocuments(filter).exec();
     const numToSkip = Math.floor(today.getTime() / (3600 * 24 * 1000)) % count;
