@@ -137,11 +137,13 @@ const BattleCard = ({
           }
         }}
       >
-        <PostCardHeader _post={_battle} />
+        {location.pathname.startsWith('/battles') && (
+          <PostCardHeader _post={_battle} />
+        )}
         <ButtonBase
           onClick={() => {
             showModal &&
-            showModal('battle', battleId, displayName, caption, filename);
+              showModal('battle', battleId, displayName, caption, filename);
           }}
           sx={{ width: '100%' }}
         >
@@ -151,8 +153,12 @@ const BattleCard = ({
             loading='lazy'
           />
         </ButtonBase>
-        <CardContent sx={{ mb: -3 }}>
-          <Typography variant="h6">{caption}</Typography>
+        <CardContent sx={{ mb: -2 }}>
+          <Typography variant="h6">
+            <Box sx={{ lineHeight: '24px' }}>
+              {caption}
+            </Box>
+          </Typography>
         </CardContent>
         <CardActions disableSpacing>
           <IconButton
@@ -185,8 +191,8 @@ const BattleCard = ({
           >
             {
               expired
-              ? <LockIcon sx={{ pr: 1, color: voted && pink[500] }} />
-              : <FavoriteIcon sx={{ pr: 1, color: voted && pink[500] }} />
+                ? <LockIcon sx={{ pr: 1, color: voted && pink[500] }} />
+                : <FavoriteIcon sx={{ pr: 1, color: voted && pink[500] }} />
             }
             <Typography>{numVotes}</Typography>
           </IconButton>
