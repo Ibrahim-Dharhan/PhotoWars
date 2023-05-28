@@ -49,6 +49,10 @@ const SubmissionCard = ({ submissionId, showModal }) => {
         setCaption(submission.caption);
         setDisplayName(submission.author.displayName);
         setFilename(submission.filename);
+        setNumComments(submission.numComments);
+        setCommented(submission.commentedOn);
+        setNumVotes(submission.numVotes);
+        setVoted(submission.votedOn);
         _isAuthor.current = submission.author._id;
         _submission.current = submission;
         updateDeadline(
@@ -62,36 +66,6 @@ const SubmissionCard = ({ submissionId, showModal }) => {
     };
     try {
       setSubmissionInformation();
-    } catch (err) {
-      console.error(err.data);
-    }
-    return () => {
-      shouldUpdate = false;
-    };
-  }, [submissionId]);
-
-  /* useEffect for updating comment and vote count.  */
-  useEffect(() => {
-    let shouldUpdate = true;
-    const getCommentsAndVotes = async () => {
-      const commentsPath = `/comment/${submissionId}`;
-      const commentsRes = await axios.get(commentsPath);
-      const { numComments, commentedOn } = commentsRes.data;
-
-      const votesPath = `/vote/${submissionId}`;
-      const votesRes = await axios.get(votesPath);
-      const { numVotes, votedOn } = votesRes.data;
-
-      if (shouldUpdate) {
-        setCommented(commentedOn);
-        setNumComments(numComments);
-
-        setVoted(votedOn);
-        setNumVotes(numVotes);
-      }
-    };
-    try {
-      getCommentsAndVotes();
     } catch (err) {
       console.error(err.data);
     }
