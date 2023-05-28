@@ -106,7 +106,7 @@ const BattleCard = ({
 
   const openCommentModal = () => {
     navigate({
-      pathname: `comments/${battleId}`,
+      pathname: `/battles/${battleId}/comments/${battleId}`,
       search: createSearchParams({
         postType: 'battle'
       }).toString()

@@ -18,7 +18,7 @@ import { pink } from '@mui/material/colors';
 import { UserContext } from '../../contexts/UserContext';
 import { PostCardHeader } from '../postCardHeader/PostCardHeader';
 import { updateDeadline } from '../../../definitions/timerLogic';
-import { createSearchParams, useNavigate } from 'react-router-dom';
+import { createSearchParams, useLocation, useNavigate } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import './submissionCard.css';
 
@@ -37,6 +37,7 @@ const SubmissionCard = ({ submissionId }) => {
   const _submission = useRef(null);
   const _timerEvent = useRef(null);
 
+  const location = useLocation();
   const navigate = useNavigate();
 
   /* useEffect for updating caption, display name, and image.  */
@@ -73,7 +74,7 @@ const SubmissionCard = ({ submissionId }) => {
     return () => {
       shouldUpdate = false;
     };
-  }, [expired, submissionId, loggedInUser._id]);
+  }, [expired, location, submissionId, loggedInUser._id]);
 
   /* useEffect for retrieving the image.  */
   useEffect(() => {
