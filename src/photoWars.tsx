@@ -69,6 +69,7 @@ const PhotoWars = () => {
               errorElement={<div>Error loading user information.</div>}
             />
           </Route>
+          <Route path="404" element={<div>404 Not Found</div>} />
           <Route
             index
             element={<Feed />}
@@ -76,7 +77,6 @@ const PhotoWars = () => {
             errorElement={<div>Error fetching battles</div>}
           />
         </Route>
-        <Route path="/404" element={<div>404 Not Found</div>} />
         <Route path="*" element={<div>404 Not Found</div>} />
       </Route>
     )
