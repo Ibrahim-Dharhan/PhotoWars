@@ -4,7 +4,7 @@ import { UserContext } from '../contexts/UserContext';
 
 const Layout = () => {
   const [displayName, setDN] = useState(null);
-  const [open, setOpen] = useState(false);
+  const [openLoginModal, setOpenLoginModal] = useState(false);
   const [userId, setUI] = useState(null);
 
   const saveToUserInLocalStorage = (properties) => {
@@ -24,7 +24,7 @@ const Layout = () => {
     saveToUserInLocalStorage({_id: userId});
   };
 
-  const contextValue = { displayName, setDisplayName, open, setOpen, userId, setUserId };
+  const contextValue = { displayName, setDisplayName, openLoginModal, setOpenLoginModal, userId, setUserId };
   useEffect(() => {
     let name = '';
     let id = '';

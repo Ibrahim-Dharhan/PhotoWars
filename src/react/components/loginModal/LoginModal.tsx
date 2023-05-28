@@ -27,7 +27,7 @@ const style = {
 };
 
 const LoginModal = () => {
-  const { open, setOpen, setDisplayName, setUserId } = useContext(UserContext);
+  const { openLoginModal, setOpenLoginModal, setDisplayName, setUserId } = useContext(UserContext);
   const [responseError, setResponseError] = useState('');
   const [registering, setRegistering] = useState(false);
 
@@ -39,7 +39,7 @@ const LoginModal = () => {
 
   const closeModal = () => {
     clearForm();
-    setOpen(false);
+    setOpenLoginModal(false);
     setResponseError('');
   }
 
@@ -65,12 +65,12 @@ const LoginModal = () => {
   return (
     <React.Fragment>
     <Modal 
-      open={open}
+      open={openLoginModal}
       onClose={() => {
         closeModal();
       }}
     >
-      <Fade in={open} onExited={clearForm}>
+      <Fade in={openLoginModal} onExited={clearForm}>
       <Box>
       <form onSubmit={handleSubmit(handleFormSubmit)}>
         <Stack
@@ -209,7 +209,7 @@ const LoginModal = () => {
         <Grid item>
           <Button
             onClick={() => {
-              setOpen(true);
+              setOpenLoginModal(true);
               setRegistering(false);
             }}
             variant="contained"
@@ -220,7 +220,7 @@ const LoginModal = () => {
         <Grid item>
           <Button
             onClick={() => {
-              setOpen(true);
+              setOpenLoginModal(true);
               setRegistering(true);
             }}
             variant="contained"

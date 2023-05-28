@@ -23,7 +23,7 @@ import PropTypes from 'prop-types';
 import './submissionCard.css';
 
 const SubmissionCard = ({ submissionId }) => {
-  const { userId, setOpen } = useContext(UserContext);
+  const { userId, setOpenLoginModal } = useContext(UserContext);
   const [caption, setCaption] = useState('');
   const [imageUrl, setImageUrl] = useState('');
   const [filename, setFilename] = useState('');
@@ -141,7 +141,7 @@ const SubmissionCard = ({ submissionId }) => {
               if (userId !== '' && !expired) {
                 vote();
               } else {
-                setOpen(true);
+                setOpenLoginModal(true);
               }
             }}
             disableRipple={expired}

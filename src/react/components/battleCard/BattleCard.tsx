@@ -29,7 +29,7 @@ import './battleCard.css';
 const BattleCard = ({
   battleId,
 }) => {
-  const { userId, setOpen } = useContext(UserContext);
+  const { userId, setOpenLoginModal } = useContext(UserContext);
   const [caption, setCaption] = useState('');
   const [filename, setFilename] = useState('');
   const [imageUrl, setImageUrl] = useState('');
@@ -183,7 +183,7 @@ const BattleCard = ({
               if (userId !== '' && !expired) {
                 vote();
               } else {
-                setOpen(true);
+                setOpenLoginModal(true);
               }
             }}
             disableRipple={expired}

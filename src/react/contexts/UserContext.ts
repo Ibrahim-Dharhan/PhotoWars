@@ -3,8 +3,8 @@ import { createContext } from 'react';
 const UserContext = createContext({
   displayName: '',
   setDisplayName: null,
-  open: false,
-  setOpen: null,
+  openLoginModal: false,
+  setOpenLoginModal: null,
   userId: '',
   setUserId: null,
 });
