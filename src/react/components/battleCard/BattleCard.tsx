@@ -22,13 +22,13 @@ import {
 import { getImageUrl } from '../../../definitions/getImageUrl';
 import { PostCardHeader } from '../postCardHeader/PostCardHeader';
 import { updateDeadline } from '../../../definitions/timerLogic';
-import { useLocation, useNavigate } from 'react-router-dom';
+import { createSearchParams, useLocation, useNavigate } from 'react-router-dom';
 import { UserContext } from '../../contexts/UserContext';
 import './battleCard.css';
 
 const BattleCard = ({
   battleId,
-  showModal,
+  setVariant
 }) => {
   const { userId, setOpen } = useContext(UserContext);
   const [caption, setCaption] = useState('');
@@ -107,6 +107,15 @@ const BattleCard = ({
     };
   }, [filename]);
 
+  const openCommentModal = () => {
+    navigate({
+      pathname: `comments/${battleId}`,
+      search: createSearchParams({
+        variant: 'battle'
+      }).toString()
+    });
+  }
+
   const vote = async () => {
     const path = `/battle/${battleId}/${voted ? 'unvote' : 'vote'}`;
     try {
@@ -140,8 +149,7 @@ const BattleCard = ({
         <PostCardHeader _post={_battle} />
         <ButtonBase
           onClick={() => {
-            showModal &&
-            showModal('battle', battleId, displayName, caption, filename);
+            setVariant && openCommentModal();
           }}
           sx={{ width: '100%' }}
         >
@@ -193,7 +201,9 @@ const BattleCard = ({
           <IconButton
             onMouseDown={(event) => event.stopPropagation()}
             onClick={(event) => {
+              event.stopPropagation();
               event.preventDefault();
+              setVariant && openCommentModal();
             }}
           >
             <ModeCommentOutlinedIcon
@@ -250,7 +260,7 @@ const BattleCard = ({
 
 BattleCard.propTypes = {
   battleId: PropTypes.string,
-  showModal: PropTypes.func,
+  setVariant: PropTypes.func
 };
 
 export { BattleCard };

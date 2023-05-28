@@ -108,7 +108,6 @@ const UserView = () => {
                     <BattleCard
                       key={battle._id}
                       battleId={battle._id}
-                      showModal={null}
                     />
                   );
                 })
@@ -131,7 +130,6 @@ const UserView = () => {
                     >
                       <SubmissionCard
                         submissionId={submission._id}
-                        showModal={null}
                       />
                     </Box>
                   );

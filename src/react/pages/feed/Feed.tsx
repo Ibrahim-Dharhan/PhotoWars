@@ -25,7 +25,6 @@ const Feed = () => {
               <BattleCard
                 battleId={battleId}
                 key={battleId}
-                showModal={null}
               />
             );
           })}

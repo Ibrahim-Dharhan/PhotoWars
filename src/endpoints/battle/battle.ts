@@ -572,9 +572,14 @@ battleRouter.get('/:id/comments', checkSchema(ValidObjectId), async (req, res) =
   const query = Comment.find({
     commentedModel: 'Battle',
     post: battleId,
-  });
+  }).populate('author', [
+    '-loginName',
+    '-loginPassword',
+    '-__v'
+  ]);
+
   try {
-    const result = await query.exec();
+    const result = await query.lean().exec();
     if (result) {
       /* Found comments on battle. */
       res.status(200).json(result);

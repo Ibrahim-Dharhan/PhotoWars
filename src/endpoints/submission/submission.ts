@@ -282,9 +282,13 @@ submissionRouter.get('/:id/comments', checkSchema(ValidObjectId), async (req, re
   const query = Comment.find({
     commentedModel: 'Submission',
     post: submissionId,
-  });
+  }).populate('author', [
+    '-loginName',
+    '-loginPassword',
+    '-__v'
+  ]);
   try {
-    const result = await query.populate('author').lean().exec();
+    const result = await query.lean().exec();
     if (result) {
       /* Found comments on submission. */
       res.status(200).json(result);
