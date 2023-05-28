@@ -1,12 +1,29 @@
 import { createContext } from 'react';
 
+class LoggedInUser {
+  _id: string;
+  description: string;
+  displayName: string;
+  filename: string;
+  firstName: string;
+  lastName: string;
+
+  constructor() {
+    this._id = '';
+    this.description = '';
+    this.displayName = '';
+    this.filename = '';
+    this.firstName = '';
+    this.lastName = '';
+  }
+}
+
+
 const UserContext = createContext({
-  displayName: '',
-  setDisplayName: null,
   openLoginModal: false,
   setOpenLoginModal: null,
-  userId: '',
-  setUserId: null,
+  loggedInUser: new LoggedInUser(),
+  setLoggedInUser: null
 });
 
-export { UserContext };
+export { LoggedInUser, UserContext };

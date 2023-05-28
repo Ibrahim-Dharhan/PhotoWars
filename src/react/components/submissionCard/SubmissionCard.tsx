@@ -23,7 +23,7 @@ import PropTypes from 'prop-types';
 import './submissionCard.css';
 
 const SubmissionCard = ({ submissionId }) => {
-  const { userId, setOpenLoginModal } = useContext(UserContext);
+  const { loggedInUser, setOpenLoginModal } = useContext(UserContext);
   const [caption, setCaption] = useState('');
   const [imageUrl, setImageUrl] = useState('');
   const [filename, setFilename] = useState('');
@@ -73,7 +73,7 @@ const SubmissionCard = ({ submissionId }) => {
     return () => {
       shouldUpdate = false;
     };
-  }, [expired, submissionId, userId]);
+  }, [expired, submissionId, loggedInUser._id]);
 
   /* useEffect for retrieving the image.  */
   useEffect(() => {
@@ -138,7 +138,7 @@ const SubmissionCard = ({ submissionId }) => {
             onClick={(event) => {
               event.stopPropagation();
               event.preventDefault();
-              if (userId !== '' && !expired) {
+              if (loggedInUser._id !== '' && !expired) {
                 vote();
               } else {
                 setOpenLoginModal(true);

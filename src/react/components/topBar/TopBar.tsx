@@ -11,16 +11,14 @@ import {
   Typography
 } from '@mui/material';
 import AccountCircleOutlinedIcon from '@mui/icons-material/AccountCircleOutlined';
-import { UserContext } from '../../contexts/UserContext';
+import { LoggedInUser, UserContext } from '../../contexts/UserContext';
 import { LoginModal } from '../loginModal/LoginModal';
 import { Link, useNavigate } from 'react-router-dom';
 
 const TopBar = () => {
   const {
-    displayName,
-    setDisplayName,
-    userId,
-    setUserId
+    loggedInUser,
+    setLoggedInUser
   } = useContext(UserContext);
   const navigate = useNavigate();
   const [anchorElement, setAnchorElement] = useState(null);
@@ -29,8 +27,7 @@ const TopBar = () => {
     const path = '/account/logout';
     try {
       await axios.post(path);
-      setDisplayName('');
-      setUserId('');
+      setLoggedInUser(new LoggedInUser())
       localStorage.removeItem('user');
       navigate('/');
     } catch (err) {
@@ -66,7 +63,7 @@ const TopBar = () => {
             PHOTOWARS
           </Typography>
           <Box>
-            {userId === null ? <div /> : userId !== '' ?
+            {loggedInUser._id === null ? <div /> : loggedInUser._id !== '' ?
               <Stack direction="row" spacing={2}>
                   <Button
                     component={Link}
@@ -79,7 +76,7 @@ const TopBar = () => {
                     onClick={(event) => setAnchorElement(event.target)}
                     startIcon={<AccountCircleOutlinedIcon />}
                   >
-                    {displayName}
+                    {loggedInUser.displayName}
                   </Button>
                   <Menu
                     sx={{ mt: '45px' }}
@@ -99,7 +96,7 @@ const TopBar = () => {
                     <MenuItem
                       key={'profile'} 
                       onClick={() => {
-                        navigate(`/users/${userId}`)
+                        navigate(`/users/${loggedInUser._id}`)
                         setAnchorElement(null);
                       }}
                     >

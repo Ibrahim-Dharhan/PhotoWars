@@ -23,7 +23,7 @@ interface UVUserHeaderEditState {
 }
 
 const UserHeaderEdit = () => {
-  const { setDisplayName } = useContext(UserContext);
+  const { setLoggedInUser } = useContext(UserContext);
   const { user } = useOutletContext() as UVUserHeaderEditState;
   const [imageUrl, setImageUrl] = useState('');
   const [image, setImage] = useState(null);
@@ -46,7 +46,7 @@ const UserHeaderEdit = () => {
     try {
       const res = await axios.put(path, form);
       console.log(res.data);
-      setDisplayName(data.displayName);
+      setLoggedInUser(res.data);
       clearForm();
       navigate('..');
       navigate(0);

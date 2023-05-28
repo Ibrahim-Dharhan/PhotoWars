@@ -16,7 +16,7 @@ import { UserContext } from '../../contexts/UserContext';
 const PostCardHeader = ({
   _post
 }) => {
-  const { userId } = useContext(UserContext);
+  const { loggedInUser } = useContext(UserContext);
   const [openDeleteDialog, setOpenDeleteDialog] = useState(false);
 
   const navigate = useNavigate();
@@ -71,7 +71,7 @@ const PostCardHeader = ({
       action={
         <React.Fragment>
           {
-            userId === _post.current?.author._id
+            loggedInUser._id === _post.current?.author._id
             && <Button
               onMouseDown={(event) => event.stopPropagation()}
               onClick={handleDelete}

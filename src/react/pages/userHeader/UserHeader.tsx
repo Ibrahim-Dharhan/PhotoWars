@@ -20,7 +20,7 @@ interface UVUserHeaderState {
 
 const UserHeader = () => {
   const { user } = useOutletContext() as UVUserHeaderState;
-  const { userId } = useContext(UserContext);
+  const { loggedInUser } = useContext(UserContext);
   const [imageUrl, setImageUrl] = useState('');
   const [openDeleteDialog, setOpenDeleteDialog] = useState(false);
 
@@ -84,7 +84,7 @@ const UserHeader = () => {
         </Typography>
       </Box>
       {
-        user._id === userId &&
+        user._id === loggedInUser._id &&
         <Stack
           direction="row"
           sx={{marginBottom: 'auto', marginLeft: 'auto'}}

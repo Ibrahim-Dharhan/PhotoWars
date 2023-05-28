@@ -27,7 +27,7 @@ const style = {
 };
 
 const LoginModal = () => {
-  const { openLoginModal, setOpenLoginModal, setDisplayName, setUserId } = useContext(UserContext);
+  const { openLoginModal, setOpenLoginModal, setLoggedInUser } = useContext(UserContext);
   const [responseError, setResponseError] = useState('');
   const [registering, setRegistering] = useState(false);
 
@@ -49,8 +49,7 @@ const LoginModal = () => {
       const res = await axios.post(path, data);
       const user = res.data;
       closeModal();
-      setDisplayName(user.displayName);
-      setUserId(user._id);
+      setLoggedInUser(user);
       localStorage.setItem('user', JSON.stringify(user));
     } catch (err) {
       if (typeof err.response.data === 'string') {

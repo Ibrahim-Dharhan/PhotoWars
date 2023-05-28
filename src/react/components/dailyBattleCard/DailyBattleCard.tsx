@@ -20,7 +20,7 @@ import { UserContext } from '../../contexts/UserContext';
 const DailyBattleCard = ({
   battleId,
 }) => {
-  const { userId } = useContext(UserContext);
+  const { loggedInUser } = useContext(UserContext);
 
   const [caption, setCaption] = useState('');
   const [filename, setFilename] = useState('');
@@ -64,7 +64,7 @@ const DailyBattleCard = ({
         setSubmitted(
           submissionsRes.data
             .map((submission) => submission.author)
-            .includes(userId)
+            .includes(loggedInUser._id)
         );
       }
     };
@@ -76,7 +76,7 @@ const DailyBattleCard = ({
     return () => {
       shouldUpdate = false;
     };
-  }, [battleId, userId]);
+  }, [battleId, loggedInUser._id]);
 
   /* useEffect for retrieving the image.  */
   useEffect(() => {
@@ -130,7 +130,7 @@ const DailyBattleCard = ({
             title={
               submitted
                 ? 'Only one submission is allowed.'
-                : !userId && 'Log in to submit to this battle.'
+                : !loggedInUser._id && 'Log in to submit to this battle.'
             }
           >
             <Box
@@ -149,7 +149,7 @@ const DailyBattleCard = ({
                 variant='contained'
                 disabled={
                   submitted ||
-                  !userId ||
+                  !loggedInUser._id ||
                   location.pathname.endsWith('submit')
                 }
                 fullWidth

@@ -29,7 +29,7 @@ import './battleCard.css';
 const BattleCard = ({
   battleId,
 }) => {
-  const { userId, setOpenLoginModal } = useContext(UserContext);
+  const { loggedInUser, setOpenLoginModal } = useContext(UserContext);
   const [caption, setCaption] = useState('');
   const [filename, setFilename] = useState('');
   const [imageUrl, setImageUrl] = useState('');
@@ -83,7 +83,7 @@ const BattleCard = ({
     return () => {
       shouldUpdate = false;
     };
-  }, [battleId, expired, location, userId]);
+  }, [battleId, expired, location, loggedInUser._id]);
 
   /* useEffect for retrieving the image.  */
   useEffect(() => {
@@ -180,7 +180,7 @@ const BattleCard = ({
             onClick={(event) => {
               event.stopPropagation();
               event.preventDefault();
-              if (userId !== '' && !expired) {
+              if (loggedInUser._id !== '' && !expired) {
                 vote();
               } else {
                 setOpenLoginModal(true);
@@ -218,7 +218,7 @@ const BattleCard = ({
                   title={
                     submitted
                       ? 'Only one submission is allowed.'
-                      : !userId && 'Log in to submit to this battle.'
+                      : !loggedInUser && 'Log in to submit to this battle.'
                   }
                 >
                   <span
@@ -238,7 +238,7 @@ const BattleCard = ({
                       color='primary'
                       disabled={
                         submitted ||
-                        !userId ||
+                        !loggedInUser ||
                         location.pathname.endsWith('submit')
                       }
                     >

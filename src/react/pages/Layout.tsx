@@ -1,11 +1,10 @@
 import React, { useEffect, useState } from 'react';
 import { Outlet } from 'react-router-dom';
-import { UserContext } from '../contexts/UserContext';
+import { LoggedInUser, UserContext } from '../contexts/UserContext';
 
 const Layout = () => {
-  const [displayName, setDN] = useState(null);
   const [openLoginModal, setOpenLoginModal] = useState(false);
-  const [userId, setUI] = useState(null);
+  const [loggedInUser, setLIU] = useState(new LoggedInUser());
 
   const saveToUserInLocalStorage = (properties) => {
     let storedUser = localStorage.getItem('user');
@@ -14,28 +13,18 @@ const Layout = () => {
     localStorage.setItem('user', JSON.stringify(storedUser));
   }
 
-  const setDisplayName = (displayName) => {
-    setDN(displayName);
-    saveToUserInLocalStorage({displayName: displayName});
+  const setLoggedInUser = (user: LoggedInUser) => {
+    setLIU(user);
+    saveToUserInLocalStorage({ loggedInUser: user })
   };
 
-  const setUserId = (userId) => {
-    setUI(userId);
-    saveToUserInLocalStorage({_id: userId});
-  };
-
-  const contextValue = { displayName, setDisplayName, openLoginModal, setOpenLoginModal, userId, setUserId };
+  const contextValue = { openLoginModal, setOpenLoginModal, loggedInUser, setLoggedInUser };
   useEffect(() => {
-    let name = '';
-    let id = '';
-    const storedUser = localStorage.getItem('user');
+    const storedUser = localStorage.getItem('loggedInUser');
     if (storedUser) {
       const user = JSON.parse(storedUser);
-      name = user.displayName;
-      id = user._id;
+      setLoggedInUser(user);
     }
-    setDisplayName(name);
-    setUserId(id);
   });
   return (
     <UserContext.Provider value={contextValue}>
