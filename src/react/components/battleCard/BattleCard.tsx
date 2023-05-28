@@ -57,6 +57,7 @@ const BattleCard = ({
       const path = `/battle/${battleId}`;
       const res = await axios.get(path);
       const battle = res.data;
+      console.log(battle);
 
       if (shouldUpdate) {
         setCaption(battle.caption);
@@ -206,7 +207,7 @@ const BattleCard = ({
             <Typography sx={{ color: grey[400] }}>{numComments}</Typography>
           </IconButton>
           <Box display='flex' marginLeft='auto' alignItems='center'>
-            {timeRemaining === '00d:00h:00m:00s' ? (
+            {timeRemaining === 'Finished' ? (
               <Typography variant="caption" sx={{ color: grey[400], pr: 1 }}>Finished</Typography>
             ) : (
               <>
