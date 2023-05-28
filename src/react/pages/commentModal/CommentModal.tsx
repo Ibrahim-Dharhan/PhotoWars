@@ -13,11 +13,12 @@ import {
   Typography,
 } from '@mui/material';
 import { getImageUrl } from '../../../definitions/getImageUrl';
-import AddComment from '../addComment/AddComment';
+import AddComment from '../../components/addComment/AddComment';
 import {
   redirect,
   useLoaderData,
-  useNavigate
+  useNavigate,
+  useParams
 } from 'react-router-dom';
 
 const modalStyle = {
@@ -42,7 +43,11 @@ const commentModalLoader = async ({ params, request }) => {
   try {
     const commentsRes = await axios.get(commentsPath);
     const postRes = await axios.get(postPath);
-    return {comments: commentsRes.data, post: postRes.data};
+    return {
+      postComments: commentsRes.data,
+      post: postRes.data,
+      postType: postType
+    };
   } catch (err) {
     if (err.response.status === 404) {
       return redirect('/404');
@@ -77,7 +82,9 @@ interface Post {
 }
 
 const CommentModal = () => {
-  const { comments, post } = useLoaderData() as {comments: Comment[], post: Post};
+  const { postId } = useParams();
+  const { postComments, post, postType } = useLoaderData() as {postComments: Comment[], post: Post, postType: string};
+  const [comments, setComments] = useState(postComments)
   const [imageUrl, setImageUrl] = useState('');
 
   const navigate = useNavigate();
@@ -107,10 +114,12 @@ const CommentModal = () => {
 
   /* Handler for posting a new comment. */
   const handlePostComment = async (newComment: String) => {
-    const path = `/${variant}/${id}/comment`;
+    const path = `/${postType}/${postId}/comment`;
+    const commentsPath = `/${postType}/${postId}/comments`;
     try {
-      const res = await axios.post(path, {comment: newComment});
-      getComments(true);
+      await axios.post(path, {comment: newComment});
+      const res = await axios.get(commentsPath);
+      setComments(res.data);
     } catch (err) {
       console.error(err.response.data);
     }
