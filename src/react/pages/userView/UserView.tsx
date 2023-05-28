@@ -106,11 +106,9 @@ const UserView = () => {
                 battles.map((battle) => {
                   return (
                     <BattleCard
-                      battleId={battle._id}
-                      numBVSubmissions={null}
-                      setNumBVSubmissions={null}
-                      showModal={null}
                       key={battle._id}
+                      battleId={battle._id}
+                      showModal={null}
                     />
                   );
                 })

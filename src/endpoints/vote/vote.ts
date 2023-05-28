@@ -1,6 +1,8 @@
 "use strict"
 
 import express = require('express');
+import { checkSchema, validationResult } from 'express-validator';
+import { ValidObjectId } from '../../definitions/schemas/validation/validObjectId';
 import { Vote } from '../../definitions/schemas/mongoose/vote';
 
 const voteRouter = express.Router();
@@ -27,7 +29,14 @@ const voteRouter = express.Router();
  *       500:
  *         $ref: '#/components/responses/500'
 */
-voteRouter.get('/:id', async (req, res) => {
+voteRouter.get('/:id', checkSchema(ValidObjectId), async (req, res) => {
+  const errors = validationResult(req);
+  if (!errors.isEmpty()) {
+    res.status(404).json({
+      errors: errors.array(),
+    });
+    return;
+  }
   const voteModelId = req.params.id;
   const numVotesQuery = Vote.countDocuments({ post: voteModelId });
   const votedOnQuery = Vote.findOne({ post: voteModelId, user: req.session.userId });

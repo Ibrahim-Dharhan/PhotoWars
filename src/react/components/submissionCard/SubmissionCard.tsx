@@ -11,13 +11,15 @@ import {
   Typography,
 } from '@mui/material';
 import FavoriteIcon from '@mui/icons-material/Favorite';
+import LockIcon from '@mui/icons-material/Lock';
 import ModeCommentOutlinedIcon from '@mui/icons-material/ModeCommentOutlined';
 import { getImageUrl } from '../../../definitions/getImageUrl';
 import { pink } from '@mui/material/colors';
-import './submissionCard.css';
-import PropTypes from 'prop-types';
 import { UserContext } from '../../contexts/UserContext';
 import { PostCardHeader } from '../postCardHeader/PostCardHeader';
+import { updateDeadline } from '../../../definitions/timerLogic';
+import PropTypes from 'prop-types';
+import './submissionCard.css';
 
 const SubmissionCard = ({ submissionId, showModal }) => {
   const { userId, setOpen } = useContext(UserContext);
@@ -27,11 +29,13 @@ const SubmissionCard = ({ submissionId, showModal }) => {
   const [filename, setFilename] = useState('');
   const [numComments, setNumComments] = useState(0);
   const [commented, setCommented] = useState(false);
+  const [expired, setExpired] = useState(true);
   const [numVotes, setNumVotes] = useState(0);
   const [voted, setVoted] = useState(false);
 
   const _isAuthor = useRef(false);
   const _submission = useRef(null);
+  const _timerEvent = useRef(null);
 
   /* useEffect for updating caption, display name, and image.  */
   useEffect(() => {
@@ -45,8 +49,19 @@ const SubmissionCard = ({ submissionId, showModal }) => {
         setCaption(submission.caption);
         setDisplayName(submission.author.displayName);
         setFilename(submission.filename);
+        setNumComments(submission.numComments);
+        setCommented(submission.commentedOn);
+        setNumVotes(submission.numVotes);
+        setVoted(submission.votedOn);
         _isAuthor.current = submission.author._id;
         _submission.current = submission;
+        updateDeadline(
+          new Date(submission.battle.deadline),
+          _timerEvent,
+          null,
+          setExpired,
+          expired
+        );
       }
     };
     try {
@@ -57,37 +72,7 @@ const SubmissionCard = ({ submissionId, showModal }) => {
     return () => {
       shouldUpdate = false;
     };
-  }, [submissionId]);
-
-  /* useEffect for updating comment and vote count.  */
-  useEffect(() => {
-    let shouldUpdate = true;
-    const getCommentsAndVotes = async () => {
-      const commentsPath = `/comment/${submissionId}`;
-      const commentsRes = await axios.get(commentsPath);
-      const { numComments, commentedOn } = commentsRes.data;
-
-      const votesPath = `/vote/${submissionId}`;
-      const votesRes = await axios.get(votesPath);
-      const { numVotes, votedOn } = votesRes.data;
-
-      if (shouldUpdate) {
-        setCommented(commentedOn);
-        setNumComments(numComments);
-
-        setVoted(votedOn);
-        setNumVotes(numVotes);
-      }
-    };
-    try {
-      getCommentsAndVotes();
-    } catch (err) {
-      console.error(err.data);
-    }
-    return () => {
-      shouldUpdate = false;
-    };
-  }, [submissionId, userId]);
+  }, [expired, submissionId, userId]);
 
   /* useEffect for retrieving the image.  */
   useEffect(() => {
@@ -150,21 +135,19 @@ const SubmissionCard = ({ submissionId, showModal }) => {
             onClick={(event) => {
               event.stopPropagation();
               event.preventDefault();
-            }}
-          ></IconButton>
-          <IconButton
-            onMouseDown={(event) => event.stopPropagation()}
-            onClick={(event) => {
-              event.stopPropagation();
-              event.preventDefault();
-              if (userId !== '') {
+              if (userId !== '' && !expired) {
                 vote();
               } else {
                 setOpen(true);
               }
             }}
+            disableRipple={expired}
           >
-            <FavoriteIcon sx={{ pr: 1, color: voted && pink[500] }} />
+            {
+              expired
+              ? <LockIcon sx={{ pr: 1, color: voted && pink[500] }} />
+              : <FavoriteIcon sx={{ pr: 1, color: voted && pink[500] }} />
+            }
             <Typography>{numVotes}</Typography>
           </IconButton>
           <IconButton

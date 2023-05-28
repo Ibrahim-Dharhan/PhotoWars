@@ -1,5 +1,6 @@
 import React from 'react';
 import ExploreOutlinedIcon from '@mui/icons-material/ExploreOutlined';
+import TrendingUpIcon from '@mui/icons-material/TrendingUp';
 import {
   Box,
   Drawer,
@@ -35,10 +36,18 @@ const SideBar = () => {
               <ListItemText primary={'Explore'} />
             </ListItemButton>
           </ListItem>
+          <ListItem key={'openCompetitions'} disablePadding>
+            <ListItemButton onClick={() => navigate('/?opencompetitions=true')}>
+              <ListItemIcon>
+                <TrendingUpIcon />
+              </ListItemIcon>
+              <ListItemText primary={'Open Competitions'} />
+            </ListItemButton>
+          </ListItem>
         </List>
       </Box>
     </Drawer>
   );
-}
+};
 
 export { SideBar };
