@@ -3,6 +3,7 @@
 import express = require('express');
 import { checkSchema, matchedData, validationResult } from 'express-validator';
 import { UpdateSubmission } from '../../definitions/schemas/validation/updateSubmission';
+import { ValidObjectId } from '../../definitions/schemas/validation/validObjectId';
 import { Submission } from '../../definitions/schemas/mongoose/submission';
 import { Comment } from '../../definitions/schemas/mongoose/comment';
 import { voteOn, unvoteOn } from '../../definitions/schemas/mongoose/vote';
@@ -85,16 +86,23 @@ submissionRouter.get('/:id', async (req, res) => {
  */
 submissionRouter.put(
   '/:id',
-  checkSchema(UpdateSubmission),
+  checkSchema({...ValidObjectId, ...UpdateSubmission}),
   async (req, res) => {
-    const errors = validationResult(req);
-    if (!errors.isEmpty()) {
-      res.status(400).json({});
-      return;
-    }
-
     if (!req.session.loggedIn) {
       res.status(401).send('Not logged in.');
+    }
+
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+      if (errors[0].path === 'id') {
+        res.status(404);
+      } else {
+        res.status(400);
+      }
+      res.json({
+        errors: errors.array(),
+      });
+      return;
     }
 
     const submissionId = req.params.id;
@@ -143,11 +151,20 @@ submissionRouter.put(
  *       500:
  *         $ref: '#/components/responses/500'
  */
-submissionRouter.put('/:id/vote', async (req, res) => {
+submissionRouter.put('/:id/vote', checkSchema(ValidObjectId), async (req, res) => {
   if (!req.session.loggedIn) {
     res.status(401).send('Must be logged in to perform this action.');
     return;
   }
+
+  const errors = validationResult(req);
+  if (!errors.isEmpty()) {
+    res.status(404).json({
+      errors: errors.array(),
+    });
+    return;
+  }
+
   const submissionId = req.params.id;
   const query = Submission.findById(submissionId);
   try {
@@ -180,11 +197,20 @@ submissionRouter.put('/:id/vote', async (req, res) => {
  *       500:
  *         $ref: '#/components/responses/500'
  */
-submissionRouter.put('/:id/unvote', async (req, res) => {
+submissionRouter.put('/:id/unvote', checkSchema(ValidObjectId), async (req, res) => {
   if (!req.session.loggedIn) {
     res.status(401).send('Must be logged in to perform this action.');
     return;
   }
+
+  const errors = validationResult(req);
+  if (!errors.isEmpty()) {
+    res.status(404).json({
+      errors: errors.array(),
+    });
+    return;
+  }
+
   const submissionId = req.params.id;
   const query = Submission.findById(submissionId);
   try {
@@ -223,7 +249,15 @@ submissionRouter.put('/:id/unvote', async (req, res) => {
  *       500:
  *         $ref: '#/components/responses/500'
  */
-submissionRouter.get('/:id/comments', async (req, res) => {
+submissionRouter.get('/:id/comments', checkSchema(ValidObjectId), async (req, res) => {
+  const errors = validationResult(req);
+  if (!errors.isEmpty()) {
+    res.status(404).json({
+      errors: errors.array(),
+    });
+    return;
+  }
+
   const submissionId = req.params.id;
   const query = Comment.find({
     commentedModel: 'Submission',
@@ -274,15 +308,25 @@ submissionRouter.get('/:id/comments', async (req, res) => {
  *       500:
  *         $ref: '#/components/responses/500'
  */
-submissionRouter.post('/:id/comment', async (req, res) => {
+submissionRouter.post('/:id/comment', checkSchema(ValidObjectId), async (req, res) => {
   if (!req.session.loggedIn) {
     res.status(401).send('Not logged in.');
     return;
   }
+
   if (req.body.comment === '') {
     res.status(400).send('Missing information to create a new comment.');
     return;
   }
+
+  const errors = validationResult(req);
+  if (!errors.isEmpty()) {
+    res.status(404).json({
+      errors: errors.array(),
+    });
+    return;
+  }
+
   const submissionId = req.params.id;
   try {
     const newComment = await Comment.create({
@@ -317,11 +361,20 @@ submissionRouter.post('/:id/comment', async (req, res) => {
  *       500:
  *         $ref: '#/components/responses/500'
  */
-submissionRouter.delete('/:id', async (req, res) => {
+submissionRouter.delete('/:id', checkSchema(ValidObjectId), async (req, res) => {
   if (!req.session.loggedIn) {
     res.status(401).send('User not logged in.');
     return;
   }
+
+  const errors = validationResult(req);
+  if (!errors.isEmpty()) {
+    res.status(404).json({
+      errors: errors.array(),
+    });
+    return;
+  }
+
   const submissionId = req.params.id;
   /* Delete submission.  */
   const query = Submission.findOneAndDelete({
