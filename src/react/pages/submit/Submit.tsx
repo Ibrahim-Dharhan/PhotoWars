@@ -11,16 +11,11 @@ import {
 } from '@mui/material';
 import { useParams, useNavigate, useOutletContext } from 'react-router-dom';
 
-interface BVSubmissionState {
-  numBVSubmissions: number,
-  setNumBVSubmissions: React.Dispatch<React.SetStateAction<number>>
-}
-
 const Submit = () => {
   const { id } = useParams();
+  const { setSubmitted } = useOutletContext();
   const [image, setImage] = useState(null);
   const navigate = useNavigate();
-  const {numBVSubmissions, setNumBVSubmissions} = useOutletContext() as BVSubmissionState;
 
   const {
     control,
@@ -34,10 +29,13 @@ const Submit = () => {
     const form = new FormData();
     form.append('caption', data.caption);
     form.append('file', image);
-    const res = await axios.post(path, form);
-    console.log(res.data);
     clearForm();
-    setNumBVSubmissions(numBVSubmissions + 1);
+    try {
+      await axios.post(path, form);
+      setSubmitted(true);
+    } catch (err) {
+      console.error(err);
+    }
     navigate('..');
   }
 

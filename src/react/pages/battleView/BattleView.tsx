@@ -1,12 +1,29 @@
 import React, { useState } from 'react';
+import axios from 'axios';
+import {
+  Stack
+} from '@mui/material';
 import { BattleCard } from '../../components/battleCard/BattleCard';
 import { CommentModal } from '../../components/commentModal/CommentModal';
-import { Outlet, useParams } from 'react-router-dom';
+import { Outlet, redirect, useParams } from 'react-router-dom';
+
+const battleViewLoader = async ({ params }) => {
+  const id = params.id
+  const path = `/battle/${id}`;
+  try {
+    const res = await axios.get(path);
+  } catch (err) {
+    if (err.response.status === 404) {
+      return redirect('/404');
+    }
+  }
+  return null;
+}
 
 const BattleView = () => {
-  const [numBVSubmissions, setNumBVSubmissions] = useState(0);
   const { id } = useParams();
 
+  const [submitted, setSubmitted] = useState(false);
   const [modalOpen, setModalOpen] = useState(false);
   const [modalVariant, setModalVariant] = useState('');
   const [modalId, setModalId] = useState('');
@@ -33,14 +50,19 @@ const BattleView = () => {
   };
   
   return (
-    <React.Fragment>
+    <Stack
+      alignItems="center"
+      sx={{
+        width: "100%"
+      }}
+    >
       <BattleCard
         battleId={id}
-        numBVSubmissions={numBVSubmissions}
-        setNumBVSubmissions={setNumBVSubmissions}
+        submitted={submitted}
+        setSubmitted={setSubmitted}
         showModal={showModal}
       />
-      <Outlet context={{numBVSubmissions, setNumBVSubmissions, showModal}}/>
+      <Outlet context={{ setSubmitted, showModal }}/>
       <CommentModal 
         open={modalOpen}
         handleClose={closeModal}
@@ -50,8 +72,8 @@ const BattleView = () => {
         caption={modalCaption}
         filename={modalImage}
       />
-    </React.Fragment>
+    </Stack>
   );
 };
 
-export { BattleView };
+export { BattleView, battleViewLoader };

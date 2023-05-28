@@ -212,7 +212,7 @@ const LoginModal = () => {
               setOpen(true);
               setRegistering(false);
             }}
-            variant="outlined"
+            variant="contained"
           >
             Login
           </Button>
@@ -223,7 +223,7 @@ const LoginModal = () => {
               setOpen(true);
               setRegistering(true);
             }}
-            variant="outlined"
+            variant="contained"
           >
             Register
           </Button>

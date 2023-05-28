@@ -40,7 +40,14 @@ const TopBar = () => {
   }
 
   return (
-    <AppBar position="fixed" sx={{ backgroundColor: "grey", zIndex: (theme) => theme.zIndex.drawer + 1 }}>
+    <AppBar
+      elevation={1}
+      position="fixed"
+      sx={{
+        backgroundColor: "white",
+        zIndex: (theme) => theme.zIndex.drawer + 1
+      }}
+    >
       <Toolbar>
         <Stack
           alignItems="center"
@@ -56,6 +63,7 @@ const TopBar = () => {
               }
             }}
             variant="h5"
+            color="black"
           >
             PhotoWars
           </Typography>
