@@ -72,7 +72,7 @@ const SubmissionCard = ({ submissionId, showModal }) => {
     return () => {
       shouldUpdate = false;
     };
-  }, [submissionId, userId]);
+  }, [expired, submissionId, userId]);
 
   /* useEffect for retrieving the image.  */
   useEffect(() => {

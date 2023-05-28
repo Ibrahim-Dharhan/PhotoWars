@@ -9,11 +9,10 @@ import {
   TextField,
   Typography,
 } from '@mui/material';
-import { useParams, useNavigate, useOutletContext } from 'react-router-dom';
+import { useParams, useNavigate } from 'react-router-dom';
 
 const Submit = () => {
   const { id } = useParams();
-  const { setSubmitted } = useOutletContext();
   const [image, setImage] = useState(null);
   const navigate = useNavigate();
 
@@ -32,7 +31,6 @@ const Submit = () => {
     clearForm();
     try {
       await axios.post(path, form);
-      setSubmitted(true);
     } catch (err) {
       console.error(err);
     }
