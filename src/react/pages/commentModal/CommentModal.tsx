@@ -113,7 +113,7 @@ const CommentModal = () => {
   };
 
   /* Handler for posting a new comment. */
-  const handlePostComment = async (newComment: String) => {
+  const handlePostComment = async (newComment: string) => {
     const path = `/${postType}/${postId}/comment`;
     const commentsPath = `/${postType}/${postId}/comments`;
     try {

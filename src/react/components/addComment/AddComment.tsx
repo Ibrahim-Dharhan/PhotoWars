@@ -48,7 +48,7 @@ const AddComment = ({ postComment }) => {
 };
 
 AddComment.propTypes = {
-  handlePostComment: PropTypes.func
+  postComment: PropTypes.func
 };
 
 export default AddComment;

@@ -3,6 +3,7 @@
     "files": true
   },
   "compilerOptions": {
+    "alwaysStrict": true,
     "typeRoots": ["./node_modules/@types", "./types"],
     "jsx": "react",
     "allowSyntheticDefaultImports": true,
