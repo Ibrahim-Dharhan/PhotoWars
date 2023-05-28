@@ -71,7 +71,8 @@ const BattleCard = ({
           new Date(battle.deadline),
           _timerEvent,
           setTimeRemaining,
-          setExpired
+          setExpired,
+          expired
         );
       }
     };

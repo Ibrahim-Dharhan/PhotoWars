@@ -55,7 +55,8 @@ const SubmissionCard = ({ submissionId, showModal }) => {
           new Date(submission.battle.deadline),
           _timerEvent,
           null,
-          setExpired
+          setExpired,
+          expired
         );
       }
     };
