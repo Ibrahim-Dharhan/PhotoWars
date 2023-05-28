@@ -4,13 +4,16 @@ import Grid from '@mui/material/Grid';
 import { useLoaderData, useOutletContext } from 'react-router-dom';
 import { SubmissionCard } from '../../components/submissionCard/SubmissionCard';
 
-const submissionFeedLoader = async({ params }) => {
+const submissionFeedLoader = async ({ params, request }) => {
   const id = params.id;
   const path = `/battle/${id}/submissions`;
-  const res = await axios.get(path);
+  const url = new URL(request.url);
+  console.log(request);
+  const res = await axios.get(path, {
+    params: { sort: url.searchParams.get('sort') },
+  });
   return res.data;
-  console.log("Loading submission data");
-}
+};
 
 interface Submission {
   _id: string;
@@ -22,14 +25,20 @@ interface Submission {
 }
 
 interface BVSubmissionFeedState {
-  showModal: (variant: string, id: string, author: string, caption: string, filename: string) => void
+  showModal: (
+    variant: string,
+    id: string,
+    author: string,
+    caption: string,
+    filename: string
+  ) => void;
 }
 
 const feedStyle = {
   paddingTop: 2,
   paddingBottom: 2,
   paddingLeft: 0,
-  paddingRight:0,
+  paddingRight: 0,
   bgcolor: 'background.default',
   display: 'grid',
   gridTemplateColumns: { md: 'minmax(0,1fr) minmax(0,1fr)' },
@@ -39,16 +48,23 @@ const feedStyle = {
 const SubmissionFeed = () => {
   const { showModal } = useOutletContext() as BVSubmissionFeedState;
   const submissions = useLoaderData() as Submission[];
-  
+  console.log('yoyo');
+
   return (
     <React.Fragment>
       <Grid sx={feedStyle}>
         {submissions.map((submission) => {
-          return <SubmissionCard submissionId={submission._id} key={submission._id} showModal={showModal}/>
+          return (
+            <SubmissionCard
+              submissionId={submission._id}
+              key={submission._id}
+              showModal={showModal}
+            />
+          );
         })}
       </Grid>
     </React.Fragment>
   );
 };
 
-export { SubmissionFeed, submissionFeedLoader};
+export { SubmissionFeed, submissionFeedLoader };

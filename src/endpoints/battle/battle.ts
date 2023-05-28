@@ -4,6 +4,7 @@ import express = require('express');
 import fs = require('fs');
 import path = require('path');
 import { Battle } from '../../definitions/schemas/mongoose/battle';
+import { Vote } from '../../definitions/schemas/mongoose/vote';
 import { checkSchema, matchedData, validationResult } from 'express-validator';
 import { NewBattle } from '../../definitions/schemas/validation/newBattle';
 import { NewSubmission } from '../../definitions/schemas/validation/newSubmission';
@@ -642,9 +643,27 @@ battleRouter.get('/:id/submissions', async (req, res) => {
       res.status(404).send('Invalid battle id.');
       return;
     }
-    const result = await Submission.find({
+    let result = await Submission.find({
       battle: battleId,
-    }).exec();
+    })
+      .lean()
+      .exec();
+
+    if (req.query.sort === 'top') {
+      for (let submission of result) {
+        (submission as any).numVotes = await Vote.countDocuments({
+          post: submission._id,
+          votedModel: 'Submission',
+        }).exec();
+      }
+      result.sort((a, b) => {
+        return (b as any).numVotes - (a as any).numVotes;
+      });
+    } else if (req.query.sort === 'new') {
+      result.sort((a, b) => {
+        return b.creationTime.getTime() - a.creationTime.getTime();
+      });
+    }
     /* Return submissions on battle. */
     res.status(200).json(result);
   } catch (err) {
