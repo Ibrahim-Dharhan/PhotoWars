@@ -29,18 +29,16 @@ import './battleCard.css';
 
 const BattleCard = ({
   battleId,
-  numBVSubmissions,
-  setNumBVSubmissions,
+  submitted,
+  setSubmitted,
   showModal,
 }) => {
   const { userId, setOpen } = useContext(UserContext);
-
   const [caption, setCaption] = useState('');
   const [displayName, setDisplayName] = useState('');
   const [filename, setFilename] = useState('');
   const [imageUrl, setImageUrl] = useState('');
   const [numSubmissions, setNumSubmissions] = useState(0);
-  const [submitted, setSubmitted] = useState(false);
   const [numComments, setNumComments] = useState(0);
   const [commented, setCommented] = useState(false);
   const [numVotes, setNumVotes] = useState(0);
@@ -66,6 +64,12 @@ const BattleCard = ({
         setCaption(battle.caption);
         setDisplayName(battle.author.displayName);
         setFilename(battle.filename);
+        setNumComments(battle.numComments);
+        setCommented(battle.commentedOn);
+        setNumSubmissions(battle.numSubmissions);
+        setSubmitted(battle.submittedTo);
+        setNumVotes(battle.numVotes);
+        setVoted(battle.votedOn);
         _battle.current = battle;
         updateDeadline(
           new Date(battle.deadline),
@@ -84,81 +88,7 @@ const BattleCard = ({
     return () => {
       shouldUpdate = false;
     };
-  }, [battleId]);
-
-  /* useEffect for updating submission count.  */
-  useEffect(() => {
-    let shouldUpdate = true;
-    const getSubmissions = async () => {
-      const submissionsPath = `/battle/${battleId}/submissions`;
-      const submissionsRes = await axios.get(submissionsPath);
-
-      if (shouldUpdate) {
-        if (setNumBVSubmissions)
-          setNumBVSubmissions(submissionsRes.data.length);
-        setNumSubmissions(submissionsRes.data.length);
-        setSubmitted(
-          submissionsRes.data
-            .map((submission) => submission.author)
-            .includes(userId)
-        );
-      }
-    };
-    try {
-      getSubmissions();
-    } catch (err) {
-      console.error(err.data);
-    }
-    return () => {
-      shouldUpdate = false;
-    };
-  }, [battleId, numBVSubmissions, numSubmissions, setNumBVSubmissions, userId]);
-
-  /* useEffect for updating comment count.  */
-  useEffect(() => {
-    let shouldUpdate = true;
-    const getComments = async () => {
-      const commentsPath = `/comment/${battleId}`;
-      const commentsRes = await axios.get(commentsPath);
-      const { numComments, commentedOn } = commentsRes.data;
-
-      if (shouldUpdate) {
-        setCommented(commentedOn);
-        setNumComments(numComments);
-      }
-    };
-    try {
-      getComments();
-    } catch (err) {
-      console.error(err.data);
-    }
-    return () => {
-      shouldUpdate = false;
-    };
-  }, [battleId, userId]);
-
-  /* useEffect for updating vote count.  */
-  useEffect(() => {
-    let shouldUpdate = true;
-    const getVotes = async () => {
-      const votesPath = `/vote/${battleId}`;
-      const votesRes = await axios.get(votesPath);
-      const { numVotes, votedOn } = votesRes.data;
-
-      if (shouldUpdate) {
-        setVoted(votedOn);
-        setNumVotes(numVotes);
-      }
-    };
-    try {
-      getVotes();
-    } catch (err) {
-      console.error(err.data);
-    }
-    return () => {
-      shouldUpdate = false;
-    };
-  }, [battleId, userId]);
+  }, [battleId, submitted, userId]);
 
   /* useEffect for retrieving the image.  */
   useEffect(() => {
@@ -322,8 +252,6 @@ const BattleCard = ({
 
 BattleCard.propTypes = {
   battleId: PropTypes.string,
-  numBVSubmissions: PropTypes.number,
-  setNumBVSubmissions: PropTypes.func,
   showModal: PropTypes.func,
 };
 

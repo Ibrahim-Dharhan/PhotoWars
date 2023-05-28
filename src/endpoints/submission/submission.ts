@@ -5,6 +5,7 @@ import { checkSchema, matchedData, validationResult } from 'express-validator';
 import { UpdateSubmission } from '../../definitions/schemas/validation/updateSubmission';
 import { ValidObjectId } from '../../definitions/schemas/validation/validObjectId';
 import { Submission } from '../../definitions/schemas/mongoose/submission';
+import { Vote } from '../../definitions/schemas/mongoose/vote';
 import { Comment } from '../../definitions/schemas/mongoose/comment';
 import { voteOn, unvoteOn } from '../../definitions/schemas/mongoose/vote';
 
@@ -32,14 +33,33 @@ const submissionRouter = express.Router();
 submissionRouter.get('/:id', async (req, res) => {
   const submissionId = req.params.id;
   const query = Submission.findById(submissionId);
+  const numCommentsQuery = Comment.countDocuments({ post: submissionId });
+  const commentedOnQuery = Comment.findOne({ post: submissionId,
+                                             author: req.session.userId });
+  const numVotesQuery = Vote.countDocuments({ post: submissionId });
+  const votedOnQuery = Vote.findOne({ post: submissionId,
+                                      user: req.session.userId });
   try {
-    const result = await query
+    let result = await query
                          .populate('author')
                          .populate('battle', ['deadline'])
                          .lean()
                          .exec();
     if (result) {
       /* Found submission matching submissionId.  */
+      const numComments = await numCommentsQuery.exec();
+      const commentedOn = !!(await commentedOnQuery.lean().exec());
+      const numVotes = await numVotesQuery.exec();
+      const votedOn = !!(await votedOnQuery.lean().exec());
+      result = {
+        ...result,
+        ...{
+          numComments: numComments,
+          commentedOn: commentedOn,
+          numVotes: numVotes,
+          votedOn: votedOn
+        }
+      };
       res.status(200).json(result);
     } else {
       /* Did not find a submission with matching submissionId.  */
