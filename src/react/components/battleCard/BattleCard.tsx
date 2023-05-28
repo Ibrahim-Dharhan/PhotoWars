@@ -28,11 +28,9 @@ import './battleCard.css';
 
 const BattleCard = ({
   battleId,
-  setVariant
 }) => {
   const { userId, setOpen } = useContext(UserContext);
   const [caption, setCaption] = useState('');
-  const [displayName, setDisplayName] = useState('');
   const [filename, setFilename] = useState('');
   const [imageUrl, setImageUrl] = useState('');
   const [numSubmissions, setNumSubmissions] = useState(0);
@@ -60,7 +58,6 @@ const BattleCard = ({
 
       if (shouldUpdate) {
         setCaption(battle.caption);
-        setDisplayName(battle.author.displayName);
         setFilename(battle.filename);
         setNumComments(battle.numComments);
         setCommented(battle.commentedOn);
@@ -111,7 +108,7 @@ const BattleCard = ({
     navigate({
       pathname: `comments/${battleId}`,
       search: createSearchParams({
-        variant: 'battle'
+        postType: 'battle'
       }).toString()
     });
   }
@@ -149,7 +146,7 @@ const BattleCard = ({
         <PostCardHeader _post={_battle} />
         <ButtonBase
           onClick={() => {
-            setVariant && openCommentModal();
+            openCommentModal();
           }}
           sx={{ width: '100%' }}
         >
@@ -203,7 +200,7 @@ const BattleCard = ({
             onClick={(event) => {
               event.stopPropagation();
               event.preventDefault();
-              setVariant && openCommentModal();
+              openCommentModal();
             }}
           >
             <ModeCommentOutlinedIcon
@@ -259,8 +256,7 @@ const BattleCard = ({
 };
 
 BattleCard.propTypes = {
-  battleId: PropTypes.string,
-  setVariant: PropTypes.func
+  battleId: PropTypes.string
 };
 
 export { BattleCard };

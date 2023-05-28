@@ -22,10 +22,9 @@ import { createSearchParams, useNavigate } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import './submissionCard.css';
 
-const SubmissionCard = ({ submissionId, setVariant }) => {
+const SubmissionCard = ({ submissionId }) => {
   const { userId, setOpen } = useContext(UserContext);
   const [caption, setCaption] = useState('');
-  const [displayName, setDisplayName] = useState('');
   const [imageUrl, setImageUrl] = useState('');
   const [filename, setFilename] = useState('');
   const [numComments, setNumComments] = useState(0);
@@ -50,7 +49,6 @@ const SubmissionCard = ({ submissionId, setVariant }) => {
 
       if (shouldUpdate) {
         setCaption(submission.caption);
-        setDisplayName(submission.author.displayName);
         setFilename(submission.filename);
         setNumComments(submission.numComments);
         setCommented(submission.commentedOn);
@@ -96,7 +94,7 @@ const SubmissionCard = ({ submissionId, setVariant }) => {
     navigate({
       pathname: `comments/${submissionId}`,
       search: createSearchParams({
-        variant: 'submission'
+        postType: 'submission'
       }).toString()
     });
   }
@@ -123,7 +121,7 @@ const SubmissionCard = ({ submissionId, setVariant }) => {
         </CardContent>
         <ButtonBase
           onClick={() => {
-            setVariant && openCommentModal();
+            openCommentModal();
           }}
           sx={{ width: '100%' }}
         >
@@ -160,7 +158,7 @@ const SubmissionCard = ({ submissionId, setVariant }) => {
             onClick={(event) => {
               event.stopPropagation();
               event.preventDefault();
-              setVariant && openCommentModal();
+              openCommentModal();
             }}
           >
             <ModeCommentOutlinedIcon
@@ -175,8 +173,7 @@ const SubmissionCard = ({ submissionId, setVariant }) => {
 };
 
 SubmissionCard.propTypes = {
-  submissionId: PropTypes.string,
-  setVariant: PropTypes.func,
+  submissionId: PropTypes.string
 };
 
 export { SubmissionCard };

@@ -12,10 +12,12 @@ import {
   Modal,
   Typography,
 } from '@mui/material';
-import PropTypes from 'prop-types';
 import { getImageUrl } from '../../../definitions/getImageUrl';
-import { redirect, useLoaderData, useNavigate, useOutletContext, useParams } from 'react-router-dom';
-import { VariantContext } from '../battleView/BattleView';
+import {
+  redirect,
+  useLoaderData,
+  useNavigate
+} from 'react-router-dom';
 
 const modalStyle = {
   position: 'absolute',
@@ -32,10 +34,10 @@ const modalStyle = {
 
 const commentModalLoader = async ({ params, request }) => {
   const postId = params.postId;
-  const variant = (new URL(request.url)).searchParams.get('variant');
-  if (!variant) return redirect('..');
-  const commentsPath = `/${variant}/${postId}/comments`;
-  const postPath = `/${variant}/${postId}`;
+  const postType = (new URL(request.url)).searchParams.get('postType');
+  if (!postType) return redirect('..');
+  const commentsPath = `/${postType}/${postId}/comments`;
+  const postPath = `/${postType}/${postId}`;
   try {
     const commentsRes = await axios.get(commentsPath);
     const postRes = await axios.get(postPath);
@@ -74,7 +76,6 @@ interface Post {
 }
 
 const CommentModal = () => {
-  const { variant } = useOutletContext<VariantContext>();
   const { comments, post } = useLoaderData() as {comments: Comment[], post: Post};
   const [imageUrl, setImageUrl] = useState('');
   const navigate = useNavigate();
@@ -113,7 +114,7 @@ const CommentModal = () => {
         <Grid direction='row' container spacing={1} sx={{height: "100%"}}>
           <Grid item xs={6}>
             <Box sx={{height:'100%', display: 'flex'}} alignItems='center'>
-              <img src={imageUrl} alt={`${variant} image`} width='100%'/>
+              <img src={imageUrl} width='100%'/>
             </Box>
           </Grid>
           <Grid item xs={6}>
@@ -193,16 +194,6 @@ const CommentModal = () => {
       </Box>
     </Modal>
   );
-};
-
-CommentModal.propTypes = {
-  open: PropTypes.bool,
-  handleClose: PropTypes.func,
-  variant: PropTypes.string,
-  id: PropTypes.string,
-  displayName: PropTypes.string,
-  caption: PropTypes.string,
-  filename: PropTypes.string,
 };
 
 export { CommentModal, commentModalLoader };

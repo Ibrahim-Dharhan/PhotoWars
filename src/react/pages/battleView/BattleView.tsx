@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import axios from 'axios';
 import {
   Stack
@@ -19,14 +19,8 @@ const battleViewLoader = async ({ params }) => {
   return null;
 }
 
-type VariantContext = {
-  variant: string | null,
-  setVariant: React.Dispatch<React.SetStateAction<string>> | null
-};
-
 const BattleView = () => {
   const { battleId } = useParams();
-  const [variant, setVariant] = useState('');
 
   return (
     <Stack
@@ -37,11 +31,10 @@ const BattleView = () => {
     >
       <BattleCard
         battleId={battleId}
-        setVariant={setVariant}
       />
-      <Outlet context={{ variant, setVariant }}/>
+      <Outlet />
     </Stack>
   );
 };
 
-export { BattleView, battleViewLoader, VariantContext };
+export { BattleView, battleViewLoader };

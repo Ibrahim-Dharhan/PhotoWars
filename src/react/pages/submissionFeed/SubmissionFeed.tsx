@@ -1,9 +1,8 @@
 import React from 'react';
 import axios from 'axios';
 import Grid from '@mui/material/Grid';
-import { Outlet, useLoaderData, useOutletContext } from 'react-router-dom';
+import { Outlet, useLoaderData } from 'react-router-dom';
 import { SubmissionCard } from '../../components/submissionCard/SubmissionCard';
-import { VariantContext } from '../battleView/BattleView';
 
 const submissionFeedLoader = async({ params }) => {
   const battleId = params.battleId;
@@ -33,17 +32,16 @@ const feedStyle = {
 };
 
 const SubmissionFeed = () => {
-  const { variant, setVariant } = useOutletContext<VariantContext>();
   const submissions = useLoaderData() as Submission[];
   
   return (
     <React.Fragment>
       <Grid sx={feedStyle}>
         {submissions.map((submission) => {
-          return <SubmissionCard submissionId={submission._id} key={submission._id} setVariant={setVariant} />
+          return <SubmissionCard submissionId={submission._id} key={submission._id} />
         })}
       </Grid>
-      <Outlet context={useOutletContext<VariantContext>()}/>
+      <Outlet />
     </React.Fragment>
   );
 };
