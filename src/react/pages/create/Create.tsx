@@ -122,10 +122,10 @@ const Create = () => {
                       direction="row"
                       justifyContent="center"
                       alignItems="center"
-                    >
+                    >                
                       <label htmlFor="image-upload">
                         Drag and drop an image, or
-                      </label>
+                      </label>            
                       <Button
                         variant="outlined"
                         component="label"

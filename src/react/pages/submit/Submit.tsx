@@ -8,13 +8,20 @@ import {
   Stack,
   TextField,
   Typography,
+  Paper
 } from '@mui/material';
-import { useParams, useNavigate } from 'react-router-dom';
+import { useParams, useNavigate, useOutletContext } from 'react-router-dom';
+
+interface BVSubmissionState {
+  numBVSubmissions: number,
+  setNumBVSubmissions: React.Dispatch<React.SetStateAction<number>>
+}
 
 const Submit = () => {
   const { id } = useParams();
   const [image, setImage] = useState(null);
   const navigate = useNavigate();
+  const {numBVSubmissions, setNumBVSubmissions} = useOutletContext() as BVSubmissionState;
 
   const {
     control,
@@ -28,21 +35,24 @@ const Submit = () => {
     const form = new FormData();
     form.append('caption', data.caption);
     form.append('file', image);
+    const res = await axios.post(path, form);
+    console.log(res.data);
     clearForm();
-    try {
-      await axios.post(path, form);
-    } catch (err) {
-      console.error(err);
-    }
+    setNumBVSubmissions(numBVSubmissions + 1);
     navigate('..');
   }
 
-  const handleClearImage = () => {
+  function handleImageChange(event) {
+    const file = event.target.files[0];
+    setImage(file);
+  }
+
+  function handleClearImage() {
     setImage(null);
     resetField('file');
   }
 
-  const handleImageDrop = (event) => {
+  function handleImageDrop(event) {
     event.preventDefault();
     const file = event.dataTransfer.files[0];
     setImage(file);
@@ -50,7 +60,7 @@ const Submit = () => {
 
   return (
     <React.Fragment>
-      <Box sx={{ mt: 4 }}>
+      <Paper elevation={0} sx={{ mt: 4 }}>
       <form onSubmit={handleSubmit(submitForm)}>
       <Stack spacing={2}>
       <Typography variant="h6">
@@ -155,7 +165,7 @@ const Submit = () => {
         </Button>
         </Stack>
       </form>
-      </Box>
+      </Paper>
     </React.Fragment>
   );
 };
