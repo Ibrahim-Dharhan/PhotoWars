@@ -29,7 +29,11 @@ const commentRouter = express.Router();
 */
 commentRouter.get('/:id', async (req, res) => {
   const commentId = req.params.id;
-  const query = Comment.findById(commentId);
+  const query = Comment.findById(commentId, [
+    '-__v'
+  ]).populate('post', [
+    '-__v'
+  ]);
   const numVotesQuery = Vote.countDocuments({ post: commentId });
   const votedOnQuery = Vote.findOne({ post: commentId,
                                       user: req.session.userId });

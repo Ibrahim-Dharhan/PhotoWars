@@ -38,7 +38,8 @@ const UserView = () => {
       const resBattles = await axios.get(pathBattle);
       const pathSubmissions = `/user/${user._id}/submissions`;
       const resSubmissions = await axios.get(pathSubmissions);
-      const pathComments = `/user/${user._id}/comments`; const resComments = await axios.get(pathComments);
+      const pathComments = `/user/${user._id}/comments`;
+      const resComments = await axios.get(pathComments);
       if (shouldUpdate) {
         setBattles(resBattles.data);
         setSubmissions(resSubmissions.data);
@@ -143,7 +144,7 @@ const UserView = () => {
               ) : feed === 'comments' && comments ? (
                 comments.length > 0 ? (
                   comments.map((comment) => {
-                    return <CommentCard key={comment._id} comment={comment} />;
+                    return <CommentCard key={comment._id} commentId={comment._id} />;
                   })
                 ) : (
                   <Typography textAlign={'center'}>
