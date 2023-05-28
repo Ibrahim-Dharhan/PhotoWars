@@ -4,11 +4,12 @@ import {
   AppBar,
   Box,
   Button,
+  Icon,
   Menu,
   MenuItem,
   Stack,
   Toolbar,
-  Typography
+  Typography,
 } from '@mui/material';
 import AccountCircleOutlinedIcon from '@mui/icons-material/AccountCircleOutlined';
 import { UserContext } from '../../contexts/UserContext';
@@ -40,8 +41,8 @@ const TopBar = () => {
 
   return (
     <AppBar
-      elevation={1}
-      position="fixed"
+      elevation={0}
+      position='fixed'
       sx={{
         zIndex: (theme) => theme.zIndex.drawer + 1
       }}
@@ -63,6 +64,9 @@ const TopBar = () => {
             }}
             variant="h5"
           >
+            <Icon>
+  <img src="../../assets/swords-icon.svg"/>
+</Icon>
             PHOTOWARS
           </Typography>
           <Box>
