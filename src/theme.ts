@@ -18,9 +18,19 @@ const theme = createTheme({
       styleOverrides: {
         root: {
           borderRadius: 12,
+          border: 'none',
+          backgroundColor: '#37374E'
         },
       },
     },
+    MuiAppBar: {
+      styleOverrides: {
+        root: {
+          borderBottom: '1px solid #666370',
+          boxShadow: 'none'
+        },
+      },
+    }
   },
   typography: {
     "fontFamily": `"Rubik", "Helvetica", "Arial", sans-serif`,
@@ -28,6 +38,7 @@ const theme = createTheme({
   palette: {
     mode: 'dark',
     background: {
+      default: '#27243A',
       paper: '#27243A'
     },
     primary: {

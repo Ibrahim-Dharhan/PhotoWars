@@ -7,8 +7,6 @@ import {
 import {
   Stack,
   ImageList,
-  ImageListItem,
-  Box
 } from '@mui/material';
 
 
@@ -24,7 +22,7 @@ const Feed = () => {
 
   return (
     <React.Fragment>
-      <ImageList variant="masonry" cols={3} gap={8}>
+      <ImageList variant="masonry" cols={3} gap={24}>
         {battleIdsRecent.map((battleId) => {
           return (<BattleCard battleId={battleId} key={battleId} showModal={null} />);
         })}
