@@ -50,7 +50,7 @@ const LoginModal = () => {
       const user = res.data;
       closeModal();
       setLoggedInUser(user);
-      localStorage.setItem('user', JSON.stringify(user));
+      localStorage.setItem('loggedInUser', JSON.stringify(user));
     } catch (err) {
       if (typeof err.response.data === 'string') {
         setResponseError(err.response.data);
