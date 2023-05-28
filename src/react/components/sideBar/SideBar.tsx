@@ -19,7 +19,7 @@ const SideBar = () => {
 
   return (
     <Drawer
-      variant='permanent'
+      variant="permanent"
       sx={{
         width: drawerWidth,
         [`& .MuiDrawer-paper`]: { width: drawerWidth, boxSizing: 'border-box' },
