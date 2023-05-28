@@ -46,6 +46,7 @@ const BattleCard = ({
   const [numVotes, setNumVotes] = useState(0);
   const [voted, setVoted] = useState(false);
   const [timeRemaining, setTimeRemaining] = useState('--:--:--');
+  const [expired, setExpired] = useState(false);
 
   const _battle = useRef(null);
   const _timerEvent = useRef(null);
@@ -69,7 +70,8 @@ const BattleCard = ({
         updateDeadline(
           new Date(battle.deadline),
           _timerEvent,
-          setTimeRemaining
+          setTimeRemaining,
+          setExpired
         );
       }
     };
@@ -224,18 +226,18 @@ const BattleCard = ({
             onClick={(event) => {
               event.stopPropagation();
               event.preventDefault();
-              if (userId !== '' && timeRemaining !== '00d:00h:00m:00s') {
+              if (userId !== '' && !expired) {
                 vote();
               } else {
                 setOpen(true);
               }
             }}
-            disableRipple={timeRemaining === '00d:00h:00m:00s'}
+            disableRipple={expired}
           >
             {
-              timeRemaining !== '00d:00h:00m:00s'
-              ? <FavoriteIcon sx={{ pr: 1, color: voted && pink[500] }} />
-              : <LockIcon sx={{ pr: 1, color: voted && pink[500] }} />
+              expired
+              ? <LockIcon sx={{ pr: 1, color: voted && pink[500] }} />
+              : <FavoriteIcon sx={{ pr: 1, color: voted && pink[500] }} />
             }
             <Typography>{numVotes}</Typography>
           </IconButton>
@@ -251,7 +253,7 @@ const BattleCard = ({
             <Typography>{numComments}</Typography>
           </IconButton>
           <Box display='flex' marginLeft='auto' alignItems='center'>
-            {timeRemaining === '00d:00h:00m:00s' ? (
+            {expired ? (
               <Typography>Finished</Typography>
             ) : (
               <>
