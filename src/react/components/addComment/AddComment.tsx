@@ -1,5 +1,6 @@
 import * as React from 'react';
-import { useState } from 'react';
+import { useContext, useEffect, useState } from 'react';
+import { isAxiosError } from 'axios';
 import {
   Avatar,
   Box,
@@ -8,19 +9,50 @@ import {
   Stack,
   TextField,
 } from '@mui/material';
+import { getImageUrl } from '../../../definitions/getImageUrl';
+import { UserContext } from '../../contexts/UserContext';
 
 interface IProps {
   postComment: (newComment: string) => Promise<void>;
 }
 
 const AddComment = ({ postComment }: IProps) => {
+  const { loggedInUser } = useContext(UserContext);
   const [commentText, setCommentText] = useState('');
+  const [imageUrl, setImageUrl] = useState('');
+
+  /* useEffect for retrieving the image.  */
+  useEffect(() => {
+    let shouldUpdate = true;
+    const setImage = async () => {
+      const newImageUrl = await getImageUrl(loggedInUser.filename);
+      if (shouldUpdate) {
+        setImageUrl(newImageUrl);
+      }
+    };
+    try {
+      setImage();
+    } catch (err) {
+      if (isAxiosError(err)) {
+        console.error(err.response?.data);
+      } else {
+        console.error(err);
+      }
+    }
+    return () => {
+      shouldUpdate = false;
+    };
+  }, [loggedInUser.filename]);
 
   return (
     <Card>
       <Box sx={{ p: '15px' }}>
         <Stack direction='row' spacing={2} alignItems='flex-start'>
-          <Avatar/>
+          <Avatar
+            src={imageUrl}
+          >
+            {loggedInUser.displayName[0]}
+          </Avatar>
           <TextField
             fullWidth
             placeholder='Add a comment'

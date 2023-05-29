@@ -22,6 +22,7 @@ import {
   useNavigate,
   useParams
 } from 'react-router-dom';
+import { CommentModalCommentCard } from '../../components/commentModalCommentCard/CommentModalCommentCard';
 
 const modalStyle = {
   position: 'absolute',
@@ -72,15 +73,6 @@ interface Author {
   lastName: string;
 }
 
-interface Comment {
-  _id: string;
-  author: Author;
-  commentedModel: string;
-  creationTime: string;
-  post: string;
-  text: string;
-}
-
 interface Post {
   _id: string;
   author: Author;
@@ -88,11 +80,21 @@ interface Post {
   filename: string;
 }
 
+interface Comment {
+  _id: string;
+  author: Author;
+  commentedModel: string;
+  creationTime: string;
+  post: Post;
+  text: string;
+}
+
 const CommentModal = () => {
   const { postId } = useParams();
   const { postComments, post, postType } = useLoaderData() as {postComments: Comment[], post: Post, postType: string};
   const [comments, setComments] = useState(postComments)
   const [imageUrl, setImageUrl] = useState('');
+  const [authorImageUrl, setAuthorImageUrl] = useState('');
 
   const navigate = useNavigate();
 
@@ -114,6 +116,25 @@ const CommentModal = () => {
       shouldUpdate = false;
     };
   }, [post.filename]);
+
+  /* useEffect for retrieving the image.  */
+  useEffect(() => {
+    let shouldUpdate = true;
+    const setImage = async () => {
+      const newImageUrl = await getImageUrl(post.author?.filename);
+      if (shouldUpdate) {
+        setAuthorImageUrl(newImageUrl);
+      }
+    };
+    try {
+      setImage();
+    } catch (err) {
+      console.error(err);
+    }
+    return () => {
+      shouldUpdate = false;
+    };
+  }, [post.author.filename]);
 
   const handleClose = () => {
     navigate('..');
@@ -154,7 +175,9 @@ const CommentModal = () => {
             <List>
               <ListItem alignItems='flex-start'>
                 <ListItemAvatar>
-                  <Avatar>
+                  <Avatar
+                    src={authorImageUrl}
+                  >
                     {post.author?.displayName[0]}
                   </Avatar>
                 </ListItemAvatar>
@@ -189,35 +212,7 @@ const CommentModal = () => {
               {comments.map((comment: Comment) => {
                 return (
                   <div key={comment._id}>
-                    <ListItem
-                      className='comment-modal-comment'
-                      alignItems='flex-start'
-                      onClick={(event) => {
-                        event.stopPropagation();
-                        event.preventDefault();
-                        navigate(`/users/${comment.author._id}`);
-                      }}
-                    >
-                      <ListItemAvatar>
-                        <Avatar>{comment.author.displayName[0]}</Avatar>
-                      </ListItemAvatar>
-                      <ListItemText
-                        secondary={
-                          <React.Fragment>
-                            <Typography
-                              sx={{ display: 'inline' }}
-                              component='span'
-                              variant='body2'
-                              color='text.primary'
-                            >
-                              {comment.author.displayName + '\n'}
-                            </Typography>
-                            {comment.text}
-                          </React.Fragment>
-                        }
-                      />
-                    </ListItem>
-                    <Divider variant='inset' component='li' />
+                    <CommentModalCommentCard comment={comment} />
                   </div>
                 );
               })}

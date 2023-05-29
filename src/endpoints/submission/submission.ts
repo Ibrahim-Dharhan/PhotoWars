@@ -303,6 +303,9 @@ submissionRouter.get('/:id/comments', upload.none(), checkSchema(ValidObjectId),
     '-loginName',
     '-loginPassword',
     '-__v'
+  ]).populate('post', [
+    '-author',
+    '-__v'
   ]);
   try {
     const result = await query.lean().exec();
