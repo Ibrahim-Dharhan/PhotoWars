@@ -37,7 +37,7 @@ const SideBar = () => {
             </ListItemButton>
           </ListItem>
           <ListItem key={'openCompetitions'} disablePadding>
-            <ListItemButton onClick={() => navigate('/?opencompetitions=true')}>
+            <ListItemButton onClick={() => navigate('/?open=true')}>
               <ListItemIcon>
                 <TrendingUpIcon />
               </ListItemIcon>
