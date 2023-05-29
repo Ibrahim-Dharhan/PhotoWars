@@ -41,7 +41,7 @@ const battleRouter = express.Router();
  *         $ref: '#/components/responses/500'
  */
 battleRouter.get('/all', async (req, res) => {
-  const filter = {} as any;
+  const filter = {} as { deadline?: { $gte: Date }, _id?: { $ne: mongoose.Types.ObjectId } };
   if (req.query['open'] === 'true') {
     /* Filter for all battles that have at least an hour left.  */
     const today = new Date();
