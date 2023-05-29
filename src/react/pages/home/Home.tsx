@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { RightBar } from '../../components/rightBar/RightBar';
+// import { RightBar } from '../../components/rightBar/RightBar';
 // import { SideBar } from '../../components/sideBar/SideBar';
 import { TopBar } from '../../components/topBar/TopBar';
 import { Outlet } from 'react-router-dom';
@@ -15,7 +15,7 @@ const Home = () => {
         <Toolbar />
         <Outlet />
       </Stack>
-      <RightBar />
+      {/* <RightBar /> */}
     </Stack>
   </Stack>
   );

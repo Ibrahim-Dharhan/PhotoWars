@@ -15,6 +15,7 @@ import {
   CardActions,
   CardContent,
   CardMedia,
+  Chip,
   IconButton,
   Tooltip,
   Typography,
@@ -29,9 +30,10 @@ import { ILayoutUserContext } from '../../pages/Layout';
 
 interface IProps {
   battleId: string;
+  isPhotoOfTheDay?: boolean;
 }
 
-const BattleCard = ({ battleId }: IProps) => {
+const BattleCard = ({ battleId, isPhotoOfTheDay }: IProps) => {
   const { loggedInUser, setOpenLoginModal } = useContext(UserContext) as ILayoutUserContext;
   const [caption, setCaption] = useState('');
   const [filename, setFilename] = useState('');
@@ -163,8 +165,21 @@ const BattleCard = ({ battleId }: IProps) => {
           onClick={() => {
             openCommentModal();
           }}
-          sx={{ width: '100%' }}
+          sx={{ width: '100%', position: 'relative' }}
         >
+          {isPhotoOfTheDay &&
+            (
+              <Chip
+                label="Photo of the Day"
+                color="warning"
+                sx={{
+                  position: 'absolute',
+                  top: '5px',
+                  right: '5px',
+                }}
+              />
+            )
+          }
           <CardMedia
             component='img'
             image={imageUrl}

@@ -41,17 +41,47 @@ const battleRouter = express.Router();
  *         $ref: '#/components/responses/500'
  */
 battleRouter.get('/all', async (req, res) => {
-  let deadline = new Date(0);
-  if (req.query['openCompetitionsOnly'] === 'true') {
+  const filter = {} as { deadline?: { $gte: Date }, _id?: { $ne: mongoose.Types.ObjectId } };
+  if (req.query['open'] === 'true') {
+    /* Filter for all battles that have at least an hour left.  */
     const today = new Date();
     const futureDeadline = new Date();
     futureDeadline.setHours(today.getHours() + 1);
-    deadline = futureDeadline;
+    filter.deadline = { $gte: futureDeadline };
   }
-  const filter = { deadline: { $gte: deadline } };
-  const query = Battle.find(filter);
+
+  let dailyBattle: (mongoose.FlattenMaps<{
+    author: mongoose.Types.ObjectId;
+    caption: string;
+    creationTime: Date;
+    deadline: Date;
+    filename: string;
+  }> & {
+    _id: mongoose.Types.ObjectId;
+  }) | null = null;
+  {
+    /* Retrieve a random battle for the day.  */
+    const today = new Date();
+    const tomorrow = new Date();
+    tomorrow.setDate(today.getDate() + 1);
+    const grEqOneDayFilter = {
+      deadline: {
+        $gte: tomorrow,
+      },
+    };
+    const count = await Battle.countDocuments(grEqOneDayFilter).exec();
+    const numToSkip = Math.floor(today.getTime() / (3600 * 24 * 1000)) % count;
+    const query = Battle.findOne(grEqOneDayFilter, ['_id']).skip(numToSkip);
+    dailyBattle = await query.lean().exec();
+    if (dailyBattle) {
+      filter._id = { $ne: dailyBattle._id };
+    }
+  }
+
+  const query = Battle.find(filter, ['_id']);
   try {
-    const result = await query.distinct('_id').exec();
+    const result = await query.lean().exec();
+    if (dailyBattle) result.unshift(dailyBattle);
     if (result) {
       /* Retrieved battle ids.  */
       res.status(200).json(result);

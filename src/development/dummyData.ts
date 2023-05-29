@@ -63,7 +63,7 @@ function dummyDataFunc() {
     author: user1._id,
     caption: 'This cat with a skull on his chest',
     creationTime: '2023-05-05T00:24:14.710Z',
-    deadline: '2023-05-27T00:26:13.696Z',
+    deadline: '2023-06-20T00:26:13.696Z',
     filename: 'skullCatBattle.jpeg',
   };
 
@@ -81,7 +81,7 @@ function dummyDataFunc() {
     author: user3._id,
     caption: 'Obama winning connect four against Stephen Curry',
     creationTime: '2023-05-05T00:24:14.710Z',
-    deadline: '2023-05-30T00:26:13.696Z',
+    deadline: '2023-06-10T00:26:13.696Z',
     filename: 'ObamaBattle.jpg',
   };
 

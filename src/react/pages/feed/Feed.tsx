@@ -8,23 +8,28 @@ const feedLoader: LoaderFunction = async ({ request }) => {
   const url = new URL(request.url);
   const path = '/battle/all';
   const res = await axios.get(path, {
-    params: { openCompetitionsOnly: url.searchParams.get('opencompetitions') },
+    params: { open: url.searchParams.get('open') },
   });
   return res.data;
 };
 
 const Feed = () => {
-  const battleIds = useLoaderData() as string[];
-  const battleIdsRecent = battleIds.slice(0).reverse();
+  /* First element in battles is the battle of the day.  */
+  const battles = useLoaderData() as { _id: string}[];
+  const battlesRecent = battles.slice(1).reverse();
+
+  /* Move battle of the day to the front of the array.  */
+  if (battles[0]) battlesRecent.unshift(battles[0]);
 
   return (
     <React.Fragment>
       <ImageList variant="masonry" cols={3} gap={24}>
-         {battleIdsRecent.map((battleId) => {
+         {battlesRecent.map((battle, i) => {
             return (
               <BattleCard
-                battleId={battleId}
-                key={battleId}
+                battleId={battle._id}
+                isPhotoOfTheDay={i === 0}
+                key={battle._id}
               />
             );
           })}
