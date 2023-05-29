@@ -24,13 +24,17 @@ import mongoose = require('mongoose');
  *           type: string
  */
 const voteSchema = new mongoose.Schema({
-  creationTime: {type: Date, default: Date.now},
-  post: { type: mongoose.Schema.Types.ObjectId,
-            refPath: 'votedModel' },
-  user: mongoose.Schema.Types.ObjectId,
+  creationTime: { type: Date, default: Date.now, required: true },
+  post: {
+    type: mongoose.Schema.Types.ObjectId,
+    refPath: 'votedModel',
+    required: true
+  },
+  user: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true },
   votedModel: {
     type: String,
-    enum: ['Battle', 'Comment', 'Submission']
+    enum: ['Battle', 'Comment', 'Submission'],
+    required: true
   },
 });
 

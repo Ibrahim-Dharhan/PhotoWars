@@ -1,6 +1,6 @@
 'use strict';
 
-import express = require('express');
+import { Request, Response, Router } from 'express';
 import fs = require('fs');
 import path = require('path');
 import { AWS_BUCKET_NAME, deleteFileFromS3, uploadFileToS3 } from '../../definitions/s3';
@@ -14,9 +14,9 @@ import { Vote } from '../../definitions/schemas/mongoose/vote';
 import { UpdateUser } from '../../definitions/schemas/validation/updateUser';
 
 import * as constants from '../../definitions/constants';
-const IMAGE_DIR = process.env.IMAGE_DIR || constants._imageDir;
+const IMAGE_DIR = process.env['IMAGE_DIR'] || constants._imageDir;
 
-const userRouter = express.Router();
+const userRouter = Router();
 
 /**
  * @openapi
@@ -115,7 +115,7 @@ userRouter.get('/:id', async (req, res) => {
  *       500:
  *         $ref: '#/components/responses/500'
  */
-userRouter.put('/', upload.single('file'), checkSchema(UpdateUser), async (req, res) => {
+userRouter.put('/', upload.single('file'), checkSchema(UpdateUser), async (req: Request, res: Response) => {
   const errors = validationResult(req);
   if (!errors.isEmpty()) {
     req.file && await fs.promises.unlink(path.join(IMAGE_DIR, req.file.filename));

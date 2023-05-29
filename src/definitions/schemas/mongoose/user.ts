@@ -33,38 +33,21 @@ import { Vote } from './vote';
  *         loginPassword:
  *           type: string
  */
-interface IUserShared {
-  description: string,
-  displayName: string,
-  filename: string,
-  firstName: string,
-  lastName: string,
-}
-
-interface IUserFrontend extends IUserShared {
-  _id: string
-}
-
-interface IUserBackend extends IUserShared {
-  loginName: string,
-  loginPassword: string
-}
-
 const userSchema = new mongoose.Schema({
-  description: String,
-  displayName: String,
-  filename: String,
-  firstName: String,
-  lastName: String,
-  loginName: String,
-  loginPassword: String
-} as Record<keyof IUserBackend, StringConstructor>);
+  description: { type: String, default: '', required: true },
+  displayName: { type: String, required: true },
+  filename: { type: String, default: '', required: true },
+  firstName: { type: String, default: '', required: true },
+  lastName: { type: String, default: '', required: true },
+  loginName: { type: String, required: true },
+  loginPassword: { type: String, required: true }
+});
 
 /* Middleware to delete or update User-related documents before deletion.  */
 userSchema.pre(['findOneAndDelete'], async function() {
-  const _id = this.getQuery()._id;
+  const _id = this.getQuery()['_id'];
   const result = await User.findOne(this.getQuery(), ['filename']);
-  const filename = result.filename;
+  const filename = result?.filename || '';
   /* Delete user Votes.  */
   await Vote.deleteMany({ user: _id });
   /* Delete user-owned Comments.  */
@@ -86,4 +69,4 @@ userSchema.pre(['findOneAndDelete'], async function() {
 
 const User = mongoose.model('User', userSchema);
 
-export { User, IUserFrontend };
+export { User };

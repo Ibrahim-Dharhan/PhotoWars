@@ -1,11 +1,12 @@
 "use strict"
 
-import express = require('express');
-import { checkSchema, validationResult } from 'express-validator';
+import { Request, Response, Router } from 'express';
+import { checkSchema, matchedData, validationResult } from 'express-validator';
 import { NewUser } from '../../definitions/schemas/validation/newUser';
 import { User } from '../../definitions/schemas/mongoose/user';
+import { upload } from '../../server';
 
-const accountRouter = express.Router();
+const accountRouter = Router();
 
 /**
  * @openapi
@@ -89,7 +90,7 @@ accountRouter.post('/login', async (req, res) => {
  */
 accountRouter.post('/logout', (req, res) => {
   req.session.loggedIn = false;
-  req.session.userId = null;
+  req.session.userId = '';
   res.status(200).send('Successfully logged out.');
 });
 
@@ -128,7 +129,7 @@ accountRouter.post('/logout', (req, res) => {
  *       500:
  *         $ref: '#/components/responses/500'
  */
-accountRouter.post('/new', checkSchema(NewUser), async (req, res) => {
+accountRouter.post('/new', upload.none(), checkSchema(NewUser), async (req: Request, res: Response) => {
   const errors = validationResult(req);
   if (!errors.isEmpty()) {
     res.status(400).json({
@@ -137,13 +138,8 @@ accountRouter.post('/new', checkSchema(NewUser), async (req, res) => {
     return;
   }
   try {
-    const userObj = await User.create({
-      ...req.body,
-      ...{
-        firstName: 'first',
-        lastName: 'last'
-      }
-    });
+    const body = matchedData(req);
+    const userObj = await User.create(body);
     req.session.loggedIn = true;
     req.session.userId = userObj._id.toString();
     res.status(200).json(userObj.toObject());

@@ -15,16 +15,11 @@ import {
 import { Controller, useForm } from 'react-hook-form';
 import { getImageUrl } from '../../../definitions/getImageUrl';
 import { Link, useOutletContext, useNavigate } from 'react-router-dom';
-import { IUserFrontend } from '../../../definitions/schemas/mongoose/user';
 import { UserContext } from '../../contexts/UserContext';
-
-interface UVUserHeaderEditState {
-  user: IUserFrontend
-}
 
 const UserHeaderEdit = () => {
   const { setLoggedInUser } = useContext(UserContext);
-  const { user } = useOutletContext() as UVUserHeaderEditState;
+  const { user } = useOutletContext();
   const [imageUrl, setImageUrl] = useState('');
   const [image, setImage] = useState(null);
   const navigate = useNavigate();

@@ -1,11 +1,12 @@
 "use strict"
 
-import express = require('express');
+import { Request, Response, Router } from 'express';
 import { checkSchema, validationResult } from 'express-validator';
 import { ValidObjectId } from '../../definitions/schemas/validation/validObjectId';
 import { Vote } from '../../definitions/schemas/mongoose/vote';
+import { upload } from '../../server';
 
-const voteRouter = express.Router();
+const voteRouter = Router();
 
 /**
  * @openapi
@@ -29,7 +30,7 @@ const voteRouter = express.Router();
  *       500:
  *         $ref: '#/components/responses/500'
 */
-voteRouter.get('/:id', checkSchema(ValidObjectId), async (req, res) => {
+voteRouter.get('/:id', upload.none(), checkSchema(ValidObjectId), async (req: Request, res: Response) => {
   const errors = validationResult(req);
   if (!errors.isEmpty()) {
     res.status(404).json({
@@ -37,7 +38,7 @@ voteRouter.get('/:id', checkSchema(ValidObjectId), async (req, res) => {
     });
     return;
   }
-  const voteModelId = req.params.id;
+  const voteModelId = req.params['id'];
   const numVotesQuery = Vote.countDocuments({ post: voteModelId });
   const votedOnQuery = Vote.findOne({ post: voteModelId, user: req.session.userId });
 

@@ -11,7 +11,6 @@ import {
   Toolbar,
   Typography
 } from '@mui/material';
-import { IUserFrontend } from '../../../definitions/schemas/mongoose/user';
 import { SubmissionCard } from '../../components/submissionCard/SubmissionCard';
 import CommentCard from '../../components/commentCard/CommentCard';
 
@@ -25,7 +24,7 @@ const userViewLoader = async ({ params }) => {
 const UserView = () => {
   const navigate = useNavigate();
 
-  const user = useLoaderData() as IUserFrontend;
+  const user = useLoaderData();
   const [feed, setFeed] = useState('battles');
   const [battles, setBattles] = useState(null);
   const [submissions, setSubmissions] = useState(null);

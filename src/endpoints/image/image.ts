@@ -6,7 +6,7 @@ import path = require('path');
 import { AWS_BUCKET_NAME, AWS_REGION } from '../../definitions/s3';
 import * as constants from '../../definitions/constants';
 
-const IMAGE_DIR = process.env.IMAGE_DIR || constants._imageDir;
+const IMAGE_DIR = process.env['IMAGE_DIR'] || constants._imageDir;
 const imageRouter = express.Router();
 
 /**

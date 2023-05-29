@@ -10,16 +10,11 @@ import {
 } from '@mui/material';
 import { getImageUrl } from '../../../definitions/getImageUrl';
 import { DeleteDialog } from '../../components/deleteDialog/DeleteDialog';
-import { IUserFrontend } from '../../../definitions/schemas/mongoose/user';
 import { Link, useOutletContext } from 'react-router-dom';
 import { UserContext } from '../../contexts/UserContext';
 
-interface UVUserHeaderState {
-  user: IUserFrontend
-}
-
 const UserHeader = () => {
-  const { user } = useOutletContext() as UVUserHeaderState;
+  const { user } = useOutletContext();
   const { loggedInUser } = useContext(UserContext);
   const [imageUrl, setImageUrl] = useState('');
   const [openDeleteDialog, setOpenDeleteDialog] = useState(false);

@@ -45,7 +45,7 @@ const dummyData = dummyDataFunc();
   try {
     await Promise.all(battleModels.map(async (battle) => {
       await Battle.create(battle);
-      if (process.env.IMAGE_DIR) {
+      if (process.env['IMAGE_DIR']) {
         await uploadFileToS3({
           path: path.join(IMAGE_DIR, battle.filename),
           filename: battle.filename

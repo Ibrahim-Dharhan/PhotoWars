@@ -10,15 +10,15 @@ import session = require('express-session');
 
 import * as constants from './definitions/constants';
 
-const IMAGE_DIR = process.env.IMAGE_DIR || constants._imageDir;
-const MONGODB_URI = process.env.MONGODB_URI
+const IMAGE_DIR = process.env['IMAGE_DIR'] || constants._imageDir;
+const MONGODB_URI = process.env['MONGODB_URI']
                     || 'mongodb://127.0.0.1:27017/'
                        + constants._mongoDatabaseName;
 const storage = multer.diskStorage({
-  destination: function (req, file, cb) {
+  destination: (_req, _file, cb) => {
     cb(null, IMAGE_DIR);
   },
-  filename: function (req, file, cb) {
+  filename: (_req, file, cb) => {
     cb(null, `${Date.now()}-${file.originalname}`);
   },
 });
@@ -34,7 +34,7 @@ app.use(
     cookie: {},
     resave: false,
     saveUninitialized: false,
-    secret: process.env.SESSIONSECRET || constants._sessionSecret,
+    secret: process.env['SESSIONSECRET'] || constants._sessionSecret,
     store: MongoStore.create({ mongoUrl: MONGODB_URI })
   })
 );
@@ -66,7 +66,7 @@ app.use('/user', userRouter);
 import { voteRouter } from './endpoints/vote/vote';
 app.use('/vote', voteRouter);
 
-app.get('*', (req, res) => {
+app.get('*', (_, res) => {
   res.sendFile(path.join(__dirname, 'dist/index.html'));
 });
 
@@ -77,7 +77,7 @@ async function initServer() {
     fs.mkdirSync(IMAGE_DIR, { recursive: true });
   }
 
-  const PORT = process.env.PORT || constants._portNum;
+  const PORT = process.env['PORT'] || constants._portNum;
   app.listen(PORT, function() {
     console.log('Listening at http://127.0.0.1:' + PORT
                 + ' exporting the directory ' + __dirname + '.');
