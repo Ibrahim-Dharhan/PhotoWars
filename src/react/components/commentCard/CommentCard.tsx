@@ -1,14 +1,18 @@
 import React, { useContext, useEffect, useState } from 'react';
-import axios from 'axios';
+import axios, { isAxiosError } from 'axios';
 import { getImageUrl } from '../../../definitions/getImageUrl';
 import { Card, CardMedia, Grid, Typography } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import './style.css';
-import { UserContext } from '../../contexts/UserContext';
+import { UserContext } from '../../pages/Layout';
 import { CommentFrontend } from '../../../definitions/classes/commentFrontend';
 
-const CommentCard = ({ commentId }) => {
+interface IProps {
+  commentId: string;
+}
+
+const CommentCard = ({ commentId }: IProps) => {
   const { loggedInUser } = useContext(UserContext);
   const [battleViewPath, setBattleViewPath] = useState('');
   const [comment, setComment] = useState(new CommentFrontend());
@@ -34,7 +38,11 @@ const CommentCard = ({ commentId }) => {
     try {
       setCommentInfo();
     } catch (err) {
-      console.error(err.data);
+      if (isAxiosError(err)) {
+        console.error(err.response?.data);
+      } else {
+        console.error(err);
+      }
     }
     return () => {
       shouldUpdate = false;

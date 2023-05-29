@@ -1,5 +1,5 @@
 import React, { useContext, useEffect, useState } from 'react';
-import axios from 'axios';
+import axios, { isAxiosError } from 'axios';
 import PropTypes from 'prop-types';
 import {
   Box,
@@ -15,11 +15,13 @@ import {
 } from '@mui/material';
 import { getImageUrl } from '../../../definitions/getImageUrl';
 import { useLocation, useNavigate } from 'react-router-dom';
-import { UserContext } from '../../contexts/UserContext';
+import { UserContext } from '../../pages/Layout';
 
-const DailyBattleCard = ({
-  battleId,
-}) => {
+interface IProps {
+  battleId: string;
+}
+
+const DailyBattleCard = ({ battleId }: IProps) => {
   const { loggedInUser } = useContext(UserContext);
 
   const [caption, setCaption] = useState('');
@@ -41,42 +43,22 @@ const DailyBattleCard = ({
       if (shouldUpdate) {
         setCaption(battle.caption);
         setFilename(battle.filename);
+        setSubmitted(battle.submittedTo)
       }
     };
     try {
       setBattleInformation();
     } catch (err) {
-      console.error(err.data);
+      if (isAxiosError(err)) {
+        console.error(err.response?.data);
+      } else {
+        console.error(err);
+      }
     }
     return () => {
       shouldUpdate = false;
     };
   }, [battleId]);
-
-  /* useEffect for updating submission count.  */
-  useEffect(() => {
-    let shouldUpdate = true;
-    const getSubmissions = async () => {
-      const submissionsPath = `/battle/${battleId}/submissions`;
-      const submissionsRes = await axios.get(submissionsPath);
-
-      if (shouldUpdate) {
-        setSubmitted(
-          submissionsRes.data
-            .map((submission) => submission.author)
-            .includes(loggedInUser._id)
-        );
-      }
-    };
-    try {
-      getSubmissions();
-    } catch (err) {
-      console.error(err.data);
-    }
-    return () => {
-      shouldUpdate = false;
-    };
-  }, [battleId, loggedInUser._id]);
 
   /* useEffect for retrieving the image.  */
   useEffect(() => {

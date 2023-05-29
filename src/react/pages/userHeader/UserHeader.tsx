@@ -11,15 +11,24 @@ import {
 import { getImageUrl } from '../../../definitions/getImageUrl';
 import { DeleteDialog } from '../../components/deleteDialog/DeleteDialog';
 import { Link, useOutletContext } from 'react-router-dom';
-import { UserContext } from '../../contexts/UserContext';
+import { UserContext } from '../../pages/Layout';
+
+interface IUser {
+  _id: string;
+  description: string;
+  displayName: string;
+  filename: string;
+  firstName: string;
+  lastName: string;
+}
 
 const UserHeader = () => {
-  const { user } = useOutletContext();
+  const { user } = useOutletContext() as { user: IUser };
   const { loggedInUser } = useContext(UserContext);
   const [imageUrl, setImageUrl] = useState('');
   const [openDeleteDialog, setOpenDeleteDialog] = useState(false);
 
-  const handleDelete = async (event) => {
+  const handleDelete = async (event: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
     event.stopPropagation();
     event.preventDefault();
     setOpenDeleteDialog(true);
@@ -49,7 +58,7 @@ const UserHeader = () => {
         }}
       >
         <Avatar
-          src={imageUrl || null}
+          src={imageUrl}
           sx={{
             position: 'absolute',
             minWidth: '100%',
@@ -94,8 +103,8 @@ const UserHeader = () => {
           <DeleteDialog
             openDeleteDialog={openDeleteDialog}
             setOpenDeleteDialog={setOpenDeleteDialog}
-            postId={null}
-            postType={'user'}
+            objectId ={''}
+            objectModel={'user'}
           />
           <Button
             component={Link}

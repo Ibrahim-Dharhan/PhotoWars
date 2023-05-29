@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
-import axios from 'axios';
+import axios, { isAxiosError } from 'axios';
 import { BattleCard } from '../../components/battleCard/BattleCard';
-import { Outlet, useLoaderData, useNavigate } from 'react-router-dom';
+import { LoaderFunction, Outlet, useLoaderData, useNavigate } from 'react-router-dom';
 import {
   Box,
   Button,
@@ -14,21 +14,30 @@ import {
 import { SubmissionCard } from '../../components/submissionCard/SubmissionCard';
 import CommentCard from '../../components/commentCard/CommentCard';
 
-const userViewLoader = async ({ params }) => {
-  const id = params.id;
+const userViewLoader: LoaderFunction = async ({ params }) => {
+  const id = params['id'];
   const path = `/user/${id}`;
   const res = await axios.get(path);
   return res.data;
 };
 
+interface IUser {
+  _id: string;
+  description: string;
+  displayName: string;
+  filename: string;
+  firstName: string;
+  lastName: string;
+}
+
 const UserView = () => {
   const navigate = useNavigate();
 
-  const user = useLoaderData();
+  const user = useLoaderData() as IUser;
   const [feed, setFeed] = useState('battles');
-  const [battles, setBattles] = useState(null);
-  const [submissions, setSubmissions] = useState(null);
-  const [comments, setComments] = useState(null);
+  const [battles, setBattles] = useState<{_id: string}[] | null>(null);
+  const [submissions, setSubmissions] = useState<{_id: string, battle: string}[] | null>(null);
+  const [comments, setComments] = useState<{_id: string}[] | null>(null);
 
   useEffect(() => {
     let shouldUpdate = true;
@@ -48,7 +57,11 @@ const UserView = () => {
     try {
       setUserData();
     } catch (err) {
-      console.error(err.data);
+      if (isAxiosError(err)) {
+        console.error(err.response?.data);
+      } else {
+        console.error(err);
+      }
     }
     return () => {
       shouldUpdate = false;

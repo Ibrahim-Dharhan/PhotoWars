@@ -10,15 +10,22 @@ import {
   DialogTitle,
 } from '@mui/material';
 import { useLocation, useNavigate } from 'react-router-dom';
-import { LoggedInUser, UserContext } from '../../contexts/UserContext';
+import { LoggedInUser, UserContext } from '../../pages/Layout';
 import PropTypes from 'prop-types';
+
+interface IProps {
+  openDeleteDialog: boolean;
+  setOpenDeleteDialog: React.Dispatch<React.SetStateAction<boolean>>;
+  objectId: string;
+  objectModel: string;
+}
 
 const DeleteDialog = ({
   openDeleteDialog,
   setOpenDeleteDialog,
-  postId,
-  postType
-}) => {
+  objectId,
+  objectModel 
+}: IProps) => {
   const location = useLocation();
   const navigate = useNavigate();
   const [deleting, setDeleting] = useState(false);
@@ -29,15 +36,15 @@ const DeleteDialog = ({
   };
 
   const handleDelete = async () => {
-    const path = `/${postType}${postId ? '/' : ''}${postId || ''}`;
+    const path = `/${objectModel}${objectId ? '/' : ''}${objectId || ''}`;
     try {
       !deleting && await axios.delete(path);
-      if (location.pathname.startsWith(`/${postType}`)) {
+      if (location.pathname.startsWith(`/${objectModel}`)) {
         navigate('/');
       } else {
         navigate(0);
       }
-      if (postType === 'user') {
+      if (objectModel === 'user') {
         /* Log user out and update state.  */
         const path = '/account/logout';
         await axios.post(path);
@@ -65,7 +72,7 @@ const DeleteDialog = ({
         </DialogTitle>
         <DialogContent>
           <DialogContentText>
-            Do you want to delete this {postType}? This action cannot be undone.
+            Do you want to delete this {objectModel}? This action cannot be undone.
           </DialogContentText>
         </DialogContent>
         <DialogActions>
@@ -82,8 +89,8 @@ const DeleteDialog = ({
 DeleteDialog.propTypes = {
   openDeleteDialog: PropTypes.bool,
   setOpenDeleteDialog: PropTypes.func,
-  postId: PropTypes.string,
-  postType: PropTypes.string
+  objectId: PropTypes.string,
+  objectModel: PropTypes.string
 };
 
 export { DeleteDialog };

@@ -11,7 +11,7 @@ import {
   Typography
 } from '@mui/material';
 import AccountCircleOutlinedIcon from '@mui/icons-material/AccountCircleOutlined';
-import { LoggedInUser, UserContext } from '../../contexts/UserContext';
+import { LoggedInUser, UserContext } from '../../pages/Layout';
 import { LoginModal } from '../loginModal/LoginModal';
 import { Link, useNavigate } from 'react-router-dom';
 
@@ -21,7 +21,7 @@ const TopBar = () => {
     setLoggedInUser
   } = useContext(UserContext);
   const navigate = useNavigate();
-  const [anchorElement, setAnchorElement] = useState(null);
+  const [anchorElement, setAnchorElement] = useState<HTMLElement | null>(null);
 
   const handleLogOut = async () => {
     const path = '/account/logout';
@@ -34,6 +34,10 @@ const TopBar = () => {
       console.error(err);
     }
   }
+
+  const handleOpenUserMenu = (event: React.MouseEvent<HTMLElement>) => {
+    setAnchorElement(event.currentTarget);
+  };
 
   return (
     <AppBar
@@ -73,7 +77,7 @@ const TopBar = () => {
                     Create War
                   </Button>
                   <Button
-                    onClick={(event) => setAnchorElement(event.target)}
+                    onClick={handleOpenUserMenu}
                     startIcon={<AccountCircleOutlinedIcon />}
                   >
                     {loggedInUser.displayName}

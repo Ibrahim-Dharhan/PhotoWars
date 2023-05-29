@@ -262,8 +262,8 @@ userRouter.get('/:id/comments', async (req, res) => {
   const query = Comment.find({ author: userId }, ['_id']);
 
   try {
-    const commentProps = await query.lean().exec();
-    res.status(200).json(commentProps);
+    const comments = await query.lean().exec();
+    res.status(200).json(comments);
   } catch (err) {
     res.status(500).send('Internal server error.');
     return;
@@ -294,8 +294,8 @@ userRouter.get('/:id/submissions', async (req, res) => {
   const query = Submission.find({ author: userId }, ['_id', 'battle']);
 
   try {
-    const submissionProps = await query.lean().exec();
-    res.status(200).json(submissionProps);
+    const submissions = await query.lean().exec();
+    res.status(200).json(submissions);
   } catch (err) {
     res.status(500).send('Internal server error.');
     return;

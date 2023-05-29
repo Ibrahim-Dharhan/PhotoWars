@@ -9,8 +9,11 @@ import {
 } from '@mui/material';
 import PropTypes from 'prop-types';
 
+interface IProps {
+  postComment: (newComment: string) => Promise<void>;
+}
 
-const AddComment = ({ postComment }) => {
+const AddComment = ({ postComment }: IProps) => {
   const [commentText, setCommentText] = useState('');
 
   return (

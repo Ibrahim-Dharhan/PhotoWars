@@ -3,7 +3,7 @@
 import fs = require('fs');
 import path = require('path');
 import mongoose = require('mongoose');
-import { Request, Response, Router } from 'express';
+import express = require('express');
 import { Battle } from '../../definitions/schemas/mongoose/battle';
 import { checkSchema, matchedData, validationResult } from 'express-validator';
 import { NewBattle } from '../../definitions/schemas/validation/newBattle';
@@ -19,7 +19,7 @@ import { voteOn, unvoteOn } from '../../definitions/schemas/mongoose/vote';
 
 import * as constants from '../../definitions/constants';
 const IMAGE_DIR = process.env['IMAGE_DIR'] || constants._imageDir;
-const battleRouter = Router();
+const battleRouter = express.Router();
 
 /**
  * @openapi
@@ -120,7 +120,7 @@ battleRouter.get('/random', async (_req, res) => {
  *       500:
  *         $ref: '#/components/responses/500'
  */
-battleRouter.get('/:id', upload.none(), checkSchema(ValidObjectId), async (req: Request, res: Response) => {
+battleRouter.get('/:id', upload.none(), checkSchema(ValidObjectId), async (req: express.Request, res: express.Response) => {
   const errors = validationResult(req);
   if (!errors.isEmpty()) {
     res.status(404).json({
@@ -216,7 +216,7 @@ battleRouter.get('/:id', upload.none(), checkSchema(ValidObjectId), async (req: 
  *       500:
  *         $ref: '#/components/responses/500'
  */
-battleRouter.put('/:id', upload.none(), checkSchema({...ValidObjectId, ...UpdateBattle}), async (req: Request, res: Response) => {
+battleRouter.put('/:id', upload.none(), checkSchema({...ValidObjectId, ...UpdateBattle}), async (req: express.Request, res: express.Response) => {
   if (!req.session.loggedIn) {
     res.status(401).send('Not logged in.');
     return;
@@ -307,7 +307,7 @@ battleRouter.post(
   '/new',
   upload.single('file'),
   checkSchema(NewBattle),
-  async (req: Request, res: Response) => {
+  async (req: express.Request, res: express.Response) => {
     if (!req.file) {
       res.status(400).send('Invalid file.');
       return;
@@ -392,7 +392,7 @@ battleRouter.post(
   '/:id/submit',
   upload.single('file'),
   checkSchema({...ValidObjectId, ...NewSubmission}),
-  async (req: Request, res: Response) => {
+  async (req: express.Request, res: express.Response) => {
     if (!req.file) {
       res.status(400).send('Invalid file.');
       return;
@@ -466,7 +466,7 @@ battleRouter.post(
  *       500:
  *         $ref: '#/components/responses/500'
  */
-battleRouter.put('/:id/vote', upload.none(), checkSchema(ValidObjectId), async (req: Request, res: Response) => {
+battleRouter.put('/:id/vote', upload.none(), checkSchema(ValidObjectId), async (req: express.Request, res: express.Response) => {
   if (!req.session.loggedIn || !req.session.userId) {
     res.status(401).send('Must be logged in to perform this action.');
     return;
@@ -518,7 +518,7 @@ battleRouter.put('/:id/vote', upload.none(), checkSchema(ValidObjectId), async (
  *       500:
  *         $ref: '#/components/responses/500'
  */
-battleRouter.put('/:id/unvote', upload.none(), checkSchema(ValidObjectId), async (req: Request, res: Response) => {
+battleRouter.put('/:id/unvote', upload.none(), checkSchema(ValidObjectId), async (req: express.Request, res: express.Response) => {
   if (!req.session.loggedIn || !req.session.userId) {
     res.status(401).send('Must be logged in to perform this action.');
     return;
@@ -574,7 +574,7 @@ battleRouter.put('/:id/unvote', upload.none(), checkSchema(ValidObjectId), async
  *       500:
  *         $ref: '#/components/responses/500'
  */
-battleRouter.get('/:id/comments', upload.none(), checkSchema(ValidObjectId), async (req: Request, res: Response) => {
+battleRouter.get('/:id/comments', upload.none(), checkSchema(ValidObjectId), async (req: express.Request, res: express.Response) => {
   const errors = validationResult(req);
   if (!errors.isEmpty()) {
     res.status(404).json({
@@ -634,7 +634,7 @@ battleRouter.get('/:id/comments', upload.none(), checkSchema(ValidObjectId), asy
  *       500:
  *         $ref: '#/components/responses/500'
  */
-battleRouter.post('/:id/comment', upload.none(), checkSchema(ValidObjectId), async (req: Request, res: Response) => {
+battleRouter.post('/:id/comment', upload.none(), checkSchema(ValidObjectId), async (req: express.Request, res: express.Response) => {
   if (!req.session.loggedIn) {
     res.status(401).send('Not logged in.');
     return;
@@ -686,7 +686,7 @@ battleRouter.post('/:id/comment', upload.none(), checkSchema(ValidObjectId), asy
  *       500:
  *         $ref: '#/components/responses/500'
  */
-battleRouter.delete('/:id', upload.none(), checkSchema(ValidObjectId), async (req: Request, res: Response) => {
+battleRouter.delete('/:id', upload.none(), checkSchema(ValidObjectId), async (req: express.Request, res: express.Response) => {
   if (!req.session.loggedIn) {
     res.status(401).send('User not logged in.');
     return;
@@ -741,7 +741,7 @@ battleRouter.delete('/:id', upload.none(), checkSchema(ValidObjectId), async (re
  *       500:
  *         $ref: '#/components/responses/500'
  */
-battleRouter.get('/:id/submissions', upload.none(), checkSchema(ValidObjectId), async (req: Request, res: Response) => {
+battleRouter.get('/:id/submissions', upload.none(), checkSchema(ValidObjectId), async (req: express.Request, res: express.Response) => {
   const errors = validationResult(req);
   if (!errors.isEmpty()) {
     res.status(404).json({

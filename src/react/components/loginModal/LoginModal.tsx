@@ -1,5 +1,5 @@
 import React, { useContext, useState } from 'react';
-import axios from 'axios';
+import axios, { isAxiosError } from 'axios';
 import {
   Box,
   Button,
@@ -12,7 +12,7 @@ import {
   Typography
 } from '@mui/material';
 import { Controller, useForm } from 'react-hook-form';
-import { UserContext } from '../../contexts/UserContext';
+import { UserContext } from '../../pages/Layout';
 
 const style = {
   position: 'absolute',
@@ -26,6 +26,13 @@ const style = {
   p: 2
 };
 
+interface IFormData {
+  displayName?: string;
+  loginName: string;
+  loginPassword: string;
+  loginPasswordRepeat: string;
+}
+
 const LoginModal = () => {
   const { openLoginModal, setOpenLoginModal, setLoggedInUser } = useContext(UserContext);
   const [responseError, setResponseError] = useState('');
@@ -35,7 +42,7 @@ const LoginModal = () => {
           getValues,
           handleSubmit,
           reset: clearForm
-  } = useForm({ mode: 'onChange' });
+  } = useForm<IFormData>({ mode: 'onChange' });
 
   const closeModal = () => {
     clearForm();
@@ -43,7 +50,7 @@ const LoginModal = () => {
     setResponseError('');
   }
 
-  const handleFormSubmit = async (data) => {
+  const handleFormSubmit = async (data: IFormData) => {
     try {
       const path = registering ? '/account/new' : '/account/login';
       const res = await axios.post(path, data);
@@ -52,12 +59,16 @@ const LoginModal = () => {
       setLoggedInUser(user);
       localStorage.setItem('loggedInUser', JSON.stringify(user));
     } catch (err) {
-      if (typeof err.response.data === 'string') {
-        setResponseError(err.response.data);
-      } else if (err.response.data.errors !== null) {
-        setResponseError(err.response.data.errors[0].msg);
+      if (isAxiosError(err)) {
+        if (typeof err.response?.data === 'string') {
+          setResponseError(err.response?.data);
+        } else if (err.response?.data.errors !== null) {
+          setResponseError(err.response?.data.errors[0].msg);
+        }
+        console.error(err.response?.data);
+      } else {
+        console.error(err);
       }
-      console.error(err.response.data);
     }
   };
 
@@ -69,7 +80,7 @@ const LoginModal = () => {
         closeModal();
       }}
     >
-      <Fade in={openLoginModal} onExited={clearForm}>
+      <Fade in={openLoginModal} onExited={() => clearForm()}>
       <Box>
       <form onSubmit={handleSubmit(handleFormSubmit)}>
         <Stack

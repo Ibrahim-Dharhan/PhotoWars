@@ -15,25 +15,42 @@ import {
 import { Controller, useForm } from 'react-hook-form';
 import { getImageUrl } from '../../../definitions/getImageUrl';
 import { Link, useOutletContext, useNavigate } from 'react-router-dom';
-import { UserContext } from '../../contexts/UserContext';
+import { UserContext } from '../../pages/Layout';
+
+interface IUser {
+  _id: string;
+  description: string;
+  displayName: string;
+  filename: string;
+  firstName: string;
+  lastName: string;
+}
+
+interface IFormData {
+  file: File | null;
+  firstName: string;
+  lastName: string;
+  displayName: string;
+  description: string;
+}
 
 const UserHeaderEdit = () => {
   const { setLoggedInUser } = useContext(UserContext);
-  const { user } = useOutletContext();
+  const { user } = useOutletContext() as { user: IUser };
   const [imageUrl, setImageUrl] = useState('');
-  const [image, setImage] = useState(null);
+  const [image, setImage] = useState<File | null>(null);
   const navigate = useNavigate();
 
   const {
     control,
     handleSubmit,
     reset: clearForm,
-  } = useForm({ mode: 'onChange' });
+  } = useForm<IFormData>({ mode: 'onChange' });
 
-  const handleSave = async (data) => {
+  const handleSave = async (data: IFormData) => {
     const path = '/user';
     const form = new FormData();
-    form.append('file', image);
+    form.append('file', image as Blob);
     form.append('firstName', data.firstName);
     form.append('lastName', data.lastName);
     form.append('displayName', data.displayName);
@@ -49,6 +66,12 @@ const UserHeaderEdit = () => {
       console.error(err);
     }
   };
+
+  const handleImageChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    if (!event.target.files) return;
+    const file = event.target.files.item(0);
+    setImage(file);
+  }
 
   useEffect(() => {
     let shouldUpdate = true;
@@ -70,7 +93,7 @@ const UserHeaderEdit = () => {
       <Controller
         name="file"
         control={control}
-        defaultValue=""
+        defaultValue={null}
         render={({ field }) => (
           <Grid
             sx={{
@@ -98,7 +121,7 @@ const UserHeaderEdit = () => {
               type="file"
               hidden
               id="image-upload"
-              onChange={(event) => setImage(event.target.files[0])}
+              onChange={handleImageChange}
             />
             <label htmlFor="image-upload">
               <IconButton

@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import axios from 'axios';
+import axios, { isAxiosError } from 'axios';
 import {
   Avatar,
   Box,
@@ -15,6 +15,7 @@ import {
 import { getImageUrl } from '../../../definitions/getImageUrl';
 import AddComment from '../../components/addComment/AddComment';
 import {
+  LoaderFunction,
   redirect,
   useLoaderData,
   useNavigate,
@@ -34,8 +35,8 @@ const modalStyle = {
   p: 2,
 };
 
-const commentModalLoader = async ({ params, request }) => {
-  const postId = params.postId;
+const commentModalLoader: LoaderFunction = async ({ params, request }) => {
+  const postId = params['postId'];
   const postType = (new URL(request.url)).searchParams.get('postType');
   if (!postType) return redirect('..');
   const commentsPath = `/${postType}/${postId}/comments`;
@@ -49,9 +50,15 @@ const commentModalLoader = async ({ params, request }) => {
       postType: postType
     };
   } catch (err) {
-    if (err.response.status === 404) {
-      return redirect('/404');
-    }
+      if (isAxiosError(err)) {
+        if (err.response?.status === 404) {
+          return redirect('/404');
+        }
+        console.error(err.response?.data);
+      } else {
+        console.error(err);
+      }
+    return null;
   }
 };
 
@@ -66,8 +73,7 @@ interface Author {
 
 interface Comment {
   _id: string;
-  __v: number;
-  author: Author | null;
+  author: Author;
   commentedModel: string;
   creationTime: string;
   post: string;
@@ -76,7 +82,7 @@ interface Comment {
 
 interface Post {
   _id: string;
-  author: Author | null;
+  author: Author;
   caption: string;
   filename: string;
 }
@@ -121,7 +127,11 @@ const CommentModal = () => {
       const res = await axios.get(commentsPath);
       setComments(res.data);
     } catch (err) {
-      console.error(err.response.data);
+      if (isAxiosError(err)) {
+        console.error(err.response?.data);
+      } else {
+        console.error(err);
+      }
     }
   }
 

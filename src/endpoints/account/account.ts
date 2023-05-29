@@ -1,12 +1,12 @@
 "use strict"
 
-import { Request, Response, Router } from 'express';
+import express = require('express');
 import { checkSchema, matchedData, validationResult } from 'express-validator';
 import { NewUser } from '../../definitions/schemas/validation/newUser';
 import { User } from '../../definitions/schemas/mongoose/user';
 import { upload } from '../../server';
 
-const accountRouter = Router();
+const accountRouter = express.Router();
 
 /**
  * @openapi
@@ -129,7 +129,7 @@ accountRouter.post('/logout', (req, res) => {
  *       500:
  *         $ref: '#/components/responses/500'
  */
-accountRouter.post('/new', upload.none(), checkSchema(NewUser), async (req: Request, res: Response) => {
+accountRouter.post('/new', upload.none(), checkSchema(NewUser), async (req: express.Request, res: express.Response) => {
   const errors = validationResult(req);
   if (!errors.isEmpty()) {
     res.status(400).json({
