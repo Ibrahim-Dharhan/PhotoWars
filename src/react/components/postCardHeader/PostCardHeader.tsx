@@ -1,4 +1,5 @@
-import React, { useContext, useState } from 'react';
+import * as React from 'react';
+import { useContext, useState } from 'react';
 import {
   Avatar,
   Button,
@@ -6,10 +7,10 @@ import {
   IconButton,
 } from '@mui/material';
 import DownloadIcon from '@mui/icons-material/Download';
-import PropTypes from 'prop-types';
 import { DeleteDialog } from '../deleteDialog/DeleteDialog';
 import { Link, useNavigate } from 'react-router-dom';
-import { UserContext } from '../../pages/Layout';
+import { UserContext } from '../../contexts/UserContext';
+import { ILayoutUserContext } from '../../pages/Layout';
 
 interface IProps {
   post: any
@@ -18,7 +19,7 @@ interface IProps {
 const PostCardHeader = ({
   post
 }: IProps) => {
-  const { loggedInUser } = useContext(UserContext);
+  const { loggedInUser } = useContext(UserContext) as ILayoutUserContext;
   const [openDeleteDialog, setOpenDeleteDialog] = useState(false);
 
   const navigate = useNavigate();
@@ -100,9 +101,5 @@ const PostCardHeader = ({
     />
   );
 }
-
-PostCardHeader.propTypes = {
-  post: PropTypes.object
-};
 
 export { PostCardHeader };

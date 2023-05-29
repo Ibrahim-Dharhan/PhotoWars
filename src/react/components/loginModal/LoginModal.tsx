@@ -1,4 +1,5 @@
-import React, { useContext, useState } from 'react';
+import * as React from 'react';
+import { useContext, useState } from 'react';
 import axios, { isAxiosError } from 'axios';
 import {
   Box,
@@ -12,7 +13,8 @@ import {
   Typography
 } from '@mui/material';
 import { Controller, useForm } from 'react-hook-form';
-import { UserContext } from '../../pages/Layout';
+import { UserContext } from '../../contexts/UserContext';
+import { ILayoutUserContext } from '../../pages/Layout';
 
 const style = {
   position: 'absolute',
@@ -34,7 +36,7 @@ interface IFormData {
 }
 
 const LoginModal = () => {
-  const { openLoginModal, setOpenLoginModal, setLoggedInUser } = useContext(UserContext);
+  const { openLoginModal, setOpenLoginModal, setLoggedInUser } = useContext(UserContext) as ILayoutUserContext;
   const [responseError, setResponseError] = useState('');
   const [registering, setRegistering] = useState(false);
 

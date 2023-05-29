@@ -1,6 +1,6 @@
-import React, { useContext, useEffect, useState } from 'react';
+import * as React from 'react';
+import { useContext, useEffect, useState } from 'react';
 import axios, { isAxiosError } from 'axios';
-import PropTypes from 'prop-types';
 import {
   Box,
   Button,
@@ -15,14 +15,15 @@ import {
 } from '@mui/material';
 import { getImageUrl } from '../../../definitions/getImageUrl';
 import { useLocation, useNavigate } from 'react-router-dom';
-import { UserContext } from '../../pages/Layout';
+import { UserContext } from '../../contexts/UserContext';
+import { ILayoutUserContext } from '../../pages/Layout';
 
 interface IProps {
   battleId: string;
 }
 
 const DailyBattleCard = ({ battleId }: IProps) => {
-  const { loggedInUser } = useContext(UserContext);
+  const { loggedInUser } = useContext(UserContext) as ILayoutUserContext;
 
   const [caption, setCaption] = useState('');
   const [filename, setFilename] = useState('');
@@ -144,10 +145,6 @@ const DailyBattleCard = ({ battleId }: IProps) => {
       </CardActionArea>
     </Card>
   );
-};
-
-DailyBattleCard.propTypes = {
-  battleId: PropTypes.string,
 };
 
 export { DailyBattleCard };

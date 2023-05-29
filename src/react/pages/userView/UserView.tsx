@@ -1,4 +1,5 @@
-import React, { useEffect, useState } from 'react';
+import * as React from 'react';
+import { useEffect, useState } from 'react';
 import axios, { isAxiosError } from 'axios';
 import { BattleCard } from '../../components/battleCard/BattleCard';
 import { LoaderFunction, Outlet, useLoaderData, useNavigate } from 'react-router-dom';

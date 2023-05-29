@@ -1,4 +1,5 @@
-import React, { useContext, useEffect, useRef, useState } from 'react';
+import * as React from 'react';
+import { useContext, useEffect, useRef, useState } from 'react';
 import axios, { isAxiosError } from 'axios';
 import {
   ButtonBase,
@@ -15,19 +16,19 @@ import LockIcon from '@mui/icons-material/Lock';
 import ModeCommentOutlinedIcon from '@mui/icons-material/ModeCommentOutlined';
 import { getImageUrl } from '../../../definitions/getImageUrl';
 import { pink } from '@mui/material/colors';
-import { UserContext } from '../../pages/Layout';
+import { UserContext } from '../../contexts/UserContext';
 import { PostCardHeader } from '../postCardHeader/PostCardHeader';
 import { updateDeadline } from '../../../definitions/timerLogic';
 import { createSearchParams, useLocation, useNavigate } from 'react-router-dom';
-import PropTypes from 'prop-types';
 import './submissionCard.css';
+import { ILayoutUserContext } from '../../pages/Layout';
 
 interface IProps {
   submissionId: string
 }
 
 const SubmissionCard = ({ submissionId }: IProps) => {
-  const { loggedInUser, setOpenLoginModal } = useContext(UserContext);
+  const { loggedInUser, setOpenLoginModal } = useContext(UserContext) as ILayoutUserContext;
   const [caption, setCaption] = useState('');
   const [imageUrl, setImageUrl] = useState('');
   const [filename, setFilename] = useState('');
@@ -183,10 +184,6 @@ const SubmissionCard = ({ submissionId }: IProps) => {
       </CardActionArea>
     </Card>
   );
-};
-
-SubmissionCard.propTypes = {
-  submissionId: PropTypes.string
 };
 
 export { SubmissionCard };

@@ -1,4 +1,5 @@
-import React, { useContext, useState } from 'react';
+import * as React from 'react';
+import { useContext, useState } from 'react';
 import axios from 'axios';
 import {
   AppBar,
@@ -11,15 +12,17 @@ import {
   Typography
 } from '@mui/material';
 import AccountCircleOutlinedIcon from '@mui/icons-material/AccountCircleOutlined';
-import { LoggedInUser, UserContext } from '../../pages/Layout';
+// import { LoggedInUser, UserContext } from '../../pages/Layout';
+import { LoggedInUser, UserContext } from '../../contexts/UserContext';
 import { LoginModal } from '../loginModal/LoginModal';
 import { Link, useNavigate } from 'react-router-dom';
+import { ILayoutUserContext } from '../../pages/Layout';
 
 const TopBar = () => {
   const {
     loggedInUser,
     setLoggedInUser
-  } = useContext(UserContext);
+  } = useContext(UserContext) as ILayoutUserContext;
   const navigate = useNavigate();
   const [anchorElement, setAnchorElement] = useState<HTMLElement | null>(null);
 

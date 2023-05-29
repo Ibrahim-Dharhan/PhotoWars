@@ -1,4 +1,4 @@
-import React from 'react';
+import * as React from 'react';
 import axios from 'axios';
 import Grid from '@mui/material/Grid';
 import { LoaderFunction, Outlet, useLoaderData } from 'react-router-dom';

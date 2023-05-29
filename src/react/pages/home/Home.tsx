@@ -1,4 +1,4 @@
-import React from 'react';
+import * as React from 'react';
 import { RightBar } from '../../components/rightBar/RightBar';
 // import { SideBar } from '../../components/sideBar/SideBar';
 import { TopBar } from '../../components/topBar/TopBar';

@@ -1,5 +1,5 @@
-import React, { useContext, useEffect, useState } from 'react';
-import PropTypes from 'prop-types';
+import * as React from 'react';
+import { useContext, useEffect, useState } from 'react';
 import {
   Avatar,
   Box,
@@ -11,7 +11,8 @@ import {
 import { getImageUrl } from '../../../definitions/getImageUrl';
 import { DeleteDialog } from '../../components/deleteDialog/DeleteDialog';
 import { Link, useOutletContext } from 'react-router-dom';
-import { UserContext } from '../../pages/Layout';
+import { UserContext } from '../../contexts/UserContext';
+import { ILayoutUserContext } from '../Layout';
 
 interface IUser {
   _id: string;
@@ -24,7 +25,7 @@ interface IUser {
 
 const UserHeader = () => {
   const { user } = useOutletContext() as { user: IUser };
-  const { loggedInUser } = useContext(UserContext);
+  const { loggedInUser } = useContext(UserContext) as ILayoutUserContext;
   const [imageUrl, setImageUrl] = useState('');
   const [openDeleteDialog, setOpenDeleteDialog] = useState(false);
 
@@ -117,10 +118,6 @@ const UserHeader = () => {
       }
     </Box>
   );
-};
-
-UserHeader.propTypes = {
-  user: PropTypes.object,
 };
 
 export { UserHeader };

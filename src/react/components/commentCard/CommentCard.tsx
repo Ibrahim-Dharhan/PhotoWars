@@ -1,19 +1,20 @@
-import React, { useContext, useEffect, useState } from 'react';
+import * as React from 'react';
+import { useContext, useEffect, useState } from 'react';
 import axios, { isAxiosError } from 'axios';
 import { getImageUrl } from '../../../definitions/getImageUrl';
 import { Card, CardMedia, Grid, Typography } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
-import PropTypes from 'prop-types';
 import './style.css';
-import { UserContext } from '../../pages/Layout';
+import { UserContext } from '../../contexts/UserContext';
 import { CommentFrontend } from '../../../definitions/classes/commentFrontend';
+import { ILayoutUserContext } from '../../pages/Layout';
 
 interface IProps {
   commentId: string;
 }
 
 const CommentCard = ({ commentId }: IProps) => {
-  const { loggedInUser } = useContext(UserContext);
+  const { loggedInUser } = useContext(UserContext) as ILayoutUserContext;
   const [battleViewPath, setBattleViewPath] = useState('');
   const [comment, setComment] = useState(new CommentFrontend());
   const [imageUrl, setImageUrl] = useState('');
@@ -88,10 +89,6 @@ const CommentCard = ({ commentId }: IProps) => {
       </Grid>
     </Card>
   );
-};
-
-CommentCard.propTypes = {
-  commentId: PropTypes.string
 };
 
 export default CommentCard;

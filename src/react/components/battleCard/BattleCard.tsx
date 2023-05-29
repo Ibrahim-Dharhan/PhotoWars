@@ -1,10 +1,10 @@
-import React, { useContext, useEffect, useRef, useState } from 'react';
+import * as React from 'react';
+import { useContext, useEffect, useRef, useState } from 'react';
 import axios, { isAxiosError } from 'axios';
 import ModeCommentOutlinedIcon from '@mui/icons-material/ModeCommentOutlined';
 import FavoriteIcon from '@mui/icons-material/Favorite';
 import LockIcon from '@mui/icons-material/Lock';
 import ImageIcon from '@mui/icons-material/Image';
-import PropTypes from 'prop-types';
 import { blue, pink } from '@mui/material/colors';
 import {
   Box,
@@ -23,15 +23,16 @@ import { getImageUrl } from '../../../definitions/getImageUrl';
 import { PostCardHeader } from '../postCardHeader/PostCardHeader';
 import { updateDeadline } from '../../../definitions/timerLogic';
 import { createSearchParams, useLocation, useNavigate } from 'react-router-dom';
-import { UserContext } from '../../pages/Layout';
+import { UserContext } from '../../contexts/UserContext';
 import './battleCard.css';
+import { ILayoutUserContext } from '../../pages/Layout';
 
 interface IProps {
   battleId: string;
 }
 
 const BattleCard = ({ battleId }: IProps) => {
-  const { loggedInUser, setOpenLoginModal } = useContext(UserContext);
+  const { loggedInUser, setOpenLoginModal } = useContext(UserContext) as ILayoutUserContext;
   const [caption, setCaption] = useState('');
   const [filename, setFilename] = useState('');
   const [imageUrl, setImageUrl] = useState('');
@@ -267,10 +268,6 @@ const BattleCard = ({ battleId }: IProps) => {
       </CardActionArea>
     </Card>
   );
-};
-
-BattleCard.propTypes = {
-  battleId: PropTypes.string
 };
 
 export { BattleCard };

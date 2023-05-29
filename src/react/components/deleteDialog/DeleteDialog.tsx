@@ -1,5 +1,5 @@
-"use strict"
-import React, { useContext, useState } from 'react';
+import * as React from 'react';
+import { useContext, useState } from 'react';
 import axios from 'axios';
 import {
   Button,
@@ -10,8 +10,9 @@ import {
   DialogTitle,
 } from '@mui/material';
 import { useLocation, useNavigate } from 'react-router-dom';
-import { LoggedInUser, UserContext } from '../../pages/Layout';
-import PropTypes from 'prop-types';
+// import { LoggedInUser, UserContext } from '../../pages/Layout';
+import { LoggedInUser, UserContext } from '../../contexts/UserContext';
+import { ILayoutUserContext } from '../../pages/Layout';
 
 interface IProps {
   openDeleteDialog: boolean;
@@ -29,7 +30,7 @@ const DeleteDialog = ({
   const location = useLocation();
   const navigate = useNavigate();
   const [deleting, setDeleting] = useState(false);
-  const { setLoggedInUser } = useContext(UserContext);
+  const { setLoggedInUser } = useContext(UserContext) as ILayoutUserContext;
 
   const handleClose = () => {
     !deleting && setOpenDeleteDialog(false);
@@ -85,12 +86,5 @@ const DeleteDialog = ({
     </React.Fragment>
   );
 }
-
-DeleteDialog.propTypes = {
-  openDeleteDialog: PropTypes.bool,
-  setOpenDeleteDialog: PropTypes.func,
-  objectId: PropTypes.string,
-  objectModel: PropTypes.string
-};
 
 export { DeleteDialog };

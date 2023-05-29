@@ -1,42 +1,20 @@
-import React, { createContext, useEffect, useState } from 'react';
+import * as React from 'react';
+import { useEffect, useState } from 'react';
 import { Outlet } from 'react-router-dom';
+import { LoggedInUser, UserContext } from '../contexts/UserContext';
 
-class LoggedInUser {
-  _id: string;
-  description: string;
-  displayName: string;
-  filename: string;
-  firstName: string;
-  lastName: string;
-
-  constructor() {
-    this._id = '';
-    this.description = '';
-    this.displayName = '';
-    this.filename = '';
-    this.firstName = '';
-    this.lastName = '';
-  }
-}
-
-interface IUserContext {
+interface ILayoutUserContext {
   openLoginModal: boolean;
   setOpenLoginModal: React.Dispatch<React.SetStateAction<boolean>>;
   loggedInUser: LoggedInUser;
   setLoggedInUser: React.Dispatch<React.SetStateAction<LoggedInUser>>;
 }
 
-let UserContext = {} as React.Context<IUserContext>;
-
 const Layout = () => {
   const [openLoginModal, setOpenLoginModal] = useState(false);
   const [loggedInUser, setLoggedInUser] = useState(new LoggedInUser());
-  UserContext = createContext<IUserContext>({
-    openLoginModal: openLoginModal,
-    setOpenLoginModal: setOpenLoginModal,
-    loggedInUser: loggedInUser,
-    setLoggedInUser: setLoggedInUser
-  });
+
+  const contextValue = { openLoginModal, setOpenLoginModal, loggedInUser, setLoggedInUser };
 
   useEffect(() => {
     const storedUser = localStorage.getItem('loggedInUser');
@@ -47,8 +25,10 @@ const Layout = () => {
   }, []);
 
   return (
+    <UserContext.Provider value={contextValue}>
     <Outlet />
+    </UserContext.Provider>
   );
 };
 
-export { Layout, LoggedInUser, UserContext };
+export { Layout, ILayoutUserContext };
