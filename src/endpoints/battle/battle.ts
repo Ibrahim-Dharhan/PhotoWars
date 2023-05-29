@@ -591,6 +591,9 @@ battleRouter.get('/:id/comments', upload.none(), checkSchema(ValidObjectId), asy
     '-loginName',
     '-loginPassword',
     '-__v'
+  ]).populate('post', [
+    '-author',
+    '-__v'
   ]);
 
   try {
