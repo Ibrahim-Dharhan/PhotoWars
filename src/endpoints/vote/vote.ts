@@ -1,5 +1,6 @@
 "use strict"
 
+import mongoose = require('mongoose');
 import { Request, Response, Router } from 'express';
 import { checkSchema, validationResult } from 'express-validator';
 import { ValidObjectId } from '../../definitions/schemas/validation/validObjectId';
@@ -44,7 +45,11 @@ voteRouter.get('/:id', upload.none(), checkSchema(ValidObjectId), async (req: Re
 
   try {
     const numVotes = await numVotesQuery.exec();
-    const votedOn = !!(await votedOnQuery.lean().exec());
+
+    let votedOn = null;
+    if (mongoose.Types.ObjectId.isValid(req.session.userId || '')) {
+      votedOn = !!(await votedOnQuery.lean().exec());
+    }
     res.status(200).json({ numVotes: numVotes, votedOn: votedOn });
   } catch (err) {
     res.status(500).send('Internal server error.');

@@ -1,5 +1,6 @@
 'use strict';
 
+import mongoose = require('mongoose');
 import { Request, Response, Router } from 'express';
 import { checkSchema, matchedData, validationResult } from 'express-validator';
 import { UpdateSubmission } from '../../definitions/schemas/validation/updateSubmission';
@@ -34,10 +35,12 @@ const submissionRouter = Router();
 submissionRouter.get('/:id', async (req, res) => {
   const submissionId = req.params.id;
   const query = Submission.findById(submissionId);
+
   const numCommentsQuery = Comment.countDocuments({ post: submissionId });
+  const numVotesQuery = Vote.countDocuments({ post: submissionId });
+
   const commentedOnQuery = Comment.findOne({ post: submissionId,
                                              author: req.session.userId });
-  const numVotesQuery = Vote.countDocuments({ post: submissionId });
   const votedOnQuery = Vote.findOne({ post: submissionId,
                                       user: req.session.userId });
   try {
@@ -49,9 +52,13 @@ submissionRouter.get('/:id', async (req, res) => {
     if (result) {
       /* Found submission matching submissionId.  */
       const numComments = await numCommentsQuery.exec();
-      const commentedOn = !!(await commentedOnQuery.lean().exec());
       const numVotes = await numVotesQuery.exec();
-      const votedOn = !!(await votedOnQuery.lean().exec());
+
+      let commentedOn, votedOn = null;
+      if (mongoose.Types.ObjectId.isValid(req.session.userId || '')) {
+        commentedOn = !!(await commentedOnQuery.lean().exec());
+        votedOn = !!(await votedOnQuery.lean().exec());
+      }
       result = {
         ...result,
         ...{

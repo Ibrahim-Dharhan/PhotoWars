@@ -1,8 +1,9 @@
 'use strict';
 
-import { Request, Response, Router } from 'express';
 import fs = require('fs');
 import path = require('path');
+import mongoose = require('mongoose');
+import { Request, Response, Router } from 'express';
 import { Battle } from '../../definitions/schemas/mongoose/battle';
 import { checkSchema, matchedData, validationResult } from 'express-validator';
 import { NewBattle } from '../../definitions/schemas/validation/newBattle';
@@ -130,13 +131,15 @@ battleRouter.get('/:id', upload.none(), checkSchema(ValidObjectId), async (req: 
 
   const battleId = req.params['id'];
   const query = Battle.findById(battleId);
+
   const numCommentsQuery = Comment.countDocuments({ post: battleId });
-  const commentedOnQuery = Comment.findOne({ post: battleId,
-                                             author: req.session.userId });
   const numSubmissionsQuery = Submission.countDocuments({ battle: battleId });
-  const submittedToQuery = Submission.findOne({ battle: battleId,
-                                             author: req.session.userId });
   const numVotesQuery = Vote.countDocuments({ post: battleId });
+
+  const commentedOnQuery = Comment.findOne({ post: battleId,
+                                            author: req.session.userId });
+  const submittedToQuery = Submission.findOne({ battle: battleId,
+                                            author: req.session.userId });
   const votedOnQuery = Vote.findOne({ post: battleId,
                                       user: req.session.userId });
   try {
@@ -144,11 +147,15 @@ battleRouter.get('/:id', upload.none(), checkSchema(ValidObjectId), async (req: 
     if (result) {
       /* Found battle matching battle id.  */
       const numComments = await numCommentsQuery.exec();
-      const commentedOn = !!(await commentedOnQuery.lean().exec());
       const numSubmissions = await numSubmissionsQuery.exec();
-      const submittedTo = !!(await submittedToQuery.lean().exec());
       const numVotes = await numVotesQuery.exec();
-      const votedOn = !!(await votedOnQuery.lean().exec());
+
+      let commentedOn, submittedTo, votedOn = null;
+      if (mongoose.Types.ObjectId.isValid(req.session.userId || '')) {
+        commentedOn = !!(await commentedOnQuery.lean().exec());
+        submittedTo = !!(await submittedToQuery.lean().exec());
+        votedOn = !!(await votedOnQuery.lean().exec());
+      }
       result = {
         ...result,
         ...{

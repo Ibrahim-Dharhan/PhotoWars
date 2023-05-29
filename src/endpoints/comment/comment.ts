@@ -1,5 +1,6 @@
 "use strict"
 
+import mongoose = require('mongoose');
 import { Request, Response, Router } from 'express';
 import { checkSchema, validationResult } from 'express-validator';
 import { Comment } from '../../definitions/schemas/mongoose/comment';
@@ -42,7 +43,11 @@ commentRouter.get('/:id', async (req, res) => {
   try {
     let result = await query.lean().exec();
     const numVotes = await numVotesQuery.exec();
-    const votedOn = !!(await votedOnQuery.lean().exec());
+
+    let votedOn = null;
+    if (mongoose.Types.ObjectId.isValid(req.session.userId || '')) {
+      votedOn = !!(await votedOnQuery.lean().exec());
+    }
     if (result) {
       /* Found comment with id.  */
       result = {
