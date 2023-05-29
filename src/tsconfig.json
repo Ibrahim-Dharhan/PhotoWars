@@ -29,6 +29,5 @@
     "noPropertyAccessFromIndexSignature": true,
     "allowUnusedLabels": true,
     "allowUnreachableCode": true
-  },
-  "include": ["./**/*.ts", "./**/*.tsx"]
+  }
 }

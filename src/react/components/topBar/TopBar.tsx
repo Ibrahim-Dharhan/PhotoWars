@@ -28,7 +28,7 @@ const TopBar = () => {
     try {
       await axios.post(path);
       setLoggedInUser(new LoggedInUser())
-      localStorage.removeItem('user');
+      localStorage.removeItem('loggedInUser');
       navigate('/');
     } catch (err) {
       console.error(err);

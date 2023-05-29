@@ -42,7 +42,7 @@ const DeleteDialog = ({
         const path = '/account/logout';
         await axios.post(path);
         setLoggedInUser(new LoggedInUser());
-        localStorage.removeItem('user');
+        localStorage.removeItem('loggedInUser');
       }
       setDeleting(true);
     } catch (err) {
