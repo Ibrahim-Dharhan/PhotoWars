@@ -17,7 +17,7 @@ import { ILayoutUserContext } from '../../pages/Layout';
 interface IProps {
   openDeleteDialog: boolean;
   setOpenDeleteDialog: React.Dispatch<React.SetStateAction<boolean>>;
-  objectId: string;
+  objectId: string | undefined;
   objectModel: string;
 }
 

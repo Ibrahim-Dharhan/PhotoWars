@@ -12,8 +12,20 @@ import { Link, useNavigate } from 'react-router-dom';
 import { UserContext } from '../../contexts/UserContext';
 import { ILayoutUserContext } from '../../pages/Layout';
 
+interface Author {
+  _id: string;
+  displayName: string;
+}
+
+interface IPost {
+  _id: string;
+  author: Author;
+  battle?: string;
+  filename: string;
+}
+
 interface IProps {
-  post: any
+  post: IPost | null;
 }
 
 const PostCardHeader = ({
@@ -27,6 +39,7 @@ const PostCardHeader = ({
   const handleDownload = async (event: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
     event.stopPropagation();
     event.preventDefault();
+    if (!post?.filename) return;
     const url = `/image/${post?.filename}`;
     const link = document.createElement('a');
     link.href = url;

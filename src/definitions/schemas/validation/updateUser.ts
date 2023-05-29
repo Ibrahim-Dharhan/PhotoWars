@@ -11,6 +11,7 @@ const UpdateUser = {
       },
     },
     displayNameNotInUse: {
+      // eslint-disable-next-line
       custom: async (displayName: string, { req }: any) => {
         const userId = req.session.userId;
         const query = User.findOne({ 
