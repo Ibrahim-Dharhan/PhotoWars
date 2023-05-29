@@ -32,11 +32,11 @@ import { Vote } from './vote';
  *           type: string
  */
 const battleSchema = new mongoose.Schema({
-  author: { type: mongoose.Schema.Types.ObjectId, ref: 'User' },
-  caption: String,
-  creationTime: { type: Date, default: Date.now },
-  deadline: Date,
-  filename: String,
+  author: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true },
+  caption: { type: String, required: true},
+  creationTime: { type: Date, default: Date.now, required: true },
+  deadline: { type: Date, required: true},
+  filename: { type: String, required: true},
 });
 
 /* Middleware to delete or update Battle-related documents before deletion.  */

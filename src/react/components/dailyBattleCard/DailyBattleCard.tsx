@@ -1,6 +1,6 @@
-import React, { useContext, useEffect, useState } from 'react';
-import axios from 'axios';
-import PropTypes from 'prop-types';
+import * as React from 'react';
+import { useContext, useEffect, useState } from 'react';
+import axios, { isAxiosError } from 'axios';
 import {
   Box,
   Button,
@@ -16,11 +16,14 @@ import {
 import { getImageUrl } from '../../../definitions/getImageUrl';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { UserContext } from '../../contexts/UserContext';
+import { ILayoutUserContext } from '../../pages/Layout';
 
-const DailyBattleCard = ({
-  battleId,
-}) => {
-  const { userId } = useContext(UserContext);
+interface IProps {
+  battleId: string;
+}
+
+const DailyBattleCard = ({ battleId }: IProps) => {
+  const { loggedInUser } = useContext(UserContext) as ILayoutUserContext;
 
   const [caption, setCaption] = useState('');
   const [filename, setFilename] = useState('');
@@ -41,42 +44,22 @@ const DailyBattleCard = ({
       if (shouldUpdate) {
         setCaption(battle.caption);
         setFilename(battle.filename);
+        setSubmitted(battle.submittedTo)
       }
     };
     try {
       setBattleInformation();
     } catch (err) {
-      console.error(err.data);
+      if (isAxiosError(err)) {
+        console.error(err.response?.data);
+      } else {
+        console.error(err);
+      }
     }
     return () => {
       shouldUpdate = false;
     };
   }, [battleId]);
-
-  /* useEffect for updating submission count.  */
-  useEffect(() => {
-    let shouldUpdate = true;
-    const getSubmissions = async () => {
-      const submissionsPath = `/battle/${battleId}/submissions`;
-      const submissionsRes = await axios.get(submissionsPath);
-
-      if (shouldUpdate) {
-        setSubmitted(
-          submissionsRes.data
-            .map((submission) => submission.author)
-            .includes(userId)
-        );
-      }
-    };
-    try {
-      getSubmissions();
-    } catch (err) {
-      console.error(err.data);
-    }
-    return () => {
-      shouldUpdate = false;
-    };
-  }, [battleId, userId]);
 
   /* useEffect for retrieving the image.  */
   useEffect(() => {
@@ -130,7 +113,7 @@ const DailyBattleCard = ({
             title={
               submitted
                 ? 'Only one submission is allowed.'
-                : !userId && 'Log in to submit to this battle.'
+                : !loggedInUser._id && 'Log in to submit to this battle.'
             }
           >
             <Box
@@ -149,7 +132,7 @@ const DailyBattleCard = ({
                 variant='contained'
                 disabled={
                   submitted ||
-                  !userId ||
+                  !loggedInUser._id ||
                   location.pathname.endsWith('submit')
                 }
                 fullWidth
@@ -162,10 +145,6 @@ const DailyBattleCard = ({
       </CardActionArea>
     </Card>
   );
-};
-
-DailyBattleCard.propTypes = {
-  battleId: PropTypes.string,
 };
 
 export { DailyBattleCard };

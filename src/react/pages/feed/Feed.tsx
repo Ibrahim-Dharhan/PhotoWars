@@ -1,10 +1,10 @@
-import React from 'react';
+import * as React from 'react';
 import axios from 'axios';
 import { BattleCard } from '../../components/battleCard/BattleCard';
-import { useLoaderData } from 'react-router-dom';
+import { LoaderFunction, useLoaderData } from 'react-router-dom';
 import { ImageList } from '@mui/material';
 
-const feedLoader = async ({ request }) => {
+const feedLoader: LoaderFunction = async ({ request }) => {
   const url = new URL(request.url);
   const path = '/battle/all';
   const res = await axios.get(path, {

@@ -1,4 +1,5 @@
-import React, { useState } from 'react';
+import * as React from 'react';
+import { useState } from 'react';
 import {
   Avatar,
   Box,
@@ -7,10 +8,12 @@ import {
   Stack,
   TextField,
 } from '@mui/material';
-import PropTypes from 'prop-types';
 
+interface IProps {
+  postComment: (newComment: string) => Promise<void>;
+}
 
-const AddComment = ({ postComment }) => {
+const AddComment = ({ postComment }: IProps) => {
   const [commentText, setCommentText] = useState('');
 
   return (
@@ -45,10 +48,6 @@ const AddComment = ({ postComment }) => {
       </Box>
     </Card>
   );
-};
-
-AddComment.propTypes = {
-  handlePostComment: PropTypes.func
 };
 
 export default AddComment;

@@ -30,11 +30,11 @@ import { Vote } from './vote';
  *           type: string
  */
 const submissionSchema = new mongoose.Schema({
-  author: { type: mongoose.Schema.Types.ObjectId, ref: 'User' },
-  battle: { type: mongoose.Schema.Types.ObjectId, ref: 'Battle' },
-  caption: String,
-  creationTime: { type: Date, default: Date.now },
-  filename: String,
+  author: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true },
+  battle: { type: mongoose.Schema.Types.ObjectId, ref: 'Battle', required: true },
+  caption: { type: String, required: true },
+  creationTime: { type: Date, default: Date.now, required: true },
+  filename: { type: String, required: true },
 });
 
 /* Middleware to delete or update Submission-related documents before deletion.  */

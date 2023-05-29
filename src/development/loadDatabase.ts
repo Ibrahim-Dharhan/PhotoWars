@@ -7,10 +7,10 @@ dotenv.config();
 import { uploadFileToS3 } from '../definitions/s3';
 import * as constants from '../definitions/constants';
 
-const MONGODB_URI = process.env.MONGODB_URI
+const MONGODB_URI = process.env['MONGODB_URI']
                     || 'mongodb://127.0.0.1:27017/'
                        + constants._mongoDatabaseName;
-const IMAGE_DIR = process.env.IMAGE_DIR || constants._imageDir;
+const IMAGE_DIR = process.env['IMAGE_DIR'] || constants._imageDir;
 mongoose.connect(MONGODB_URI);
 
 /* Mongoose schemas.  */
@@ -45,7 +45,7 @@ const dummyData = dummyDataFunc();
   try {
     await Promise.all(battleModels.map(async (battle) => {
       await Battle.create(battle);
-      if (process.env.IMAGE_DIR) {
+      if (process.env['IMAGE_DIR']) {
         await uploadFileToS3({
           path: path.join(IMAGE_DIR, battle.filename),
           filename: battle.filename
@@ -74,7 +74,7 @@ const dummyData = dummyDataFunc();
   try {
     await Promise.all(submissionModels.map(async (submission) => {
       await Submission.create(submission);
-      if (process.env.IMAGE_DIR) {
+      if (process.env['IMAGE_DIR']) {
         await uploadFileToS3({
           path: path.join(IMAGE_DIR, submission.filename),
           filename: submission.filename
@@ -92,7 +92,7 @@ const dummyData = dummyDataFunc();
   try {
     await Promise.all(userModels.map(async (user) => {
       await User.create(user);
-      if (process.env.IMAGE_DIR) {
+      if (process.env['IMAGE_DIR']) {
         await uploadFileToS3({
           path: path.join(IMAGE_DIR, user.filename),
           filename: user.filename

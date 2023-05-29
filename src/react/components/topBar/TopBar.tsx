@@ -1,4 +1,5 @@
-import React, { useContext, useState } from 'react';
+import * as React from 'react';
+import { useContext, useState } from 'react';
 import axios from 'axios';
 import {
   AppBar,
@@ -11,32 +12,35 @@ import {
   Typography
 } from '@mui/material';
 import AccountCircleOutlinedIcon from '@mui/icons-material/AccountCircleOutlined';
-import { UserContext } from '../../contexts/UserContext';
+// import { LoggedInUser, UserContext } from '../../pages/Layout';
+import { LoggedInUser, UserContext } from '../../contexts/UserContext';
 import { LoginModal } from '../loginModal/LoginModal';
 import { Link, useNavigate } from 'react-router-dom';
+import { ILayoutUserContext } from '../../pages/Layout';
 
 const TopBar = () => {
   const {
-    displayName,
-    setDisplayName,
-    userId,
-    setUserId
-  } = useContext(UserContext);
+    loggedInUser,
+    setLoggedInUser
+  } = useContext(UserContext) as ILayoutUserContext;
   const navigate = useNavigate();
-  const [anchorElement, setAnchorElement] = useState(null);
+  const [anchorElement, setAnchorElement] = useState<HTMLElement | null>(null);
 
   const handleLogOut = async () => {
     const path = '/account/logout';
     try {
       await axios.post(path);
-      setDisplayName('');
-      setUserId('');
-      localStorage.removeItem('user');
+      setLoggedInUser(new LoggedInUser())
+      localStorage.removeItem('loggedInUser');
       navigate('/');
     } catch (err) {
       console.error(err);
     }
   }
+
+  const handleOpenUserMenu = (event: React.MouseEvent<HTMLElement>) => {
+    setAnchorElement(event.currentTarget);
+  };
 
   return (
     <AppBar
@@ -66,7 +70,7 @@ const TopBar = () => {
             PHOTOWARS
           </Typography>
           <Box>
-            {userId === null ? <div /> : userId !== '' ?
+            {loggedInUser._id === null ? <div /> : loggedInUser._id !== '' ?
               <Stack direction="row" spacing={2}>
                   <Button
                     component={Link}
@@ -76,10 +80,10 @@ const TopBar = () => {
                     Create War
                   </Button>
                   <Button
-                    onClick={(event) => setAnchorElement(event.target)}
+                    onClick={handleOpenUserMenu}
                     startIcon={<AccountCircleOutlinedIcon />}
                   >
-                    {displayName}
+                    {loggedInUser.displayName}
                   </Button>
                   <Menu
                     sx={{ mt: '45px' }}
@@ -99,7 +103,7 @@ const TopBar = () => {
                     <MenuItem
                       key={'profile'} 
                       onClick={() => {
-                        navigate(`/users/${userId}`)
+                        navigate(`/users/${loggedInUser._id}`)
                         setAnchorElement(null);
                       }}
                     >

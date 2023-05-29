@@ -1,4 +1,4 @@
-import React from 'react';
+import * as React from 'react';
 import ExploreOutlinedIcon from '@mui/icons-material/ExploreOutlined';
 import TrendingUpIcon from '@mui/icons-material/TrendingUp';
 import {

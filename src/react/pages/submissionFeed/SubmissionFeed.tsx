@@ -1,11 +1,11 @@
-import React from 'react';
+import * as React from 'react';
 import axios from 'axios';
 import Grid from '@mui/material/Grid';
-import { Outlet, useLoaderData } from 'react-router-dom';
+import { LoaderFunction, Outlet, useLoaderData } from 'react-router-dom';
 import { SubmissionCard } from '../../components/submissionCard/SubmissionCard';
 
-const submissionFeedLoader = async({ params }) => {
-  const battleId = params.battleId;
+const submissionFeedLoader: LoaderFunction = async({ params }) => {
+  const battleId = params['battleId'];
   const path = `/battle/${battleId}/submissions`;
   const res = await axios.get(path);
   return res.data;

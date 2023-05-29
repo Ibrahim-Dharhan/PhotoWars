@@ -1,10 +1,10 @@
-import React, { useContext, useEffect, useRef, useState } from 'react';
-import axios from 'axios';
+import * as React from 'react';
+import { useContext, useEffect, useRef, useState } from 'react';
+import axios, { isAxiosError } from 'axios';
 import ModeCommentOutlinedIcon from '@mui/icons-material/ModeCommentOutlined';
 import FavoriteIcon from '@mui/icons-material/Favorite';
 import LockIcon from '@mui/icons-material/Lock';
 import ImageIcon from '@mui/icons-material/Image';
-import PropTypes from 'prop-types';
 import { blue, pink } from '@mui/material/colors';
 import {
   Box,
@@ -25,11 +25,14 @@ import { updateDeadline } from '../../../definitions/timerLogic';
 import { createSearchParams, useLocation, useNavigate } from 'react-router-dom';
 import { UserContext } from '../../contexts/UserContext';
 import './battleCard.css';
+import { ILayoutUserContext } from '../../pages/Layout';
 
-const BattleCard = ({
-  battleId,
-}) => {
-  const { userId, setOpen } = useContext(UserContext);
+interface IProps {
+  battleId: string;
+}
+
+const BattleCard = ({ battleId }: IProps) => {
+  const { loggedInUser, setOpenLoginModal } = useContext(UserContext) as ILayoutUserContext;
   const [caption, setCaption] = useState('');
   const [filename, setFilename] = useState('');
   const [imageUrl, setImageUrl] = useState('');
@@ -43,7 +46,7 @@ const BattleCard = ({
   const [expired, setExpired] = useState(true);
 
   const _battle = useRef(null);
-  const _timerEvent = useRef(null);
+  const _timerEvent = useRef<NodeJS.Timer | null>(null);
 
   const location = useLocation();
   const navigate = useNavigate();
@@ -78,12 +81,16 @@ const BattleCard = ({
     try {
       setBattleInformation();
     } catch (err) {
-      console.error(err.data);
+      if (isAxiosError(err)) {
+        console.error(err.response?.data);
+      } else {
+        console.error(err);
+      }
     }
     return () => {
       shouldUpdate = false;
     };
-  }, [battleId, expired, location, userId]);
+  }, [battleId, expired, location, loggedInUser._id]);
 
   /* useEffect for retrieving the image.  */
   useEffect(() => {
@@ -97,7 +104,11 @@ const BattleCard = ({
     try {
       setImage();
     } catch (err) {
-      console.error(err.data);
+      if (isAxiosError(err)) {
+        console.error(err.response?.data);
+      } else {
+        console.error(err);
+      }
     }
     return () => {
       shouldUpdate = false;
@@ -120,7 +131,11 @@ const BattleCard = ({
       setVoted(!voted);
       setNumVotes(numVotes + (voted ? -1 : 1));
     } catch (err) {
-      console.error(err.response.data);
+      if (isAxiosError(err)) {
+        console.error(err.response?.data);
+      } else {
+        console.error(err);
+      }
     }
   };
 
@@ -143,7 +158,7 @@ const BattleCard = ({
           }
         }}
       >
-        <PostCardHeader _post={_battle} />
+        <PostCardHeader post={_battle.current} />
         <ButtonBase
           onClick={() => {
             openCommentModal();
@@ -170,7 +185,7 @@ const BattleCard = ({
             <ImageIcon
               sx={{
                 pr: 1,
-                color: submitted && blue[500],
+                color: submitted ? blue[500] : null,
               }}
             />
             <Typography>{numSubmissions}</Typography>
@@ -180,18 +195,18 @@ const BattleCard = ({
             onClick={(event) => {
               event.stopPropagation();
               event.preventDefault();
-              if (userId !== '' && !expired) {
+              if (loggedInUser._id !== '' && !expired) {
                 vote();
               } else {
-                setOpen(true);
+                setOpenLoginModal(true);
               }
             }}
             disableRipple={expired}
           >
             {
               expired
-              ? <LockIcon sx={{ pr: 1, color: voted && pink[500] }} />
-              : <FavoriteIcon sx={{ pr: 1, color: voted && pink[500] }} />
+              ? <LockIcon sx={{ pr: 1, color: voted ? pink[500] : null }} />
+              : <FavoriteIcon sx={{ pr: 1, color: voted ? pink[500] : null }} />
             }
             <Typography>{numVotes}</Typography>
           </IconButton>
@@ -204,7 +219,7 @@ const BattleCard = ({
             }}
           >
             <ModeCommentOutlinedIcon
-              sx={{ pr: 1, color: commented && pink[500] }}
+              sx={{ pr: 1, color: commented ? pink[500] : null }}
             />
             <Typography>{numComments}</Typography>
           </IconButton>
@@ -218,7 +233,7 @@ const BattleCard = ({
                   title={
                     submitted
                       ? 'Only one submission is allowed.'
-                      : !userId && 'Log in to submit to this battle.'
+                      : !loggedInUser && 'Log in to submit to this battle.'
                   }
                 >
                   <span
@@ -238,7 +253,7 @@ const BattleCard = ({
                       color='primary'
                       disabled={
                         submitted ||
-                        !userId ||
+                        !loggedInUser ||
                         location.pathname.endsWith('submit')
                       }
                     >
@@ -253,10 +268,6 @@ const BattleCard = ({
       </CardActionArea>
     </Card>
   );
-};
-
-BattleCard.propTypes = {
-  battleId: PropTypes.string
 };
 
 export { BattleCard };

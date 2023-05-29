@@ -1,26 +1,35 @@
-import React from 'react';
-import axios from 'axios';
+import * as React from 'react';
+import axios, { isAxiosError } from 'axios';
 import {
   Stack
 } from '@mui/material';
 import { BattleCard } from '../../components/battleCard/BattleCard';
-import { Outlet, redirect, useParams } from 'react-router-dom';
+import { LoaderFunction, Outlet, redirect, useParams } from 'react-router-dom';
 
-const battleViewLoader = async ({ params }) => {
-  const battleId = params.battleId;
+const battleViewLoader: LoaderFunction = async ({ params }) => {
+  const battleId = params['battleId'];
   const path = `/battle/${battleId}`;
   try {
     await axios.get(path);
   } catch (err) {
-    if (err.response.status === 404) {
-      return redirect('/404');
-    }
+      if (isAxiosError(err)) {
+        if (err.response?.status === 404) {
+          return redirect('/404');
+        }
+        console.error(err.response?.data);
+      } else {
+        console.error(err);
+      }
   }
   return null;
 }
 
+interface IParams {
+  battleId: string
+}
+
 const BattleView = () => {
-  const { battleId } = useParams();
+  const { battleId } = useParams<'battleId'>() as IParams;
 
   return (
     <Stack

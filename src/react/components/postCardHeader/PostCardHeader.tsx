@@ -1,6 +1,5 @@
-"use strict";
-
-import React, { useContext, useState } from 'react';
+import * as React from 'react';
+import { useContext, useState } from 'react';
 import {
   Avatar,
   Button,
@@ -8,33 +7,50 @@ import {
   IconButton,
 } from '@mui/material';
 import DownloadIcon from '@mui/icons-material/Download';
-import PropTypes from 'prop-types';
 import { DeleteDialog } from '../deleteDialog/DeleteDialog';
 import { Link, useNavigate } from 'react-router-dom';
 import { UserContext } from '../../contexts/UserContext';
+import { ILayoutUserContext } from '../../pages/Layout';
+
+interface Author {
+  _id: string;
+  displayName: string;
+}
+
+interface IPost {
+  _id: string;
+  author: Author;
+  battle?: string;
+  filename: string;
+}
+
+interface IProps {
+  post: IPost | null;
+}
 
 const PostCardHeader = ({
-  _post
-}) => {
-  const { userId } = useContext(UserContext);
+  post
+}: IProps) => {
+  const { loggedInUser } = useContext(UserContext) as ILayoutUserContext;
   const [openDeleteDialog, setOpenDeleteDialog] = useState(false);
 
   const navigate = useNavigate();
 
-  const handleDownload = async (event) => {
+  const handleDownload = async (event: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
     event.stopPropagation();
     event.preventDefault();
-    const url = `/image/${_post.current?.filename}`;
+    if (!post?.filename) return;
+    const url = `/image/${post?.filename}`;
     const link = document.createElement('a');
     link.href = url;
-    link.download = _post.current?.filename;
+    link.download = post?.filename;
     link.click();
   };
 
-  const handleDelete = async (event) => {
+  const handleDelete = async (event: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
     event.stopPropagation();
     event.preventDefault();
-    setOpenDeleteDialog(true);
+    // setOpenDeleteDialog(true);
   };
 
   return (
@@ -45,10 +61,10 @@ const PostCardHeader = ({
             onClick={(event) => {
               event.stopPropagation();
               event.preventDefault();
-              navigate(`/users/${_post.current?.author._id}`);
+              navigate(`/users/${post?.author._id}`);
             }}
         >
-          {_post.current?.author.displayName[0]}
+          {post?.author.displayName[0]}
         </Avatar>
       }
       title={
@@ -58,23 +74,23 @@ const PostCardHeader = ({
           onClick={(event) => {
             event.stopPropagation();
             event.preventDefault();
-            navigate(`/users/${_post.current?.author._id}`);
+            navigate(`/users/${post?.author._id}`);
           }}
           style={{ 
             textDecoration: 'none',
             color: 'inherit'
           }}
         >
-          {_post.current?.author.displayName}
+          {post?.author.displayName}
         </Link>
       }
       action={
         <React.Fragment>
           {
-            userId === _post.current?.author._id
+            loggedInUser._id === post?.author._id
             && <Button
               onMouseDown={(event) => event.stopPropagation()}
-              onClick={handleDelete}
+              onClick={(event) => handleDelete(event)}
               size="small"
               sx={{ color: 'red' }}
             >
@@ -84,8 +100,8 @@ const PostCardHeader = ({
           <DeleteDialog
             openDeleteDialog={openDeleteDialog}
             setOpenDeleteDialog={setOpenDeleteDialog}
-            postId={_post.current?._id}
-            postType={_post.current?.battle ? 'submission' : 'battle'}
+            objectId={post?._id}
+            objectModel={post?.battle ? 'submission' : 'battle'}
           />
           <IconButton
             onMouseDown={(event) => event.stopPropagation()}
@@ -98,9 +114,5 @@ const PostCardHeader = ({
     />
   );
 }
-
-PostCardHeader.propTypes = {
-  _post: PropTypes.object
-};
 
 export { PostCardHeader };

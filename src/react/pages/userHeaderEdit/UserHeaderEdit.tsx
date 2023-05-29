@@ -1,7 +1,7 @@
-import React, { useContext, useEffect, useState } from 'react';
+import * as React from 'react';
+import { useContext, useEffect, useState } from 'react';
 import axios from 'axios';
 import PhotoCamera from '@mui/icons-material/PhotoCamera';
-import PropTypes from 'prop-types';
 import {
   Avatar,
   Box,
@@ -15,30 +15,43 @@ import {
 import { Controller, useForm } from 'react-hook-form';
 import { getImageUrl } from '../../../definitions/getImageUrl';
 import { Link, useOutletContext, useNavigate } from 'react-router-dom';
-import { IUserFrontend } from '../../../definitions/schemas/mongoose/user';
 import { UserContext } from '../../contexts/UserContext';
+import { ILayoutUserContext } from '../Layout';
 
-interface UVUserHeaderEditState {
-  user: IUserFrontend
+interface IUser {
+  _id: string;
+  description: string;
+  displayName: string;
+  filename: string;
+  firstName: string;
+  lastName: string;
+}
+
+interface IFormData {
+  file: File | null;
+  firstName: string;
+  lastName: string;
+  displayName: string;
+  description: string;
 }
 
 const UserHeaderEdit = () => {
-  const { setDisplayName } = useContext(UserContext);
-  const { user } = useOutletContext() as UVUserHeaderEditState;
+  const { setLoggedInUser } = useContext(UserContext) as ILayoutUserContext;
+  const { user } = useOutletContext() as { user: IUser };
   const [imageUrl, setImageUrl] = useState('');
-  const [image, setImage] = useState(null);
+  const [image, setImage] = useState<File | null>(null);
   const navigate = useNavigate();
 
   const {
     control,
     handleSubmit,
     reset: clearForm,
-  } = useForm({ mode: 'onChange' });
+  } = useForm<IFormData>({ mode: 'onChange' });
 
-  const handleSave = async (data) => {
+  const handleSave = async (data: IFormData) => {
     const path = '/user';
     const form = new FormData();
-    form.append('file', image);
+    form.append('file', image as Blob);
     form.append('firstName', data.firstName);
     form.append('lastName', data.lastName);
     form.append('displayName', data.displayName);
@@ -46,7 +59,7 @@ const UserHeaderEdit = () => {
     try {
       const res = await axios.put(path, form);
       console.log(res.data);
-      setDisplayName(data.displayName);
+      setLoggedInUser(res.data);
       clearForm();
       navigate('..');
       navigate(0);
@@ -54,6 +67,12 @@ const UserHeaderEdit = () => {
       console.error(err);
     }
   };
+
+  const handleImageChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    if (!event.target.files) return;
+    const file = event.target.files.item(0);
+    setImage(file);
+  }
 
   useEffect(() => {
     let shouldUpdate = true;
@@ -75,7 +94,7 @@ const UserHeaderEdit = () => {
       <Controller
         name="file"
         control={control}
-        defaultValue=""
+        defaultValue={null}
         render={({ field }) => (
           <Grid
             sx={{
@@ -103,7 +122,7 @@ const UserHeaderEdit = () => {
               type="file"
               hidden
               id="image-upload"
-              onChange={(event) => setImage(event.target.files[0])}
+              onChange={handleImageChange}
             />
             <label htmlFor="image-upload">
               <IconButton
@@ -207,10 +226,6 @@ const UserHeaderEdit = () => {
     </Box>
     </form>
   );
-};
-
-UserHeaderEdit.propTypes = {
-  user: PropTypes.object,
 };
 
 export { UserHeaderEdit };

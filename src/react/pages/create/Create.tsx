@@ -1,4 +1,5 @@
-import React, { useState } from 'react';
+import * as React from 'react';
+import { useState } from 'react';
 import {
   Box,
   Button,
@@ -8,29 +9,35 @@ import {
   Typography,
 } from '@mui/material';
 import './create.css';
-import axios from "axios";
+import axios, { isAxiosError } from "axios";
 import { Controller, useForm } from 'react-hook-form';
+import { Dayjs } from 'dayjs';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { useNavigate } from 'react-router-dom';
 
+interface IFormData {
+  caption: string;
+  file: File | null;
+}
+
 const Create = () => {
-  const [image, setImage] = useState(null);
-  const [length, setLength] = useState(null);
+  const [image, setImage] = useState<File | null>(null);
+  const [length, setLength] = useState<Dayjs | null>(null);
   const navigate = useNavigate();
   const {
     control,
     handleSubmit,
     reset: clearForm,
     resetField,
-  } = useForm({ mode: 'onChange' });
+  } = useForm<IFormData>({ mode: 'onChange' });
 
-  const handleFormSubmit = async (data) => {
+  const handleFormSubmit = async (data: IFormData) => {
     const formData = new FormData();
     formData.append("caption", data.caption);
-    formData.append("file", image);
-    formData.append("deadline", length.toISOString());
+    formData.append("file", image as Blob);
+    length && formData.append("deadline", length.toISOString());
     clearForm();
     try {
       await axios.post('/battle/new', formData, {
@@ -40,7 +47,11 @@ const Create = () => {
       });
       navigate('/');
     } catch (err) {
-      console.error(err.response.data);
+      if (isAxiosError(err)) {
+        console.error(err.response?.data);
+      } else {
+        console.error(err);
+      }
     }
   };
 
@@ -49,9 +60,15 @@ const Create = () => {
     resetField('file');
   }
 
-  const handleImageDrop = (event) => {
+  const handleImageDrop = (event: React.DragEvent<HTMLDivElement>) => {
     event.preventDefault();
-    const file = event.dataTransfer.files[0];
+    const file = event.dataTransfer.files.item(0);
+    setImage(file);
+  }
+
+  const handleImageChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    if (!event.target.files) return;
+    const file = event.target.files.item(0);
     setImage(file);
   }
 
@@ -103,7 +120,7 @@ const Create = () => {
             <Controller
               name="file"
               control={control}
-              defaultValue=""
+              defaultValue={null}
               rules={{
                 validate: {
                   imageExists: value => !!value || 'Please upload an image.'
@@ -137,7 +154,7 @@ const Create = () => {
                           id="image-upload"
                           accept="image/*"
                           name="image"
-                          onChange={(event) => setImage(event.target.files[0])}
+                          onChange={handleImageChange}
                         />
                       </Button>
                     </Stack>

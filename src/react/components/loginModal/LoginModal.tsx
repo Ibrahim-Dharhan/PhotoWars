@@ -1,5 +1,6 @@
-import React, { useContext, useState } from 'react';
-import axios from 'axios';
+import * as React from 'react';
+import { useContext, useState } from 'react';
+import axios, { isAxiosError } from 'axios';
 import {
   Box,
   Button,
@@ -13,6 +14,7 @@ import {
 } from '@mui/material';
 import { Controller, useForm } from 'react-hook-form';
 import { UserContext } from '../../contexts/UserContext';
+import { ILayoutUserContext } from '../../pages/Layout';
 
 const style = {
   position: 'absolute',
@@ -26,8 +28,15 @@ const style = {
   p: 2
 };
 
+interface IFormData {
+  displayName?: string;
+  loginName: string;
+  loginPassword: string;
+  loginPasswordRepeat: string;
+}
+
 const LoginModal = () => {
-  const { open, setOpen, setDisplayName, setUserId } = useContext(UserContext);
+  const { openLoginModal, setOpenLoginModal, setLoggedInUser } = useContext(UserContext) as ILayoutUserContext;
   const [responseError, setResponseError] = useState('');
   const [registering, setRegistering] = useState(false);
 
@@ -35,42 +44,45 @@ const LoginModal = () => {
           getValues,
           handleSubmit,
           reset: clearForm
-  } = useForm({ mode: 'onChange' });
+  } = useForm<IFormData>({ mode: 'onChange' });
 
   const closeModal = () => {
     clearForm();
-    setOpen(false);
+    setOpenLoginModal(false);
     setResponseError('');
   }
 
-  const handleFormSubmit = async (data) => {
+  const handleFormSubmit = async (data: IFormData) => {
     try {
       const path = registering ? '/account/new' : '/account/login';
       const res = await axios.post(path, data);
       const user = res.data;
       closeModal();
-      setDisplayName(user.displayName);
-      setUserId(user._id);
-      localStorage.setItem('user', JSON.stringify(user));
+      setLoggedInUser(user);
+      localStorage.setItem('loggedInUser', JSON.stringify(user));
     } catch (err) {
-      if (typeof err.response.data === 'string') {
-        setResponseError(err.response.data);
-      } else if (err.response.data.errors !== null) {
-        setResponseError(err.response.data.errors[0].msg);
+      if (isAxiosError(err)) {
+        if (typeof err.response?.data === 'string') {
+          setResponseError(err.response?.data);
+        } else if (err.response?.data.errors !== null) {
+          setResponseError(err.response?.data.errors[0].msg);
+        }
+        console.error(err.response?.data);
+      } else {
+        console.error(err);
       }
-      console.error(err.response.data);
     }
   };
 
   return (
     <React.Fragment>
     <Modal 
-      open={open}
+      open={openLoginModal}
       onClose={() => {
         closeModal();
       }}
     >
-      <Fade in={open} onExited={clearForm}>
+      <Fade in={openLoginModal} onExited={() => clearForm()}>
       <Box>
       <form onSubmit={handleSubmit(handleFormSubmit)}>
         <Stack
@@ -209,7 +221,7 @@ const LoginModal = () => {
         <Grid item>
           <Button
             onClick={() => {
-              setOpen(true);
+              setOpenLoginModal(true);
               setRegistering(false);
             }}
             variant="contained"
@@ -220,7 +232,7 @@ const LoginModal = () => {
         <Grid item>
           <Button
             onClick={() => {
-              setOpen(true);
+              setOpenLoginModal(true);
               setRegistering(true);
             }}
             variant="contained"

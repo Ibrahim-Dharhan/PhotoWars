@@ -1,6 +1,6 @@
-"use strict"
-import React, { useEffect, useState } from 'react';
-import axios from 'axios';
+import * as React from 'react';
+import { useEffect, useState } from 'react';
+import axios, { isAxiosError } from 'axios';
 import {
   Box,
   Drawer,
@@ -27,7 +27,11 @@ const RightBar = () => {
     try {
       getBattleId();
     } catch (err) {
-      console.error(err.data);
+      if (isAxiosError(err)) {
+        console.error(err.response?.data);
+      } else {
+        console.error(err);
+      }
     }
     return () => {
       shouldUpdate = false;

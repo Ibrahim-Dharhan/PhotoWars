@@ -1,5 +1,5 @@
-import React, { useContext, useEffect, useState } from 'react';
-import PropTypes from 'prop-types';
+import * as React from 'react';
+import { useContext, useEffect, useState } from 'react';
 import {
   Avatar,
   Box,
@@ -10,21 +10,26 @@ import {
 } from '@mui/material';
 import { getImageUrl } from '../../../definitions/getImageUrl';
 import { DeleteDialog } from '../../components/deleteDialog/DeleteDialog';
-import { IUserFrontend } from '../../../definitions/schemas/mongoose/user';
 import { Link, useOutletContext } from 'react-router-dom';
 import { UserContext } from '../../contexts/UserContext';
+import { ILayoutUserContext } from '../Layout';
 
-interface UVUserHeaderState {
-  user: IUserFrontend
+interface IUser {
+  _id: string;
+  description: string;
+  displayName: string;
+  filename: string;
+  firstName: string;
+  lastName: string;
 }
 
 const UserHeader = () => {
-  const { user } = useOutletContext() as UVUserHeaderState;
-  const { userId } = useContext(UserContext);
+  const { user } = useOutletContext() as { user: IUser };
+  const { loggedInUser } = useContext(UserContext) as ILayoutUserContext;
   const [imageUrl, setImageUrl] = useState('');
   const [openDeleteDialog, setOpenDeleteDialog] = useState(false);
 
-  const handleDelete = async (event) => {
+  const handleDelete = async (event: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
     event.stopPropagation();
     event.preventDefault();
     setOpenDeleteDialog(true);
@@ -54,7 +59,7 @@ const UserHeader = () => {
         }}
       >
         <Avatar
-          src={imageUrl || null}
+          src={imageUrl}
           sx={{
             position: 'absolute',
             minWidth: '100%',
@@ -84,7 +89,7 @@ const UserHeader = () => {
         </Typography>
       </Box>
       {
-        user._id === userId &&
+        user._id === loggedInUser._id &&
         <Stack
           direction="row"
           sx={{marginBottom: 'auto', marginLeft: 'auto'}}
@@ -99,8 +104,8 @@ const UserHeader = () => {
           <DeleteDialog
             openDeleteDialog={openDeleteDialog}
             setOpenDeleteDialog={setOpenDeleteDialog}
-            postId={null}
-            postType={'user'}
+            objectId ={''}
+            objectModel={'user'}
           />
           <Button
             component={Link}
@@ -113,10 +118,6 @@ const UserHeader = () => {
       }
     </Box>
   );
-};
-
-UserHeader.propTypes = {
-  user: PropTypes.object,
 };
 
 export { UserHeader };
