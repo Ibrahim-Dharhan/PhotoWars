@@ -24,10 +24,11 @@ const Feed = () => {
   return (
     <React.Fragment>
       <ImageList variant="masonry" cols={3} gap={24}>
-         {battlesRecent.map((battle) => {
+         {battlesRecent.map((battle, i) => {
             return (
               <BattleCard
                 battleId={battle._id}
+                isPhotoOfTheDay={i === 0}
                 key={battle._id}
               />
             );
