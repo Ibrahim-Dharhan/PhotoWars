@@ -122,6 +122,7 @@ const UserHeaderEdit = () => {
               type="file"
               hidden
               id="image-upload"
+              accept="image/*"
               onChange={handleImageChange}
             />
             <label htmlFor="image-upload">

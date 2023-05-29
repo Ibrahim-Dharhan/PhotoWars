@@ -233,7 +233,7 @@ const BattleCard = ({ battleId }: IProps) => {
                   title={
                     submitted
                       ? 'Only one submission is allowed.'
-                      : !loggedInUser && 'Log in to submit to this battle.'
+                      : !loggedInUser._id && 'Log in to submit to this battle.'
                   }
                 >
                   <span
@@ -253,7 +253,7 @@ const BattleCard = ({ battleId }: IProps) => {
                       color='primary'
                       disabled={
                         submitted ||
-                        !loggedInUser ||
+                        !loggedInUser._id ||
                         location.pathname.endsWith('submit')
                       }
                     >

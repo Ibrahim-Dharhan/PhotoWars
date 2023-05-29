@@ -24,6 +24,7 @@ import { UserHeader } from './react/pages/userHeader/UserHeader';
 import { UserHeaderEdit } from './react/pages/userHeaderEdit/UserHeaderEdit';
 import { UserView, userViewLoader } from './react/pages/userView/UserView';
 import theme from './theme';
+import { RequireLoginRoute } from './react/components/requireLoginRoute/RequireLoginRoute';
 
 const PhotoWars = () => {
   const router = createBrowserRouter(
@@ -49,7 +50,7 @@ const PhotoWars = () => {
                 errorElement={<div>Error loading comments</div>}
               />
             </Route>
-            <Route path='submit' element={<Submit />} />
+            <Route path='submit' element={<RequireLoginRoute><Submit /></RequireLoginRoute>} />
           </Route>
           <Route path='create' element={<Create />} />
           <Route
