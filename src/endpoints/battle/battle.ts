@@ -26,6 +26,11 @@ const battleRouter = express.Router();
  * /battle/all:
  *   get:
  *     summary: Get all battle IDs, filtering for open comps only if needed.
+ *     parameters:
+ *       - in: query
+ *         name: open
+ *         schema:
+ *           type: string
  *     responses:
  *       200:
  *         description: Resource successfully retrieved.
@@ -34,7 +39,10 @@ const battleRouter = express.Router();
  *             schema:
  *               type: array
  *               items:
- *                 type: string
+ *                 type: object
+ *                 properties:
+ *                   _id:
+ *                     type: boolean
  *       404:
  *         $ref: '#/components/responses/404NotFound'
  *       500:
