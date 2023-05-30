@@ -23,6 +23,9 @@ import {
   useParams
 } from 'react-router-dom';
 import { CommentModalCommentCard } from '../../components/commentModalCommentCard/CommentModalCommentCard';
+import { PopulatedBattleFrontend } from '../../../definitions/classes/battle';
+import { PopulatedSubmissionFrontend } from '../../../definitions/classes/submission';
+import { PopulatedCommentFrontend } from '../../../definitions/classes/comment';
 
 const modalStyle = {
   position: 'absolute',
@@ -37,6 +40,12 @@ const modalStyle = {
   p: 2,
 };
 
+interface ILoaderData {
+  postComments: PopulatedCommentFrontend[];
+  post: PopulatedSubmissionFrontend | PopulatedBattleFrontend;
+  postType: string;
+}
+
 const commentModalLoader: LoaderFunction = async ({ params, request }) => {
   const postId = params['postId'];
   const postType = (new URL(request.url)).searchParams.get('postType');
@@ -50,7 +59,7 @@ const commentModalLoader: LoaderFunction = async ({ params, request }) => {
       postComments: commentsRes.data,
       post: postRes.data,
       postType: postType
-    };
+    } as ILoaderData;
   } catch (err) {
       if (isAxiosError(err)) {
         if (err.response?.status === 404) {
@@ -64,34 +73,9 @@ const commentModalLoader: LoaderFunction = async ({ params, request }) => {
   }
 };
 
-interface Author {
-  _id: string;
-  description: string;
-  displayName: string;
-  filename: string;
-  firstName: string;
-  lastName: string;
-}
-
-interface Post {
-  _id: string;
-  author: Author;
-  caption: string;
-  filename: string;
-}
-
-interface Comment {
-  _id: string;
-  author: Author;
-  commentedModel: string;
-  creationTime: string;
-  post: Post;
-  text: string;
-}
-
 const CommentModal = () => {
   const { postId } = useParams();
-  const { postComments, post, postType } = useLoaderData() as {postComments: Comment[], post: Post, postType: string};
+  const { postComments, post, postType } = useLoaderData() as ILoaderData;
   const [comments, setComments] = useState(postComments)
   const [imageUrl, setImageUrl] = useState('');
   const [authorImageUrl, setAuthorImageUrl] = useState('');
@@ -209,7 +193,7 @@ const CommentModal = () => {
                 />
               </ListItem>
               <Divider variant='inset' component='li' />
-              {comments.map((comment: Comment) => {
+              {comments.map((comment: PopulatedCommentFrontend) => {
                 return (
                   <div key={comment._id}>
                     <CommentModalCommentCard comment={comment} />

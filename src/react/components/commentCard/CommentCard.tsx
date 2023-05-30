@@ -6,17 +6,16 @@ import { Card, CardMedia, Grid, Typography } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
 import './style.css';
 import { UserContext } from '../../contexts/UserContext';
-import { CommentFrontend } from '../../../definitions/classes/commentFrontend';
-import { ILayoutUserContext } from '../../pages/Layout';
+import { PopulatedCommentFrontend } from '../../../definitions/classes/comment';
 
 interface IProps {
   commentId: string;
 }
 
 const CommentCard = ({ commentId }: IProps) => {
-  const { loggedInUser } = useContext(UserContext) as ILayoutUserContext;
+  const { loggedInUser } = useContext(UserContext);
   const [battleViewPath, setBattleViewPath] = useState('');
-  const [comment, setComment] = useState(new CommentFrontend());
+  const [comment, setComment] = useState(new PopulatedCommentFrontend());
   const [imageUrl, setImageUrl] = useState('');
 
   const navigate = useNavigate();
@@ -84,7 +83,7 @@ const CommentCard = ({ commentId }: IProps) => {
         </Grid>
         <Grid item xs={8}>
           <Typography sx={{ fontWeight: 'bold' }}>{comment.post.caption}</Typography>
-          <Typography>{comment.text}</Typography>
+          <Typography>{comment.caption}</Typography>
         </Grid>
       </Grid>
     </Card>

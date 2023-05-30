@@ -14,7 +14,6 @@ import {
 } from '@mui/material';
 import { Controller, useForm } from 'react-hook-form';
 import { UserContext } from '../../contexts/UserContext';
-import { ILayoutUserContext } from '../../pages/Layout';
 
 const style = {
   position: 'absolute',
@@ -36,7 +35,7 @@ interface IFormData {
 }
 
 const LoginModal = () => {
-  const { openLoginModal, setOpenLoginModal, setLoggedInUser } = useContext(UserContext) as ILayoutUserContext;
+  const { openLoginModal, setOpenLoginModal, setLoggedInUser } = useContext(UserContext);
   const [responseError, setResponseError] = useState('');
   const [registering, setRegistering] = useState(false);
 
@@ -48,7 +47,7 @@ const LoginModal = () => {
 
   const closeModal = () => {
     clearForm();
-    setOpenLoginModal(false);
+    setOpenLoginModal && setOpenLoginModal(false);
     setResponseError('');
   }
 
@@ -58,7 +57,7 @@ const LoginModal = () => {
       const res = await axios.post(path, data);
       const user = res.data;
       closeModal();
-      setLoggedInUser(user);
+      setLoggedInUser && setLoggedInUser(user);
       localStorage.setItem('loggedInUser', JSON.stringify(user));
     } catch (err) {
       if (isAxiosError(err)) {
@@ -221,7 +220,7 @@ const LoginModal = () => {
         <Grid item>
           <Button
             onClick={() => {
-              setOpenLoginModal(true);
+              setOpenLoginModal && setOpenLoginModal(true);
               setRegistering(false);
             }}
             variant="contained"
@@ -232,7 +231,7 @@ const LoginModal = () => {
         <Grid item>
           <Button
             onClick={() => {
-              setOpenLoginModal(true);
+              setOpenLoginModal && setOpenLoginModal(true);
               setRegistering(true);
             }}
             variant="contained"

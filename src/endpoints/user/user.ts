@@ -323,7 +323,7 @@ userRouter.get('/:id/submissions', async (req, res) => {
  */
 userRouter.get('/:id/votes', async (req, res) => {
   const userId = req.params.id;
-  const query = Vote.find({ user: userId }, ['-_id', '-__v']);
+  const query = Vote.find({ author: userId }, ['-_id', '-__v']);
 
   try {
     const voteIds = await query.populate('post', ['_id']).lean().exec();

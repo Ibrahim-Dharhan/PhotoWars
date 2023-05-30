@@ -16,14 +16,13 @@ import {
 import { getImageUrl } from '../../../definitions/getImageUrl';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { UserContext } from '../../contexts/UserContext';
-import { ILayoutUserContext } from '../../pages/Layout';
 
 interface IProps {
   battleId: string;
 }
 
 const DailyBattleCard = ({ battleId }: IProps) => {
-  const { loggedInUser } = useContext(UserContext) as ILayoutUserContext;
+  const { loggedInUser } = useContext(UserContext);
 
   const [caption, setCaption] = useState('');
   const [filename, setFilename] = useState('');

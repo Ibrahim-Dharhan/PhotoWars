@@ -43,13 +43,24 @@ const userSchema = new mongoose.Schema({
   loginPassword: { type: String, required: true }
 });
 
+userSchema.pre([
+    'find',
+    'findOne',
+    'findOneAndDelete',
+    'findOneAndRemove',
+    'findOneAndReplace',
+    'findOneAndUpdate'
+  ], async function() {
+    this.select(['-__v', '-loginName', '-loginPassword']);
+});
+
 /* Middleware to delete or update User-related documents before deletion.  */
 userSchema.pre(['findOneAndDelete'], async function() {
   const _id = this.getQuery()['_id'];
   const result = await User.findOne(this.getQuery(), ['filename']);
   const filename = result?.filename || '';
   /* Delete user Votes.  */
-  await Vote.deleteMany({ user: _id });
+  await Vote.deleteMany({ author: _id });
   /* Delete user-owned Comments.  */
   await Comment.deleteMany({ author: _id });
   /* Delete user-owned Submissions.  */

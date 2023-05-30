@@ -1,18 +1,14 @@
+import { UserFrontend } from "./user";
+
 class Post {
-  _id: string;
-  author: string;
-  battle?: string;
+  author: string | UserFrontend;
   caption: string;
   creationTime: string;
-  filename: string;
 
   constructor() {
-    this._id = '';
     this.author = '';
-    this.battle = '';
     this.caption = '';
     this.creationTime = '';
-    this.filename = '';
   }
 }
 

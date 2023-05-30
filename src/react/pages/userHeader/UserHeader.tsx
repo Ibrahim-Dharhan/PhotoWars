@@ -12,7 +12,6 @@ import { getImageUrl } from '../../../definitions/getImageUrl';
 import { DeleteDialog } from '../../components/deleteDialog/DeleteDialog';
 import { Link, useOutletContext } from 'react-router-dom';
 import { UserContext } from '../../contexts/UserContext';
-import { ILayoutUserContext } from '../Layout';
 
 interface IUser {
   _id: string;
@@ -25,7 +24,7 @@ interface IUser {
 
 const UserHeader = () => {
   const { user } = useOutletContext() as { user: IUser };
-  const { loggedInUser } = useContext(UserContext) as ILayoutUserContext;
+  const { loggedInUser } = useContext(UserContext);
   const [imageUrl, setImageUrl] = useState('');
   const [openDeleteDialog, setOpenDeleteDialog] = useState(false);
 

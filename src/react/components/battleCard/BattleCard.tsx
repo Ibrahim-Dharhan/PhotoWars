@@ -26,7 +26,6 @@ import { updateDeadline } from '../../../definitions/timerLogic';
 import { createSearchParams, useLocation, useNavigate } from 'react-router-dom';
 import { UserContext } from '../../contexts/UserContext';
 import './battleCard.css';
-import { ILayoutUserContext } from '../../pages/Layout';
 
 interface IProps {
   battleId: string;
@@ -34,7 +33,7 @@ interface IProps {
 }
 
 const BattleCard = ({ battleId, isPhotoOfTheDay }: IProps) => {
-  const { loggedInUser, setOpenLoginModal } = useContext(UserContext) as ILayoutUserContext;
+  const { loggedInUser, setOpenLoginModal } = useContext(UserContext);
   const [caption, setCaption] = useState('');
   const [filename, setFilename] = useState('');
   const [imageUrl, setImageUrl] = useState('');
@@ -60,6 +59,7 @@ const BattleCard = ({ battleId, isPhotoOfTheDay }: IProps) => {
       const path = `/battle/${battleId}`;
       const res = await axios.get(path);
       const battle = res.data;
+      console.log(battle);
 
       if (shouldUpdate) {
         setCaption(battle.caption);
@@ -213,7 +213,7 @@ const BattleCard = ({ battleId, isPhotoOfTheDay }: IProps) => {
               if (loggedInUser._id !== '' && !expired) {
                 vote();
               } else {
-                setOpenLoginModal(true);
+                setOpenLoginModal && setOpenLoginModal(true);
               }
             }}
             disableRipple={expired}

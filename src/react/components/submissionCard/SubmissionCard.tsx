@@ -21,14 +21,13 @@ import { PostCardHeader } from '../postCardHeader/PostCardHeader';
 import { updateDeadline } from '../../../definitions/timerLogic';
 import { createSearchParams, useLocation, useNavigate } from 'react-router-dom';
 import './submissionCard.css';
-import { ILayoutUserContext } from '../../pages/Layout';
 
 interface IProps {
   submissionId: string
 }
 
 const SubmissionCard = ({ submissionId }: IProps) => {
-  const { loggedInUser, setOpenLoginModal } = useContext(UserContext) as ILayoutUserContext;
+  const { loggedInUser, setOpenLoginModal } = useContext(UserContext);
   const [caption, setCaption] = useState('');
   const [imageUrl, setImageUrl] = useState('');
   const [filename, setFilename] = useState('');
@@ -63,7 +62,7 @@ const SubmissionCard = ({ submissionId }: IProps) => {
         _isAuthor.current = submission.author._id;
         _submission.current = submission;
         updateDeadline(
-          new Date(submission.battle.deadline),
+          new Date(submission.post.deadline),
           _timerEvent,
           null,
           setExpired,
@@ -155,7 +154,7 @@ const SubmissionCard = ({ submissionId }: IProps) => {
               if (loggedInUser._id !== '' && !expired) {
                 vote();
               } else {
-                setOpenLoginModal(true);
+                setOpenLoginModal && setOpenLoginModal(true);
               }
             }}
             disableRipple={expired}

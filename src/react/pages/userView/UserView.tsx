@@ -37,7 +37,7 @@ const UserView = () => {
   const user = useLoaderData() as IUser;
   const [feed, setFeed] = useState('battles');
   const [battles, setBattles] = useState<{_id: string}[] | null>(null);
-  const [submissions, setSubmissions] = useState<{_id: string, battle: string}[] | null>(null);
+  const [submissions, setSubmissions] = useState<{_id: string, post: string}[] | null>(null);
   const [comments, setComments] = useState<{_id: string}[] | null>(null);
 
   useEffect(() => {
@@ -138,7 +138,7 @@ const UserView = () => {
                       <Box
                         onClick={(event) => {
                           event.stopPropagation();
-                          navigate(`/battles/${submission.battle}`);
+                          navigate(`/battles/${submission.post}`);
                         }}
                         key={submission._id}
                         sx={{ marginBottom: '5px' }}

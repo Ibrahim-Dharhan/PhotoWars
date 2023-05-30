@@ -38,7 +38,7 @@ commentRouter.get('/:id', async (req, res) => {
   ]);
   const numVotesQuery = Vote.countDocuments({ post: commentId });
   const votedOnQuery = Vote.findOne({ post: commentId,
-                                      user: req.session.userId });
+                                      author: req.session.userId });
 
   try {
     let result = await query.lean().exec();
@@ -116,9 +116,9 @@ commentRouter.delete('/:id', upload.none(), checkSchema(ValidObjectId), async (r
       await Comment.findByIdAndUpdate(commentId,
                                       {
                                         author: '000000000000000000000000',
-                                        text: ''
+                                        caption: ''
                                       });
-      res.status(200).send('Successfully deleted comment text.');
+      res.status(200).send('Successfully deleted comment caption.');
     }
   } catch (err) {
     console.error(err);
@@ -139,10 +139,10 @@ commentRouter.delete('/:id', upload.none(), checkSchema(ValidObjectId), async (r
  *           schema:
  *             type: object
  *             properties:
- *               text:
+ *               caption:
  *                 type: string
  *             required:
- *               - text
+ *               - caption 
  *     parameters:
  *       - $ref: '#/components/parameters/idParam'
  *     responses:
@@ -187,7 +187,7 @@ commentRouter.put('/:id', upload.none(), checkSchema(ValidObjectId), async (req:
       /* User requesting change is not the comment's author.  */
       res.status(403).send('User is not the comment author.');
     } else {
-      result.text = req.body.text;
+      result.caption = req.body.caption;
       const updatedComment = await result.save();
       res.status(200).send(updatedComment);
     }
