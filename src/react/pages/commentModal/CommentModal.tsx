@@ -75,7 +75,7 @@ const commentModalLoader: LoaderFunction = async ({ params, request }) => {
 };
 
 const CommentModal = () => {
-  const { postId } = useParams();
+  const { postId } = useParams<'battleId' | 'postId'>();
   const { postComments, post, postType } = useLoaderData() as ILoaderData;
   const [comments, setComments] = useState(postComments)
   const [imageUrl, setImageUrl] = useState('');

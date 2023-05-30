@@ -18,7 +18,7 @@ interface IFormData {
 }
 
 const Submit = () => {
-  const { battleId } = useParams();
+  const { battleId } = useParams<'battleId'>();
   const [image, setImage] = useState<File | null>(null);
   const navigate = useNavigate();
 
