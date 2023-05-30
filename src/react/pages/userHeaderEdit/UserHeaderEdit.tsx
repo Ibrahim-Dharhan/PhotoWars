@@ -15,7 +15,7 @@ import {
 import { Controller, useForm } from 'react-hook-form';
 import { getImageUrl } from '../../../definitions/getImageUrl';
 import { Link, useOutletContext, useNavigate } from 'react-router-dom';
-import { UserContext } from '../../contexts/UserContext';
+import { LoggedInUser, UserContext } from '../../contexts/UserContext';
 
 interface IUser {
   _id: string;
@@ -56,7 +56,7 @@ const UserHeaderEdit = () => {
     form.append('displayName', data.displayName);
     form.append('description', data.description);
     try {
-      const res = await axios.put(path, form);
+      const res = await axios.put<LoggedInUser>(path, form);
       setLoggedInUser && setLoggedInUser(res.data);
       clearForm();
       navigate('..');

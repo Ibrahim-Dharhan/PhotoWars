@@ -3,7 +3,7 @@ import { useContext, useEffect, useState } from 'react';
 import axios, { isAxiosError } from 'axios';
 import { getImageUrl } from '../../../definitions/getImageUrl';
 import { Card, CardMedia, Grid, Typography } from '@mui/material';
-import { useNavigate } from 'react-router-dom';
+import { createSearchParams, useNavigate } from 'react-router-dom';
 import './style.css';
 import { UserContext } from '../../contexts/UserContext';
 import { CommentCardInfo, PopulatedCommentFrontend } from '../../../definitions/classes/comment';
@@ -16,7 +16,7 @@ interface IProps {
 
 const CommentCard = ({ commentId }: IProps) => {
   const { loggedInUser } = useContext(UserContext);
-  const [battleViewPath, setBattleViewPath] = useState('');
+  const [commentLink, setCommentLink] = useState<string | { pathname: string, search: string }>('');
   const [comment, setComment] = useState(new PopulatedCommentFrontend());
   const [imageUrl, setImageUrl] = useState('');
 
@@ -30,13 +30,19 @@ const CommentCard = ({ commentId }: IProps) => {
       if (shouldUpdate) {
         setComment(res.data);
         let battleId: string;
+        const commentedPostId = res.data.post._id
         if (comment.commentedModel === 'Battle') {
           battleId = (res.data.post as BattleFrontend)._id;
         } else {
           battleId = (res.data.post as SubmissionFrontend).post;
         }
-        const pathToBattle = `/battles/${battleId}`;
-        setBattleViewPath(pathToBattle);
+        const navigateParams = {
+          pathname: `/battles/${battleId}/comments/${commentedPostId}`,
+          search: createSearchParams({
+            postType: comment.commentedModel
+          }).toString()
+        };
+        setCommentLink(navigateParams);
       }
     };
     try {
@@ -74,7 +80,7 @@ const CommentCard = ({ commentId }: IProps) => {
       sx={{ marginBottom: '20px' }}
       onClick={(event) => {
         event.stopPropagation();
-        navigate(battleViewPath);
+        navigate(commentLink);
       }}
     >
       <Grid container spacing={2} sx={{ padding: 0 }}>

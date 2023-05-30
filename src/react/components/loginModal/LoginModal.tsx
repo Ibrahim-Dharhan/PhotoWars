@@ -13,7 +13,7 @@ import {
   Typography
 } from '@mui/material';
 import { Controller, useForm } from 'react-hook-form';
-import { UserContext } from '../../contexts/UserContext';
+import { LoggedInUser, UserContext } from '../../contexts/UserContext';
 
 const style = {
   position: 'absolute',
@@ -54,7 +54,7 @@ const LoginModal = () => {
   const handleFormSubmit = async (data: IFormData) => {
     try {
       const path = registering ? '/account/new' : '/account/login';
-      const res = await axios.post(path, data);
+      const res = await axios.post<LoggedInUser>(path, data);
       const user = res.data;
       closeModal();
       setLoggedInUser && setLoggedInUser(user);
