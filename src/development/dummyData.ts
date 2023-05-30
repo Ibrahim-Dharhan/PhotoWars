@@ -35,7 +35,7 @@ function dummyDataFunc() {
     filename: 'seagull.jpg',
     firstName: 'Sam',
     lastName: 'Smith',
-    loginName: 'cd ',
+    loginName: 'cd',
     loginPassword: 'cd',
   };
 

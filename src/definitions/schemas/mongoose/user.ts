@@ -55,7 +55,7 @@ userSchema.pre([
 });
 
 /* Middleware to delete or update User-related documents before deletion.  */
-userSchema.pre(['findOneAndDelete'], async function() {
+userSchema.pre(['deleteMany', 'findOneAndDelete'], async function() {
   const _id = this.getQuery()['_id'];
   const result = await User.findOne(this.getQuery(), ['filename']);
   const filename = result?.filename || '';
