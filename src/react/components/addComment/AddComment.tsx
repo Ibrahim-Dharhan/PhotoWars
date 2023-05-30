@@ -18,8 +18,8 @@ interface IProps {
 
 const AddComment = ({ postComment }: IProps) => {
   const { loggedInUser } = useContext(UserContext);
-  const [commentText, setCommentText] = useState('');
-  const [imageUrl, setImageUrl] = useState('');
+  const [commentText, setCommentText] = useState<string>('');
+  const [imageUrl, setImageUrl] = useState<string>('');
 
   /* useEffect for retrieving the image.  */
   useEffect(() => {

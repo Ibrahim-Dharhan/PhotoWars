@@ -27,7 +27,7 @@ const UserView = () => {
   const navigate = useNavigate();
 
   const user = useLoaderData() as UserFrontend;
-  const [feed, setFeed] = useState('battles');
+  const [feed, setFeed] = useState<string>('battles');
   const [battles, setBattles] = useState<{_id: string}[] | null>(null);
   const [submissions, setSubmissions] = useState<{_id: string, post: string}[] | null>(null);
   const [comments, setComments] = useState<{_id: string}[] | null>(null);

@@ -35,16 +35,16 @@ interface IProps {
 
 const BattleCard = ({ battleId, isPhotoOfTheDay }: IProps) => {
   const { loggedInUser, setOpenLoginModal } = useContext(UserContext);
-  const [caption, setCaption] = useState('');
-  const [filename, setFilename] = useState('');
-  const [imageUrl, setImageUrl] = useState('');
-  const [numSubmissions, setNumSubmissions] = useState(0);
-  const [numComments, setNumComments] = useState(0);
-  const [commented, setCommented] = useState(false);
-  const [numVotes, setNumVotes] = useState(0);
-  const [submitted, setSubmitted] = useState(false);
-  const [voted, setVoted] = useState(false);
-  const [timeRemaining, setTimeRemaining] = useState('--:--:--');
+  const [caption, setCaption] = useState<string>('');
+  const [filename, setFilename] = useState<string>('');
+  const [imageUrl, setImageUrl] = useState<string>('');
+  const [numSubmissions, setNumSubmissions] = useState<number>(0);
+  const [numComments, setNumComments] = useState<number>(0);
+  const [commented, setCommented] = useState<boolean>(false);
+  const [numVotes, setNumVotes] = useState<number>(0);
+  const [submitted, setSubmitted] = useState<boolean>(false);
+  const [voted, setVoted] = useState<boolean>(false);
+  const [timeRemaining, setTimeRemaining] = useState<string>('--:--:--');
   const [expired, setExpired] = useState<boolean>(true);
 
   const _battle = useRef<BattleCardInfo| null>(null);

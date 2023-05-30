@@ -8,7 +8,7 @@ import {
 import { createSearchParams, useNavigate } from 'react-router-dom';
 
 const TabBar = () => {
-  const [tab, setTab] = useState('explore');
+  const [tab, setTab] = useState<string>('explore');
 
   const navigate = useNavigate();
 

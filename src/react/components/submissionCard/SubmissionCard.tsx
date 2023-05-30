@@ -29,17 +29,17 @@ interface IProps {
 
 const SubmissionCard = ({ submissionId }: IProps) => {
   const { loggedInUser, setOpenLoginModal } = useContext(UserContext);
-  const [caption, setCaption] = useState('');
-  const [imageUrl, setImageUrl] = useState('');
-  const [filename, setFilename] = useState('');
-  const [numComments, setNumComments] = useState(0);
+  const [caption, setCaption] = useState<string>('');
+  const [imageUrl, setImageUrl] = useState<string>('');
+  const [filename, setFilename] = useState<string>('');
+  const [numComments, setNumComments] = useState<number>(0);
   const [commented, setCommented] = useState<boolean | null>(false);
   const [expired, setExpired] = useState<boolean>(true);
-  const [numVotes, setNumVotes] = useState(0);
+  const [numVotes, setNumVotes] = useState<number>(0);
   const [voted, setVoted] = useState<boolean | null>(false);
 
   const _submission = useRef<SubmissionCardInfo | null>(null);
-  const _timerEvent = useRef(null);
+  const _timerEvent = useRef<NodeJS.Timer | null>(null);
 
   const location = useLocation();
   const navigate = useNavigate();

@@ -77,9 +77,9 @@ const commentModalLoader: LoaderFunction = async ({ params, request }) => {
 const CommentModal = () => {
   const { postId } = useParams<'battleId' | 'postId'>();
   const { postComments, post, postType } = useLoaderData() as ILoaderData;
-  const [comments, setComments] = useState(postComments)
-  const [imageUrl, setImageUrl] = useState('');
-  const [authorImageUrl, setAuthorImageUrl] = useState('');
+  const [comments, setComments] = useState<PopulatedCommentFrontend[]>(postComments)
+  const [imageUrl, setImageUrl] = useState<string>('');
+  const [authorImageUrl, setAuthorImageUrl] = useState<string>('');
 
   const navigate = useNavigate();
 
