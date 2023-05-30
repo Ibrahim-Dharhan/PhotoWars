@@ -16,7 +16,7 @@ import { SubmissionCard } from '../../components/submissionCard/SubmissionCard';
 import CommentCard from '../../components/commentCard/CommentCard';
 
 const userViewLoader: LoaderFunction = async ({ params }) => {
-  const id = params['id'];
+  const id = params['userId'];
   const path = `/user/${id}`;
   const res = await axios.get(path);
   return res.data;

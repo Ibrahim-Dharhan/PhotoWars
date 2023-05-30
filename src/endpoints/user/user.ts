@@ -52,11 +52,7 @@ const userRouter = Router();
  */
 userRouter.get('/:id', async (req, res) => {
   const userId = req.params.id;
-  const query = User.findOne({ _id: userId }, [
-    '-__v',
-    '-loginName',
-    '-loginPassword',
-  ]);
+  const query = User.findOne({ _id: userId });
 
   try {
     const userObj = await query.lean().exec();

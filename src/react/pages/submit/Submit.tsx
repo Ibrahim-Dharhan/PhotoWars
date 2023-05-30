@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { useState } from 'react';
-import axios from 'axios';
+import axios, { isAxiosError } from 'axios';
 import { Controller, useForm } from 'react-hook-form';
 import {
   Box,
@@ -18,7 +18,7 @@ interface IFormData {
 }
 
 const Submit = () => {
-  const { id } = useParams();
+  const { battleId } = useParams();
   const [image, setImage] = useState<File | null>(null);
   const navigate = useNavigate();
 
@@ -30,7 +30,7 @@ const Submit = () => {
   } = useForm<IFormData>();
 
   const submitForm = async (data: IFormData) => {
-    const path = `/battle/${id}/submit`;
+    const path = `/battle/${battleId}/submit`;
     const form = new FormData();
     form.append('caption', data.caption);
     form.append('file', image as Blob);
@@ -38,7 +38,11 @@ const Submit = () => {
     try {
       await axios.post(path, form);
     } catch (err) {
-      console.error(err);
+      if (isAxiosError(err)) {
+        console.error(err.response?.data);
+      } else {
+        console.error(err);
+      }
     }
     navigate('..');
   }

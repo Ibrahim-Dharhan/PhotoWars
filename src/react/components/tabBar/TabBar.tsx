@@ -17,6 +17,7 @@ const TabBar = () => {
     switch (newTab) {
       case 'explore': {
         navigate('/');
+        console.log('Navigating');
         return;
       }
 

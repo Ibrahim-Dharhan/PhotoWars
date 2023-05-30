@@ -59,7 +59,6 @@ const BattleCard = ({ battleId, isPhotoOfTheDay }: IProps) => {
       const path = `/battle/${battleId}`;
       const res = await axios.get(path);
       const battle = res.data;
-      console.log(battle);
 
       if (shouldUpdate) {
         setCaption(battle.caption);

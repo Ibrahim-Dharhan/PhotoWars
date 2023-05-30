@@ -116,7 +116,7 @@ const PostCardHeader = ({
             openDeleteDialog={openDeleteDialog}
             setOpenDeleteDialog={setOpenDeleteDialog}
             objectId={post?._id}
-            objectModel={post && 'battle' in post ? 'submission' : 'battle'}
+            objectModel={post && 'post' in post ? 'submission' : 'battle'}
           />
           <IconButton
             onMouseDown={(event) => event.stopPropagation()}

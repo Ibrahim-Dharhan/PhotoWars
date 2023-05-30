@@ -695,7 +695,7 @@ battleRouter.post('/:id/comment', upload.none(), checkSchema(ValidObjectId), asy
       author: req.session.userId,
       commentedModel: 'Battle',
       post: battleId,
-      text: req.body.comment,
+      caption: req.body.comment,
     });
     res.status(200).json(newCommentObj);
   } catch (err) {
@@ -747,7 +747,6 @@ battleRouter.delete('/:id', upload.none(), checkSchema(ValidObjectId), async (re
     const battleObj = await query.lean().exec();
     if (!battleObj) {
       res.status(404).send('Failed to find battle.');
-      console.error('Failed to find battle.');
     } else {
       res.status(200).send('Successfully deleted battle.');
     }

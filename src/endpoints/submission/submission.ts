@@ -373,7 +373,7 @@ submissionRouter.post('/:id/comment', upload.none(), checkSchema(ValidObjectId),
       author: req.session.userId,
       commentedModel: 'Submission',
       post: submissionId,
-      text: req.body.comment,
+      caption: req.body.comment,
     });
     res.status(200).json(newComment);
   } catch (err) {
