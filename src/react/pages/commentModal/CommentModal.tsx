@@ -26,6 +26,7 @@ import { CommentModalCommentCard } from '../../components/commentModalCommentCar
 import { PopulatedBattleFrontend } from '../../../definitions/classes/battle';
 import { PopulatedSubmissionFrontend } from '../../../definitions/classes/submission';
 import { PopulatedCommentFrontend } from '../../../definitions/classes/comment';
+import { Post } from '../../../definitions/classes/post';
 
 const modalStyle = {
   position: 'absolute',
@@ -53,8 +54,8 @@ const commentModalLoader: LoaderFunction = async ({ params, request }) => {
   const commentsPath = `/${postType}/${postId}/comments`;
   const postPath = `/${postType}/${postId}`;
   try {
-    const commentsRes = await axios.get(commentsPath);
-    const postRes = await axios.get(postPath);
+    const commentsRes = await axios.get<PopulatedCommentFrontend[]>(commentsPath);
+    const postRes = await axios.get<Post>(postPath);
     return {
       postComments: commentsRes.data,
       post: postRes.data,
@@ -130,7 +131,7 @@ const CommentModal = () => {
     const commentsPath = `/${postType}/${postId}/comments`;
     try {
       await axios.post(path, {comment: newComment});
-      const res = await axios.get(commentsPath);
+      const res = await axios.get<PopulatedCommentFrontend[]>(commentsPath);
       setComments(res.data);
     } catch (err) {
       if (isAxiosError(err)) {

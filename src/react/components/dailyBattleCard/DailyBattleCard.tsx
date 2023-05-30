@@ -16,6 +16,7 @@ import {
 import { getImageUrl } from '../../../definitions/getImageUrl';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { UserContext } from '../../contexts/UserContext';
+import { BattleCardInfo } from '../../../definitions/classes/battle';
 
 interface IProps {
   battleId: string;
@@ -27,7 +28,7 @@ const DailyBattleCard = ({ battleId }: IProps) => {
   const [caption, setCaption] = useState('');
   const [filename, setFilename] = useState('');
   const [imageUrl, setImageUrl] = useState('');
-  const [submitted, setSubmitted] = useState(false);
+  const [submitted, setSubmitted] = useState<boolean | null>(false);
 
   const location = useLocation();
   const navigate = useNavigate();
@@ -37,7 +38,7 @@ const DailyBattleCard = ({ battleId }: IProps) => {
     let shouldUpdate = true;
     const setBattleInformation = async () => {
       const path = `/battle/${battleId}`;
-      const res = await axios.get(path);
+      const res = await axios.get<BattleCardInfo>(path);
       const battle = res.data;
 
       if (shouldUpdate) {

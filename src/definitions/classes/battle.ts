@@ -1,5 +1,8 @@
+import { CommentStats } from "./comment";
 import { Post } from "./post";
+import { SubmissionStats } from "./submission";
 import { UserFrontend } from "./user";
+import { VoteStats } from "./vote";
 
 class BattleShared extends Post {
   deadline: string;
@@ -38,4 +41,10 @@ class PopulatedBattleFrontend extends BattleShared {
   }
 }
 
-export { BattleFrontend, PopulatedBattleFrontend };
+type BattleCardInfo = PopulatedBattleFrontend
+                      & CommentStats
+                      & SubmissionStats
+                      & VoteStats
+
+
+export { BattleCardInfo, BattleFrontend, PopulatedBattleFrontend };

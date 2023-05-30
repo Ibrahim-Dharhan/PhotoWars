@@ -10,14 +10,14 @@ import { useLocation } from 'react-router-dom';
 import { DailyBattleCard } from '../dailyBattleCard/DailyBattleCard';
 
 const RightBar = () => {
-  const [battleId, setBattleId] = useState(null);
+  const [battleId, setBattleId] = useState<string>('');
   const location = useLocation();
 
   useEffect(() => {
     let shouldUpdate = true;
     const getBattleId = async () => {
       const path = '/battle/random';
-      const res = await axios.get(path);
+      const res = await axios.get<{ _id: string }>(path);
       const randomBattleId = res.data?._id;
       if (shouldUpdate) {
         setBattleId(randomBattleId);

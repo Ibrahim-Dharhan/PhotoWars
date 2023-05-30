@@ -6,7 +6,9 @@ import { Card, CardMedia, Grid, Typography } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
 import './style.css';
 import { UserContext } from '../../contexts/UserContext';
-import { PopulatedCommentFrontend } from '../../../definitions/classes/comment';
+import { CommentCardInfo, PopulatedCommentFrontend } from '../../../definitions/classes/comment';
+import { SubmissionFrontend } from '../../../definitions/classes/submission';
+import { BattleFrontend } from '../../../definitions/classes/battle';
 
 interface IProps {
   commentId: string;
@@ -24,14 +26,16 @@ const CommentCard = ({ commentId }: IProps) => {
     let shouldUpdate = true;
     const setCommentInfo = async () => {
       const path = `/comment/${commentId}`;
-      const res = await axios.get(path);
+      const res = await axios.get<CommentCardInfo>(path);
       if (shouldUpdate) {
         setComment(res.data);
-        const pathToBattle = `/battles/${
-          comment.commentedModel === 'Battle'
-          ? res.data.post._id
-          : res.data.post.battle
-        }`;
+        let battleId: string;
+        if (comment.commentedModel === 'Battle') {
+          battleId = (res.data.post as BattleFrontend)._id;
+        } else {
+          battleId = (res.data.post as SubmissionFrontend).post;
+        }
+        const pathToBattle = `/battles/${battleId}`;
         setBattleViewPath(pathToBattle);
       }
     };

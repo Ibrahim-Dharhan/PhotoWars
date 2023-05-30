@@ -8,7 +8,7 @@ import { TabBar } from '../../components/tabBar/TabBar';
 const feedLoader: LoaderFunction = async ({ request }) => {
   const url = new URL(request.url);
   const path = '/battle/all';
-  const res = await axios.get(path, {
+  const res = await axios.get<{ _id: string }[]>(path, {
     params: { open: url.searchParams.get('open') },
   });
   return res.data;

@@ -2,6 +2,7 @@ import { BattleFrontend } from "./battle";
 import { Post } from "./post";
 import { SubmissionFrontend } from "./submission";
 import { UserFrontend } from "./user";
+import { VoteStats } from "./vote";
 
 class CommentShared extends Post {
   post: string | Post;
@@ -51,4 +52,17 @@ class PopulatedCommentFrontend extends CommentShared {
   }
 }
 
-export { CommentBackend, CommentFrontend, PopulatedCommentFrontend };
+class CommentStats {
+  numComments: number;
+  commentedOn: boolean | null;
+
+  constructor() {
+    this.numComments= 0;
+    this.commentedOn = false;
+  }
+}
+
+type CommentCardInfo = PopulatedCommentFrontend
+                       & VoteStats
+
+export { CommentBackend, CommentCardInfo, CommentFrontend, PopulatedCommentFrontend, CommentStats };

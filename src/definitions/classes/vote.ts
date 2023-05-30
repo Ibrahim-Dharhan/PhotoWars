@@ -27,4 +27,14 @@ class VoteFrontend extends VoteShared {
   }
 }
 
-export { VoteBackend, VoteFrontend }
+class VoteStats {
+  numVotes: number;
+  votedOn: boolean | null;
+
+  constructor() {
+    this.numVotes = 0;
+    this.votedOn = false;
+  }
+}
+
+export { VoteBackend, VoteFrontend, VoteStats }

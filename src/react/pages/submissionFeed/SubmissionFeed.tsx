@@ -3,21 +3,13 @@ import axios from 'axios';
 import Grid from '@mui/material/Grid';
 import { LoaderFunction, Outlet, useLoaderData } from 'react-router-dom';
 import { SubmissionCard } from '../../components/submissionCard/SubmissionCard';
+import { PopulatedSubmissionFrontend } from '../../../definitions/classes/submission';
 
 const submissionFeedLoader: LoaderFunction = async({ params }) => {
   const battleId = params['battleId'];
   const path = `/battle/${battleId}/submissions`;
-  const res = await axios.get(path);
+  const res = await axios.get<PopulatedSubmissionFrontend[]>(path);
   return res.data;
-}
-
-interface Submission {
-  _id: string;
-  __v: number;
-  author: string;
-  caption: string;
-  creationTime: string;
-  filename: string;
 }
 
 const feedStyle = {
@@ -32,7 +24,7 @@ const feedStyle = {
 };
 
 const SubmissionFeed = () => {
-  const submissions = useLoaderData() as Submission[];
+  const submissions = useLoaderData() as PopulatedSubmissionFrontend[];
   
   return (
     <React.Fragment>

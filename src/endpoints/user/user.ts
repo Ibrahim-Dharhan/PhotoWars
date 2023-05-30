@@ -287,7 +287,7 @@ userRouter.get('/:id/comments', async (req, res) => {
  */
 userRouter.get('/:id/submissions', async (req, res) => {
   const userId = req.params.id;
-  const query = Submission.find({ author: userId }, ['_id', 'battle']);
+  const query = Submission.find({ author: userId }, ['_id', 'post']);
 
   try {
     const submissions = await query.lean().exec();

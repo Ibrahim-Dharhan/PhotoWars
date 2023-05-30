@@ -21,6 +21,7 @@ import { PostCardHeader } from '../postCardHeader/PostCardHeader';
 import { updateDeadline } from '../../../definitions/timerLogic';
 import { createSearchParams, useLocation, useNavigate } from 'react-router-dom';
 import './submissionCard.css';
+import { SubmissionCardInfo } from '../../../definitions/classes/submission';
 
 interface IProps {
   submissionId: string
@@ -32,13 +33,12 @@ const SubmissionCard = ({ submissionId }: IProps) => {
   const [imageUrl, setImageUrl] = useState('');
   const [filename, setFilename] = useState('');
   const [numComments, setNumComments] = useState(0);
-  const [commented, setCommented] = useState(false);
-  const [expired, setExpired] = useState(true);
+  const [commented, setCommented] = useState<boolean | null>(false);
+  const [expired, setExpired] = useState<boolean>(true);
   const [numVotes, setNumVotes] = useState(0);
-  const [voted, setVoted] = useState(false);
+  const [voted, setVoted] = useState<boolean | null>(false);
 
-  const _isAuthor = useRef(false);
-  const _submission = useRef(null);
+  const _submission = useRef<SubmissionCardInfo | null>(null);
   const _timerEvent = useRef(null);
 
   const location = useLocation();
@@ -49,7 +49,7 @@ const SubmissionCard = ({ submissionId }: IProps) => {
     let shouldUpdate = true;
     const setSubmissionInformation = async () => {
       const path = `/submission/${submissionId}`;
-      const res = await axios.get(path);
+      const res = await axios.get<SubmissionCardInfo>(path);
       const submission = res.data;
 
       if (shouldUpdate) {
@@ -59,14 +59,13 @@ const SubmissionCard = ({ submissionId }: IProps) => {
         setCommented(submission.commentedOn);
         setNumVotes(submission.numVotes);
         setVoted(submission.votedOn);
-        _isAuthor.current = submission.author._id;
         _submission.current = submission;
         updateDeadline(
           new Date(submission.post.deadline),
           _timerEvent,
           null,
           setExpired,
-          expired
+          !!expired
         );
       }
     };
@@ -157,7 +156,7 @@ const SubmissionCard = ({ submissionId }: IProps) => {
                 setOpenLoginModal && setOpenLoginModal(true);
               }
             }}
-            disableRipple={expired}
+            disableRipple={!!expired}
           >
             {
               expired

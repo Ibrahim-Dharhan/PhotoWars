@@ -14,27 +14,19 @@ import {
 } from '@mui/material';
 import { SubmissionCard } from '../../components/submissionCard/SubmissionCard';
 import CommentCard from '../../components/commentCard/CommentCard';
+import { UserFrontend } from '../../../definitions/classes/user';
 
 const userViewLoader: LoaderFunction = async ({ params }) => {
   const id = params['userId'];
   const path = `/user/${id}`;
-  const res = await axios.get(path);
+  const res = await axios.get<UserFrontend>(path);
   return res.data;
 };
-
-interface IUser {
-  _id: string;
-  description: string;
-  displayName: string;
-  filename: string;
-  firstName: string;
-  lastName: string;
-}
 
 const UserView = () => {
   const navigate = useNavigate();
 
-  const user = useLoaderData() as IUser;
+  const user = useLoaderData() as UserFrontend;
   const [feed, setFeed] = useState('battles');
   const [battles, setBattles] = useState<{_id: string}[] | null>(null);
   const [submissions, setSubmissions] = useState<{_id: string, post: string}[] | null>(null);
@@ -44,11 +36,11 @@ const UserView = () => {
     let shouldUpdate = true;
     const setUserData = async () => {
       const pathBattle = `/user/${user._id}/battles`;
-      const resBattles = await axios.get(pathBattle);
+      const resBattles = await axios.get<UserFrontend[]>(pathBattle);
       const pathSubmissions = `/user/${user._id}/submissions`;
-      const resSubmissions = await axios.get(pathSubmissions);
+      const resSubmissions = await axios.get<{ _id: string, author: UserFrontend, post: string }[]>(pathSubmissions);
       const pathComments = `/user/${user._id}/comments`;
-      const resComments = await axios.get(pathComments);
+      const resComments = await axios.get<{ _id: string, author: UserFrontend }[]>(pathComments);
       if (shouldUpdate) {
         setBattles(resBattles.data);
         setSubmissions(resSubmissions.data);
