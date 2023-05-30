@@ -14,7 +14,14 @@ const AWS_REGION = process.env['AWS_REGION'] || '';
 const AWS_SECRET_ACCESS_KEY = process.env['AWS_SECRET_ACCESS_KEY'] || '';
 const AWS_BUCKET_NAME = process.env['BUCKET_NAME'] || '';
 
-const s3Client = new S3Client({
+let AWS_DEFINED = false;
+
+if (AWS_ACCESS_KEY_ID
+    && AWS_REGION
+    && AWS_SECRET_ACCESS_KEY
+    && AWS_BUCKET_NAME) AWS_DEFINED = true;
+
+const s3Client = AWS_DEFINED && new S3Client({
   region: AWS_REGION,
   credentials: {
     accessKeyId: AWS_ACCESS_KEY_ID,
@@ -30,7 +37,7 @@ const uploadFileToS3 = (file: { path: string, filename: string }) => {
     Bucket: AWS_BUCKET_NAME,
     Key: path.join(IMAGE_DIR, file.filename),
   };
-  return new Upload({
+  return s3Client && new Upload({
     client: s3Client,
     params: uploadParams
   }).done();
@@ -44,10 +51,10 @@ const deleteFileFromS3 = async (filename: string) => {
   const command = new DeleteObjectCommand(deleteParams);
 
   try {
-    await s3Client.send(command);
+    s3Client && await s3Client.send(command);
   } catch (err) {
     console.error(err);
   }
 };
 
-export { AWS_BUCKET_NAME, AWS_REGION, uploadFileToS3, deleteFileFromS3 };
+export { AWS_BUCKET_NAME, AWS_REGION, AWS_DEFINED, uploadFileToS3, deleteFileFromS3 };
