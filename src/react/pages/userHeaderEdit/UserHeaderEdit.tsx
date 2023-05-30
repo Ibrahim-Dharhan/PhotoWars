@@ -57,7 +57,6 @@ const UserHeaderEdit = () => {
     form.append('description', data.description);
     try {
       const res = await axios.put(path, form);
-      console.log(res.data);
       setLoggedInUser && setLoggedInUser(res.data);
       clearForm();
       navigate('..');

@@ -149,7 +149,6 @@ const BattleCard = ({ battleId, isPhotoOfTheDay }: IProps) => {
             location.pathname === '/' ||
             location.pathname.startsWith('/users')
           ) {
-            console.log('Open post');
             navigate(`/battles/${battleId}`);
           }
         }}
@@ -259,7 +258,6 @@ const BattleCard = ({ battleId, isPhotoOfTheDay }: IProps) => {
                       onClick={(event) => {
                         event.stopPropagation();
                         event.preventDefault();
-                        console.log('Open submit page');
                         navigate(`/battles/${battleId}/submit`);
                       }}
                       variant='outlined'

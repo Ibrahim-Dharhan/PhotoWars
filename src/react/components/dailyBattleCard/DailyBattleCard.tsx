@@ -84,7 +84,6 @@ const DailyBattleCard = ({ battleId }: IProps) => {
             location.pathname === '/' ||
             location.pathname.startsWith('/users')
           ) {
-            console.log('Open post');
             navigate(`/battles/${battleId}`);
           }
         }}
@@ -125,7 +124,6 @@ const DailyBattleCard = ({ battleId }: IProps) => {
                 onClick={(event) => {
                   event.stopPropagation();
                   event.preventDefault();
-                  console.log('Open submit page');
                   navigate(`/battles/${battleId}/submit`);
                 }}
                 variant='contained'

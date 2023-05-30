@@ -55,7 +55,7 @@ const voteOn = async (modelName: string, id: string, user: string) => {
   try {
     await Vote.findOneAndUpdate(vote, vote, { upsert: true }).lean().exec();
   } catch (err) {
-    console.log(err);
+    console.error(err);
   }
 };
 
@@ -68,7 +68,7 @@ const unvoteOn = async (modelName: string, id: string, user: string) => {
   try {
     await Vote.findOneAndDelete(vote).lean().exec();
   } catch (err) {
-    console.log(err);
+    console.error(err);
   }
 };
 
