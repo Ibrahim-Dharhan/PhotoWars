@@ -13,12 +13,12 @@ import mongoose = require('mongoose');
  *           type: string
  *         __v:
  *           type: number 
+ *         author:
+ *           $ref: '#/components/schemas/UserFrontend'
  *         creationTime:
  *           type: string
  *           format: date-time
  *         post:
- *           type: string
- *         user:
  *           type: string
  *         votedModel:
  *           type: string

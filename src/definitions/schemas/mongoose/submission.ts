@@ -18,15 +18,15 @@ import { Vote } from './vote';
  *         __v:
  *           type: number
  *         author:
- *           type: string
- *         post:
- *           type: string
+ *           $ref: '#/components/schemas/UserFrontend'
  *         caption:
  *           type: string
  *         creationTime:
  *           type: string
  *           format: date-time
  *         filename:
+ *           type: string
+ *         post:
  *           type: string
  */
 const submissionSchema = new mongoose.Schema({

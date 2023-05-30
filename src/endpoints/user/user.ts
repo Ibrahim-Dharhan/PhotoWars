@@ -31,20 +31,7 @@ const userRouter = Router();
  *         content:
  *           application/json:
  *             schema:
- *               type: object
- *               properties:
- *                 _id:
- *                   type: string
- *                 description:
- *                   type: string
- *                 displayName:
- *                   type: string
- *                 filename:
- *                   type: string
- *                 firstName:
- *                   type: string
- *                 lastName:
- *                   type: string
+ *               $ref: '#/components/schemas/UserFrontend'
  *       404:
  *         $ref: '#/components/responses/404NotFound'
  *       500:
@@ -101,7 +88,7 @@ userRouter.get('/:id', async (req, res) => {
  *         content:
  *           application/json:
  *             schema:
- *               $ref: '#/components/schemas/User'
+ *               $ref: '#/components/schemas/UserFrontend'
  *       400:
  *         description: Invalid information to update user.
  *       401:

@@ -42,7 +42,7 @@ const battleRouter = express.Router();
  *                 type: object
  *                 properties:
  *                   _id:
- *                     type: boolean
+ *                     type: string
  *       404:
  *         $ref: '#/components/responses/404NotFound'
  *       500:
@@ -663,6 +663,10 @@ battleRouter.get('/:id/comments', upload.none(), checkSchema(ValidObjectId), asy
  *     responses:
  *       200:
  *         description: Successfully created new comment.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/Comment'
  *       400:
  *         description: Missing information to create a new comment.
  *       401:

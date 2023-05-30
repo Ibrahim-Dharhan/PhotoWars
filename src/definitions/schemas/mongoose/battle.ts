@@ -19,7 +19,7 @@ import { Vote } from './vote';
  *         __v:
  *           type: number
  *         author:
- *           type: string
+ *           $ref: '#/components/schemas/UserFrontend'
  *         caption:
  *           type: string
  *         creationTime:
@@ -43,7 +43,7 @@ battleSchema.pre([
     'find',
     'findOne',
   ], async function() {
-    this.populate('author');
+    if (!this.projection() || 'author' in this.projection()) this.populate('author');
 });
 
 /* Middleware to delete or update Battle-related documents before deletion.  */

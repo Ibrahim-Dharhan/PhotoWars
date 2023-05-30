@@ -24,6 +24,10 @@ const imageRouter = express.Router();
  *     responses:
  *       200:
  *         description: Resource successfully retrieved.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: string
  *       404:
  *         $ref: '#/components/responses/404NotFound'
  *
