@@ -14,7 +14,7 @@ import { Vote } from '../../definitions/schemas/mongoose/vote';
 import { UpdateBattle } from '../../definitions/schemas/validation/updateBattle';
 import { ValidObjectId } from '../../definitions/schemas/validation/validObjectId';
 import { upload } from '../../server';
-import { AWS_BUCKET_NAME, uploadFileToS3 } from '../../definitions/s3';
+import { AWS_DEFINED, uploadFileToS3 } from '../../definitions/s3';
 import { voteOn, unvoteOn } from '../../definitions/schemas/mongoose/vote';
 
 import * as constants from '../../definitions/constants';
@@ -374,7 +374,7 @@ battleRouter.post(
         ...matchedData(req),
       });
       /* Uploading to S3.  */
-      if (AWS_BUCKET_NAME) {
+      if (AWS_DEFINED) {
         await uploadFileToS3(req.file);
         // await fs.promises.unlink(path.join(IMAGE_DIR, req.file.filename));
       }
@@ -474,7 +474,7 @@ battleRouter.post(
         ...matchedData(req),
       });
       /* Uploading to S3.  */
-      if (AWS_BUCKET_NAME) {
+      if (AWS_DEFINED) {
         await uploadFileToS3(req.file);
         await fs.promises.unlink(path.join(IMAGE_DIR, req.file.filename));
       }

@@ -1,7 +1,7 @@
 "use strict"
 
 import mongoose = require('mongoose');
-import { AWS_BUCKET_NAME, deleteFileFromS3 } from '../../s3';
+import { AWS_DEFINED, deleteFileFromS3 } from '../../s3';
 import { Battle } from './battle';
 import { Comment } from './comment';
 import { Submission } from './submission';
@@ -69,7 +69,7 @@ userSchema.pre(['deleteMany', 'findOneAndDelete'], async function() {
   await Battle.deleteMany({ author: _id });
 
   /* Delete user profile picture.  */
-  if (AWS_BUCKET_NAME) {
+  if (AWS_DEFINED) {
     try {
       await deleteFileFromS3(filename);
     } catch (err) {
