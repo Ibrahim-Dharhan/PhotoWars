@@ -16,19 +16,19 @@ import {
 import { getImageUrl } from '../../../definitions/getImageUrl';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { UserContext } from '../../contexts/UserContext';
-import { ILayoutUserContext } from '../../pages/Layout';
+import { BattleCardInfo } from '../../../definitions/classes/battle';
 
 interface IProps {
   battleId: string;
 }
 
 const DailyBattleCard = ({ battleId }: IProps) => {
-  const { loggedInUser } = useContext(UserContext) as ILayoutUserContext;
+  const { loggedInUser } = useContext(UserContext);
 
   const [caption, setCaption] = useState('');
   const [filename, setFilename] = useState('');
   const [imageUrl, setImageUrl] = useState('');
-  const [submitted, setSubmitted] = useState(false);
+  const [submitted, setSubmitted] = useState<boolean | null>(false);
 
   const location = useLocation();
   const navigate = useNavigate();
@@ -38,7 +38,7 @@ const DailyBattleCard = ({ battleId }: IProps) => {
     let shouldUpdate = true;
     const setBattleInformation = async () => {
       const path = `/battle/${battleId}`;
-      const res = await axios.get(path);
+      const res = await axios.get<BattleCardInfo>(path);
       const battle = res.data;
 
       if (shouldUpdate) {
@@ -85,7 +85,6 @@ const DailyBattleCard = ({ battleId }: IProps) => {
             location.pathname === '/' ||
             location.pathname.startsWith('/users')
           ) {
-            console.log('Open post');
             navigate(`/battles/${battleId}`);
           }
         }}
@@ -126,7 +125,6 @@ const DailyBattleCard = ({ battleId }: IProps) => {
                 onClick={(event) => {
                   event.stopPropagation();
                   event.preventDefault();
-                  console.log('Open submit page');
                   navigate(`/battles/${battleId}/submit`);
                 }}
                 variant='contained'

@@ -41,7 +41,7 @@ voteRouter.get('/:id', upload.none(), checkSchema(ValidObjectId), async (req: Re
   }
   const voteModelId = req.params['id'];
   const numVotesQuery = Vote.countDocuments({ post: voteModelId });
-  const votedOnQuery = Vote.findOne({ post: voteModelId, user: req.session.userId });
+  const votedOnQuery = Vote.findOne({ post: voteModelId, author: req.session.userId });
 
   try {
     const numVotes = await numVotesQuery.exec();

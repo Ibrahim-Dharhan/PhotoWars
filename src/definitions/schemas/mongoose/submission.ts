@@ -19,7 +19,7 @@ import { Vote } from './vote';
  *           type: number
  *         author:
  *           type: string
- *         battle:
+ *         post:
  *           type: string
  *         caption:
  *           type: string
@@ -31,10 +31,17 @@ import { Vote } from './vote';
  */
 const submissionSchema = new mongoose.Schema({
   author: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true },
-  battle: { type: mongoose.Schema.Types.ObjectId, ref: 'Battle', required: true },
+  post: { type: mongoose.Schema.Types.ObjectId, ref: 'Battle', required: true },
   caption: { type: String, required: true },
   creationTime: { type: Date, default: Date.now, required: true },
   filename: { type: String, required: true },
+});
+
+submissionSchema.pre([
+    'find',
+    'findOne',
+  ], async function() {
+    this.populate('author');
 });
 
 /* Middleware to delete or update Submission-related documents before deletion.  */

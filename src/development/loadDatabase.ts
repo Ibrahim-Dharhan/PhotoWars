@@ -63,7 +63,7 @@ const dummyData = dummyDataFunc();
   try {
     await Promise.all(commentModels.map(async (comment) => {
       await Comment.create(comment);
-      console.log(`Added comment "${comment.text}" to database.`);
+      console.log(`Added comment "${comment.caption}" to database.`);
     }));
   } catch (err) {
     console.error(err);

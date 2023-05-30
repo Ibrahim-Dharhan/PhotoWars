@@ -24,13 +24,13 @@ import mongoose = require('mongoose');
  *           type: string
  */
 const voteSchema = new mongoose.Schema({
+  author: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true },
   creationTime: { type: Date, default: Date.now, required: true },
   post: {
     type: mongoose.Schema.Types.ObjectId,
     refPath: 'votedModel',
     required: true
   },
-  user: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true },
   votedModel: {
     type: String,
     enum: ['Battle', 'Comment', 'Submission'],
@@ -40,7 +40,7 @@ const voteSchema = new mongoose.Schema({
 
 /* Enforce that each Vote is unique.  */
 voteSchema.index(
-  { post: 1, user: 1, votedModel: 1 },
+  { post: 1, author: 1, votedModel: 1 },
   { unique: true }
 );
 
@@ -49,26 +49,26 @@ const Vote = mongoose.model('Vote', voteSchema);
 const voteOn = async (modelName: string, id: string, user: string) => {
   const vote = {
     post: id,
-    user: user,
+    author: user,
     votedModel: modelName
   };
   try {
     await Vote.findOneAndUpdate(vote, vote, { upsert: true }).lean().exec();
   } catch (err) {
-    console.log(err);
+    console.error(err);
   }
 };
 
 const unvoteOn = async (modelName: string, id: string, user: string) => {
   const vote = {
     post: id,
-    user: user,
+    author: user,
     votedModel: modelName
   };
   try {
     await Vote.findOneAndDelete(vote).lean().exec();
   } catch (err) {
-    console.log(err);
+    console.error(err);
   }
 };
 

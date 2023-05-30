@@ -3,11 +3,12 @@ import axios from 'axios';
 import { BattleCard } from '../../components/battleCard/BattleCard';
 import { LoaderFunction, useLoaderData } from 'react-router-dom';
 import { ImageList } from '@mui/material';
+import { TabBar } from '../../components/tabBar/TabBar';
 
 const feedLoader: LoaderFunction = async ({ request }) => {
   const url = new URL(request.url);
   const path = '/battle/all';
-  const res = await axios.get(path, {
+  const res = await axios.get<{ _id: string }[]>(path, {
     params: { open: url.searchParams.get('open') },
   });
   return res.data;
@@ -23,6 +24,7 @@ const Feed = () => {
 
   return (
     <React.Fragment>
+      <TabBar />
       <ImageList variant="masonry" cols={3} gap={24}>
          {battlesRecent.map((battle, i) => {
             return (

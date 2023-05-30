@@ -3,7 +3,7 @@ import axios, { isAxiosError } from 'axios';
 const getImageUrl = async (filename: string) => {
   const path = `/image/${filename}`;
   try {
-    const res = await axios.get(path);
+    const res = await axios.get<string>(path);
     if (!res.data.startsWith('https')) {
       /* Using local filesystem for images.  */
       return path;
@@ -17,6 +17,7 @@ const getImageUrl = async (filename: string) => {
     } else {
       console.error(err);
     }
+    return '';
   }
 };
 

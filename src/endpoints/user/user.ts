@@ -52,11 +52,7 @@ const userRouter = Router();
  */
 userRouter.get('/:id', async (req, res) => {
   const userId = req.params.id;
-  const query = User.findOne({ _id: userId }, [
-    '-__v',
-    '-loginName',
-    '-loginPassword',
-  ]);
+  const query = User.findOne({ _id: userId });
 
   try {
     const userObj = await query.lean().exec();
@@ -291,7 +287,7 @@ userRouter.get('/:id/comments', async (req, res) => {
  */
 userRouter.get('/:id/submissions', async (req, res) => {
   const userId = req.params.id;
-  const query = Submission.find({ author: userId }, ['_id', 'battle']);
+  const query = Submission.find({ author: userId }, ['_id', 'post']);
 
   try {
     const submissions = await query.lean().exec();
@@ -323,7 +319,7 @@ userRouter.get('/:id/submissions', async (req, res) => {
  */
 userRouter.get('/:id/votes', async (req, res) => {
   const userId = req.params.id;
-  const query = Vote.find({ user: userId }, ['-_id', '-__v']);
+  const query = Vote.find({ author: userId }, ['-_id', '-__v']);
 
   try {
     const voteIds = await query.populate('post', ['_id']).lean().exec();

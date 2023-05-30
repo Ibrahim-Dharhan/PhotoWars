@@ -39,6 +39,13 @@ const battleSchema = new mongoose.Schema({
   filename: { type: String, required: true},
 });
 
+battleSchema.pre([
+    'find',
+    'findOne',
+  ], async function() {
+    this.populate('author');
+});
+
 /* Middleware to delete or update Battle-related documents before deletion.  */
 battleSchema.pre(['deleteMany', 'findOneAndDelete'], async function () {
   const results = await Battle.find(this.getQuery(), ['_id', 'filename']);
@@ -56,7 +63,7 @@ battleSchema.pre(['deleteMany', 'findOneAndDelete'], async function () {
   });
   /* Delete all submissions to Battle.  */
   await Submission.deleteMany({
-    battle: { $in: _ids },
+    post: { $in: _ids },
   });
 
   /* Delete image associated with Battle.  */

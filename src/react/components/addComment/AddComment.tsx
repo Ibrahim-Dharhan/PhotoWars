@@ -66,7 +66,6 @@ const AddComment = ({ postComment }: IProps) => {
             variant='contained'
             onClick={(e) => {
               if (commentText.trim()) {
-                console.log(commentText.trim());
                 postComment(commentText.trim());
               } else {
                 e.preventDefault();

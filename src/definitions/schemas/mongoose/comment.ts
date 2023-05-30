@@ -16,14 +16,14 @@ import { Vote } from './vote';
  *           type: number
  *         author:
  *           type: string
+ *         caption:
+ *           type: string
  *         commentedModel:
  *           type: string
  *         creationTime:
  *           type: string
  *           format: date-time
  *         post:
- *           type: string
- *         text:
  *           type: string
  */
 const commentSchema = new mongoose.Schema({
@@ -32,6 +32,7 @@ const commentSchema = new mongoose.Schema({
     ref: 'User',
     required: true
   },
+  caption: { type: String, required: true },
   commentedModel: {
     type: String,
     enum: ['Battle', 'Comment', 'Submission'],
@@ -43,7 +44,13 @@ const commentSchema = new mongoose.Schema({
     refPath: 'commentedModel',
     required: true
   },
-  text: { type: String, required: true },
+});
+
+commentSchema.pre([
+    'find',
+    'findOne',
+  ], async function() {
+    this.populate('author');
 });
 
 commentSchema.pre(['deleteMany'], async function () {

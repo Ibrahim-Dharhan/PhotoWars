@@ -16,13 +16,12 @@ import AccountCircleOutlinedIcon from '@mui/icons-material/AccountCircleOutlined
 import { LoggedInUser, UserContext } from '../../contexts/UserContext';
 import { LoginModal } from '../loginModal/LoginModal';
 import { Link, useNavigate } from 'react-router-dom';
-import { ILayoutUserContext } from '../../pages/Layout';
 
 const TopBar = () => {
   const {
     loggedInUser,
     setLoggedInUser
-  } = useContext(UserContext) as ILayoutUserContext;
+  } = useContext(UserContext);
   const navigate = useNavigate();
   const [anchorElement, setAnchorElement] = useState<HTMLElement | null>(null);
 
@@ -30,7 +29,7 @@ const TopBar = () => {
     const path = '/account/logout';
     try {
       await axios.post(path);
-      setLoggedInUser(new LoggedInUser())
+      setLoggedInUser && setLoggedInUser(new LoggedInUser())
       localStorage.removeItem('loggedInUser');
       navigate('/');
     } catch (err) {

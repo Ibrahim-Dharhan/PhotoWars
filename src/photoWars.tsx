@@ -54,7 +54,7 @@ const PhotoWars = () => {
           </Route>
           <Route path='create' element={<Create />} />
           <Route
-            path='users/:id'
+            path='users/:userId'
             element={<UserView />}
             loader={userViewLoader}
           >

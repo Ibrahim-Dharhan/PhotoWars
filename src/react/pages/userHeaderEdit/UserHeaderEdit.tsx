@@ -15,8 +15,7 @@ import {
 import { Controller, useForm } from 'react-hook-form';
 import { getImageUrl } from '../../../definitions/getImageUrl';
 import { Link, useOutletContext, useNavigate } from 'react-router-dom';
-import { UserContext } from '../../contexts/UserContext';
-import { ILayoutUserContext } from '../Layout';
+import { LoggedInUser, UserContext } from '../../contexts/UserContext';
 
 interface IUser {
   _id: string;
@@ -36,7 +35,7 @@ interface IFormData {
 }
 
 const UserHeaderEdit = () => {
-  const { setLoggedInUser } = useContext(UserContext) as ILayoutUserContext;
+  const { setLoggedInUser } = useContext(UserContext);
   const { user } = useOutletContext() as { user: IUser };
   const [imageUrl, setImageUrl] = useState('');
   const [image, setImage] = useState<File | null>(null);
@@ -57,9 +56,8 @@ const UserHeaderEdit = () => {
     form.append('displayName', data.displayName);
     form.append('description', data.description);
     try {
-      const res = await axios.put(path, form);
-      console.log(res.data);
-      setLoggedInUser(res.data);
+      const res = await axios.put<LoggedInUser>(path, form);
+      setLoggedInUser && setLoggedInUser(res.data);
       clearForm();
       navigate('..');
       navigate(0);

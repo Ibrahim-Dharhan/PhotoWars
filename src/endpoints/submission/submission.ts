@@ -42,11 +42,11 @@ submissionRouter.get('/:id', async (req, res) => {
   const commentedOnQuery = Comment.findOne({ post: submissionId,
                                              author: req.session.userId });
   const votedOnQuery = Vote.findOne({ post: submissionId,
-                                      user: req.session.userId });
+                                      author: req.session.userId });
   try {
     let result = await query
                          .populate('author')
-                         .populate('battle', ['deadline'])
+                         .populate('post', ['deadline'])
                          .lean()
                          .exec();
     if (result) {
@@ -299,11 +299,7 @@ submissionRouter.get('/:id/comments', upload.none(), checkSchema(ValidObjectId),
   const query = Comment.find({
     commentedModel: 'Submission',
     post: submissionId,
-  }).populate('author', [
-    '-loginName',
-    '-loginPassword',
-    '-__v'
-  ]).populate('post', [
+  }).populate('author').populate('post', [
     '-author',
     '-__v'
   ]);
@@ -377,7 +373,7 @@ submissionRouter.post('/:id/comment', upload.none(), checkSchema(ValidObjectId),
       author: req.session.userId,
       commentedModel: 'Submission',
       post: submissionId,
-      text: req.body.comment,
+      caption: req.body.comment,
     });
     res.status(200).json(newComment);
   } catch (err) {

@@ -10,7 +10,7 @@ const battleViewLoader: LoaderFunction = async ({ params }) => {
   const battleId = params['battleId'];
   const path = `/battle/${battleId}`;
   try {
-    await axios.get(path);
+    await axios.get<{ _id: string }[]>(path);
   } catch (err) {
       if (isAxiosError(err)) {
         if (err.response?.status === 404) {

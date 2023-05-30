@@ -12,29 +12,17 @@ import { getImageUrl } from '../../../definitions/getImageUrl';
 import { DeleteDialog } from '../deleteDialog/DeleteDialog';
 import { Link, useNavigate } from 'react-router-dom';
 import { UserContext } from '../../contexts/UserContext';
-import { ILayoutUserContext } from '../../pages/Layout';
-
-interface Author {
-  _id: string;
-  displayName: string;
-  filename: string;
-}
-
-interface IPost {
-  _id: string;
-  author: Author;
-  battle?: string;
-  filename: string;
-}
+import { PopulatedSubmissionFrontend } from '../../../definitions/classes/submission';
+import { PopulatedBattleFrontend } from '../../../definitions/classes/battle';
 
 interface IProps {
-  post: IPost | null;
+  post: PopulatedBattleFrontend | PopulatedSubmissionFrontend | null;
 }
 
 const PostCardHeader = ({
   post
 }: IProps) => {
-  const { loggedInUser } = useContext(UserContext) as ILayoutUserContext;
+  const { loggedInUser } = useContext(UserContext);
   const [openDeleteDialog, setOpenDeleteDialog] = useState(false);
   const [imageUrl, setImageUrl] = useState('');
 
@@ -128,7 +116,7 @@ const PostCardHeader = ({
             openDeleteDialog={openDeleteDialog}
             setOpenDeleteDialog={setOpenDeleteDialog}
             objectId={post?._id}
-            objectModel={post?.battle ? 'submission' : 'battle'}
+            objectModel={post && 'post' in post ? 'submission' : 'battle'}
           />
           <IconButton
             onMouseDown={(event) => event.stopPropagation()}

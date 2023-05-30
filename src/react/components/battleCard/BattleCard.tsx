@@ -26,7 +26,7 @@ import { updateDeadline } from '../../../definitions/timerLogic';
 import { createSearchParams, useLocation, useNavigate } from 'react-router-dom';
 import { UserContext } from '../../contexts/UserContext';
 import './battleCard.css';
-import { ILayoutUserContext } from '../../pages/Layout';
+import { BattleCardInfo } from '../../../definitions/classes/battle';
 
 interface IProps {
   battleId: string;
@@ -34,7 +34,7 @@ interface IProps {
 }
 
 const BattleCard = ({ battleId, isPhotoOfTheDay }: IProps) => {
-  const { loggedInUser, setOpenLoginModal } = useContext(UserContext) as ILayoutUserContext;
+  const { loggedInUser, setOpenLoginModal } = useContext(UserContext);
   const [caption, setCaption] = useState('');
   const [filename, setFilename] = useState('');
   const [imageUrl, setImageUrl] = useState('');
@@ -45,9 +45,9 @@ const BattleCard = ({ battleId, isPhotoOfTheDay }: IProps) => {
   const [submitted, setSubmitted] = useState(false);
   const [voted, setVoted] = useState(false);
   const [timeRemaining, setTimeRemaining] = useState('--:--:--');
-  const [expired, setExpired] = useState(true);
+  const [expired, setExpired] = useState<boolean>(true);
 
-  const _battle = useRef(null);
+  const _battle = useRef<BattleCardInfo| null>(null);
   const _timerEvent = useRef<NodeJS.Timer | null>(null);
 
   const location = useLocation();
@@ -58,25 +58,25 @@ const BattleCard = ({ battleId, isPhotoOfTheDay }: IProps) => {
     let shouldUpdate = true;
     const setBattleInformation = async () => {
       const path = `/battle/${battleId}`;
-      const res = await axios.get(path);
+      const res = await axios.get<BattleCardInfo>(path);
       const battle = res.data;
 
       if (shouldUpdate) {
         setCaption(battle.caption);
         setFilename(battle.filename);
         setNumComments(battle.numComments);
-        setCommented(battle.commentedOn);
+        setCommented(!!battle.commentedOn);
         setNumSubmissions(battle.numSubmissions);
-        setSubmitted(battle.submittedTo);
+        setSubmitted(!!battle.submittedTo);
         setNumVotes(battle.numVotes);
-        setVoted(battle.votedOn);
+        setVoted(!!battle.votedOn);
         _battle.current = battle;
         updateDeadline(
           new Date(battle.deadline),
           _timerEvent,
           setTimeRemaining,
           setExpired,
-          expired
+          !!expired
         );
       }
     };
@@ -150,7 +150,6 @@ const BattleCard = ({ battleId, isPhotoOfTheDay }: IProps) => {
             location.pathname === '/' ||
             location.pathname.startsWith('/users')
           ) {
-            console.log('Open post');
             navigate(`/battles/${battleId}`);
           }
         }}
@@ -213,10 +212,10 @@ const BattleCard = ({ battleId, isPhotoOfTheDay }: IProps) => {
               if (loggedInUser._id !== '' && !expired) {
                 vote();
               } else {
-                setOpenLoginModal(true);
+                setOpenLoginModal && setOpenLoginModal(true);
               }
             }}
-            disableRipple={expired}
+            disableRipple={!!expired}
           >
             {
               expired
@@ -260,7 +259,6 @@ const BattleCard = ({ battleId, isPhotoOfTheDay }: IProps) => {
                       onClick={(event) => {
                         event.stopPropagation();
                         event.preventDefault();
-                        console.log('Open submit page');
                         navigate(`/battles/${battleId}/submit`);
                       }}
                       variant='outlined'

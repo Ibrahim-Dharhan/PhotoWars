@@ -10,39 +10,13 @@ import {
   ListItemText,
   Typography } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
-// import { ILayoutUserContext } from '../../pages/Layout';
-
-interface Author {
-  _id: string;
-  description: string;
-  displayName: string;
-  filename: string;
-  firstName: string;
-  lastName: string;
-}
-
-interface Comment {
-  _id: string;
-  author: Author;
-  commentedModel: string;
-  creationTime: string;
-  post: Post;
-  text: string;
-}
-
-interface Post {
-  _id: string;
-  author: Author;
-  caption: string;
-  filename: string;
-}
+import { PopulatedCommentFrontend } from '../../../definitions/classes/comment';
 
 interface IProps {
-  comment: Comment;
+  comment: PopulatedCommentFrontend;
 }
 
 const CommentModalCommentCard = ({ comment }: IProps) => {
-  // const { loggedInUser } = useContext(UserContext) as ILayoutUserContext;
   const [imageUrl, setImageUrl] = useState('');
 
   const navigate = useNavigate();
@@ -95,7 +69,7 @@ const CommentModalCommentCard = ({ comment }: IProps) => {
               >
                 {comment.author.displayName + '\n'}
               </Typography>
-              {comment.text}
+              {comment.caption}
             </React.Fragment>
           }
         />

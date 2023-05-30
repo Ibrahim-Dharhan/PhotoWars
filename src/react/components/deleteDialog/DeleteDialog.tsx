@@ -12,7 +12,6 @@ import {
 import { useLocation, useNavigate } from 'react-router-dom';
 // import { LoggedInUser, UserContext } from '../../pages/Layout';
 import { LoggedInUser, UserContext } from '../../contexts/UserContext';
-import { ILayoutUserContext } from '../../pages/Layout';
 
 interface IProps {
   openDeleteDialog: boolean;
@@ -30,7 +29,7 @@ const DeleteDialog = ({
   const location = useLocation();
   const navigate = useNavigate();
   const [deleting, setDeleting] = useState(false);
-  const { setLoggedInUser } = useContext(UserContext) as ILayoutUserContext;
+  const { setLoggedInUser } = useContext(UserContext);
 
   const handleClose = () => {
     !deleting && setOpenDeleteDialog(false);
@@ -49,7 +48,7 @@ const DeleteDialog = ({
         /* Log user out and update state.  */
         const path = '/account/logout';
         await axios.post(path);
-        setLoggedInUser(new LoggedInUser());
+        setLoggedInUser && setLoggedInUser(new LoggedInUser());
         localStorage.removeItem('loggedInUser');
       }
       setDeleting(true);
