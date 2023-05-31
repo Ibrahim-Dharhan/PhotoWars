@@ -22,6 +22,7 @@ import {
   useNavigate,
   useParams
 } from 'react-router-dom';
+import { AspectRatio } from '../../components/aspectRatio/AspectRatio';
 import { CommentModalCommentCard } from '../../components/commentModalCommentCard/CommentModalCommentCard';
 import { PopulatedBattleFrontend } from '../../../definitions/classes/battle';
 import { PopulatedSubmissionFrontend } from '../../../definitions/classes/submission';
@@ -152,9 +153,7 @@ const CommentModal = () => {
       <Box sx={modalStyle}>
         <Grid direction='row' container spacing={1} sx={{height: "100%"}}>
           <Grid item xs={6}>
-            <Box sx={{height:'100%', display: 'flex'}} alignItems='center'>
-              <img src={imageUrl} width='100%'/>
-            </Box>
+            <AspectRatio imageUrl={imageUrl} />
           </Grid>
           <Grid item xs={6}>
             <List>
