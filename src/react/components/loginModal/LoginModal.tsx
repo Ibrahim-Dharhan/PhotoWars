@@ -15,7 +15,7 @@ import {
 import { Controller, useForm } from 'react-hook-form';
 import { LoggedInUser, UserContext } from '../../contexts/UserContext';
 
-const style = {
+const modalStyle = {
   position: 'absolute',
   top: '50%',
   left: '50%',
@@ -23,6 +23,7 @@ const style = {
   width: '25%',
   minWidth: 400,
   height: '50%',
+  minHeight: 550,
   bgcolor: 'background.paper',
   boxShadow: 24,
   borderRadius: '12px',
@@ -87,7 +88,7 @@ const LoginModal = () => {
       <Box>
       <form onSubmit={handleSubmit(handleFormSubmit)}>
         <Stack
-          sx={style}
+          sx={modalStyle}
           direction="column"
           alignItems="center"
           justifyContent="space-between"
