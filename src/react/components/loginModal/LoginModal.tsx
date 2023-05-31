@@ -20,10 +20,12 @@ const style = {
   top: '50%',
   left: '50%',
   transform: 'translate(-50%, -50%)',
-  width: 400,
+  width: '25%',
+  minWidth: 400,
+  height: '50%',
   bgcolor: 'background.paper',
   boxShadow: 24,
-  borderRadius: '2px',
+  borderRadius: '12px',
   p: 2
 };
 
@@ -88,104 +90,112 @@ const LoginModal = () => {
           sx={style}
           direction="column"
           alignItems="center"
+          justifyContent="space-between"
           spacing={2}
         >
-          <Typography variant="h4">Photo Wars</Typography>
-          {
-            registering && <Controller
-              name="displayName"
+          <Typography sx={{ fontWeight: 800, color: 'white' }} variant="h3">
+            PHOTOWARS
+          </Typography>
+
+          <Stack direction="column" spacing={2}>
+            {
+              registering && <Controller
+                name="displayName"
+                control={control}
+                defaultValue=""
+                rules={{
+                  required: 'Display name required',
+                  minLength: {
+                    value: registering ? 3 : 0,
+                    message: 'Must be at least 3 character long.'
+                  }
+                }}
+                render={({ field, fieldState: { error } }) => (
+                  <TextField
+                    error={!!error}
+                    helperText={error ? error.message : null}
+                    label="Display name"
+                    variant="outlined"
+                    {...field}
+                  />
+                )}
+              />
+            }
+            <Controller
+              name="loginName"
               control={control}
               defaultValue=""
               rules={{
-                required: 'Display name required',
+                required: 'Username required',
                 minLength: {
-                  value: registering ? 3 : 0,
-                  message: 'Must be at least 3 character long.'
+                  value: registering ? 6 : 0,
+                  message: 'Must be at least 6 characters long.'
                 }
               }}
               render={({ field, fieldState: { error } }) => (
                 <TextField
                   error={!!error}
                   helperText={error ? error.message : null}
-                  label="Display name"
+                  label="Username"
                   variant="outlined"
                   {...field}
                 />
               )}
             />
-          }
-          <Controller
-            name="loginName"
-            control={control}
-            defaultValue=""
-            rules={{
-              required: 'Username required',
-              minLength: {
-                value: registering ? 6 : 0,
-                message: 'Must be at least 6 characters long.'
-              }
-            }}
-            render={({ field, fieldState: { error } }) => (
-              <TextField
-                error={!!error}
-                helperText={error ? error.message : null}
-                label="Username"
-                variant="outlined"
-                {...field}
-              />
-            )}
-          />
-          <Controller
-            name="loginPassword"
-            control={control}
-            defaultValue=""
-            rules={{
-              required: 'Password required.',
-              minLength: {
-                value: registering ? 8 : 0,
-                message: 'Must be at least 8 characters long'
-              }
-            }}
-            render={({ field, fieldState: { error } }) => (
-              <TextField
-                error={!!error}
-                helperText={error ? error.message : null}
-                label="Password"
-                type="Password"
-                variant="outlined"
-                {...field}
-              />
-            )}
-          />
-          {
-            registering && <Controller
-              name="loginPasswordRepeat"
+            <Controller
+              name="loginPassword"
               control={control}
               defaultValue=""
               rules={{
-                validate: {
-                  passwordsMatch: value => value === getValues('loginPassword') || 'Passwords must match.'
+                required: 'Password required.',
+                minLength: {
+                  value: registering ? 8 : 0,
+                  message: 'Must be at least 8 characters long'
                 }
               }}
               render={({ field, fieldState: { error } }) => (
                 <TextField
                   error={!!error}
                   helperText={error ? error.message : null}
-                  label="Repeat password"
-                  type="password"
+                  label="Password"
+                  type="Password"
                   variant="outlined"
                   {...field}
                 />
               )}
             />
-          }
-          { responseError !== '' && <Typography>{responseError}</Typography> }
-          <Button type="submit" variant="outlined">
-            { registering ? 'Register' : 'Login' }
-          </Button>
+            {
+              registering && <Controller
+                name="loginPasswordRepeat"
+                control={control}
+                defaultValue=""
+                rules={{
+                  validate: {
+                    passwordsMatch: value => value === getValues('loginPassword') || 'Passwords must match.'
+                  }
+                }}
+                render={({ field, fieldState: { error } }) => (
+                  <TextField
+                    error={!!error}
+                    helperText={error ? error.message : null}
+                    label="Repeat password"
+                    type="password"
+                    variant="outlined"
+                    {...field}
+                  />
+                )}
+              />
+            }
+            { responseError !== '' && <Typography>{responseError}</Typography> }
+            <Button type="submit" variant="contained">
+              { registering ? 'Register' : 'Login' }
+            </Button>
+
+          </Stack>
+
           {
             registering ?
-              <Typography>
+              <Typography color='white'>
                 {"Already have an account? "}
                 <Link
                   style={{ cursor: 'pointer'}}
@@ -198,7 +208,7 @@ const LoginModal = () => {
                 </Link>
               </Typography>
             :
-              <Typography>
+              <Typography color='white'>
                 {"Don't have an account? "}
                 <Link
                   style={{ cursor: 'pointer'}}
