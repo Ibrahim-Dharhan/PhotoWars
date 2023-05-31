@@ -1,45 +1,15 @@
-import async from 'async';
+import async = require('async');
 import * as fs from 'fs/promises';
-import path from 'path';
-import { Comment } from '../definitions/schemas/mongoose/comment';
+import path = require('path');
 import { Battle } from '../definitions/schemas/mongoose/battle';
 import { generateSubmissionsData } from './generateSubmissionData';
-
-const getLocalISOString = (date: Date) => {
-  const offset = date.getTimezoneOffset()
-  const offsetAbs = Math.abs(offset)
-  const isoString = new Date(date.getTime() - offset * 60 * 1000).toISOString()
-  return `${isoString.slice(0, -1)}${offset > 0 ? '-' : '+'}${String(Math.floor(offsetAbs / 60)).padStart(2, '0')}:${String(offsetAbs % 60).padStart(2, '0')}`
-}
-
-async function loadComment(this: any, comment: any, index: any, callback: any) {
-  let commentIdx = index.toString();
-  if (index <= 9) commentIdx = '0' + commentIdx; // Turns '9' into '09'
-
-  /* Set _id.  */
-  comment._id = '00000000000000000bac';
-  comment._id += (this.postIdx as string) + commentIdx;
-
-  /* Set creationTime.  */
-  comment.creationTime = getLocalISOString(new Date());
-
-  /* Set type of post.  */
-  comment.commentedModel = this.model;
-
-  /* Set post id.  */
-  comment.post = this.postId;
-
-  try {
-    await Comment.create(comment);
-    console.log(`Added comment "${comment.caption}" to database.`)
-  } catch (err) {
-    console.error(err);
-  }
-  callback();
-}
+import { getLocalISOString, loadComment } from './loadDatabaseNew';
 
 const generateBattleData = async (pathToBattle: string) => {
+  console.log('Generating battle data for ' + pathToBattle);
+  pathToBattle = path.join(process.cwd(), pathToBattle);
   const model = 'Battle';
+  const commentPrefix = '00000000000000000bac';
   let postId = '000000000000000000000b';
   const postIdx = pathToBattle.replace(/^\/*|\/*$/g, '').split('/').slice(-1)[0]!.slice(0, 2);
   postId += postIdx;
@@ -49,8 +19,8 @@ const generateBattleData = async (pathToBattle: string) => {
       switch (entry.name) {
         case 'submissions': {
           const pathToSubmissions = path.join(pathToBattle, 'submissions');
-          generateSubmissionsData(pathToSubmissions, postId);
-          return;
+          await generateSubmissionsData(pathToSubmissions, postId);
+          break;
         }
 
         case 'image': {
@@ -68,23 +38,22 @@ const generateBattleData = async (pathToBattle: string) => {
           } catch (err) {
             console.error(err);
           }
-          return;
+          break;
         }
 
         case 'comments.ts': {
-          const { comments } = await import(path.join(pathToBattle, 'comments'))
+          const { comments } = await import(path.join(pathToBattle, 'comments'));
           try {
-            await async.eachOf(comments, loadComment.bind(model, postId, postIdx));
+            const loadCommentBind = loadComment.bind({ model: model, postId: postId, postIdx: postIdx, commentPrefix: commentPrefix});
+            await async.eachOf(comments, loadCommentBind);
           } catch (err) {
             console.error(err);
           }
-          return;
+          break;
         }
 
       }
     }
-
-    dir.close();
   } catch (err) {
     console.error(err);
   }
