@@ -34,7 +34,7 @@ async function loadComment(this: any, comment: any, index: any, callback: any) {
     console.error(err);
   }
   callback();
-};
+}
 
 
 async function generateSubmissionData(this: any, pathToSubmission: string, callback: any) {
@@ -71,7 +71,7 @@ async function generateSubmissionData(this: any, pathToSubmission: string, callb
   }
 
   callback();
-};
+}
 
 const generateSubmissionsData = async (pathToSubmissions: string, battleId: string) => {
   try {

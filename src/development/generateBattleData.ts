@@ -36,7 +36,7 @@ async function loadComment(this: any, comment: any, index: any, callback: any) {
     console.error(err);
   }
   callback();
-};
+}
 
 const generateBattleData = async (pathToBattle: string) => {
   const model = 'Battle';
