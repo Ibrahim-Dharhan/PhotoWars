@@ -25,8 +25,8 @@ interface IUser {
 const UserHeader = () => {
   const { user } = useOutletContext() as { user: IUser };
   const { loggedInUser } = useContext(UserContext);
-  const [imageUrl, setImageUrl] = useState('');
-  const [openDeleteDialog, setOpenDeleteDialog] = useState(false);
+  const [imageUrl, setImageUrl] = useState<string>('');
+  const [openDeleteDialog, setOpenDeleteDialog] = useState<boolean>(false);
 
   const handleDelete = async (event: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
     event.stopPropagation();

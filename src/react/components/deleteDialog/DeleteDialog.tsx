@@ -28,7 +28,7 @@ const DeleteDialog = ({
 }: IProps) => {
   const location = useLocation();
   const navigate = useNavigate();
-  const [deleting, setDeleting] = useState(false);
+  const [deleting, setDeleting] = useState<boolean>(false);
   const { setLoggedInUser } = useContext(UserContext);
 
   const handleClose = () => {

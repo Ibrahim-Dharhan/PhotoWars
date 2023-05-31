@@ -14,7 +14,7 @@ import { Vote } from '../../definitions/schemas/mongoose/vote';
 import { UpdateBattle } from '../../definitions/schemas/validation/updateBattle';
 import { ValidObjectId } from '../../definitions/schemas/validation/validObjectId';
 import { upload } from '../../server';
-import { AWS_BUCKET_NAME, uploadFileToS3 } from '../../definitions/s3';
+import { AWS_DEFINED, uploadFileToS3 } from '../../definitions/s3';
 import { voteOn, unvoteOn } from '../../definitions/schemas/mongoose/vote';
 
 import * as constants from '../../definitions/constants';
@@ -42,7 +42,7 @@ const battleRouter = express.Router();
  *                 type: object
  *                 properties:
  *                   _id:
- *                     type: boolean
+ *                     type: string
  *       404:
  *         $ref: '#/components/responses/404NotFound'
  *       500:
@@ -374,7 +374,7 @@ battleRouter.post(
         ...matchedData(req),
       });
       /* Uploading to S3.  */
-      if (AWS_BUCKET_NAME) {
+      if (AWS_DEFINED) {
         await uploadFileToS3(req.file);
         // await fs.promises.unlink(path.join(IMAGE_DIR, req.file.filename));
       }
@@ -474,7 +474,7 @@ battleRouter.post(
         ...matchedData(req),
       });
       /* Uploading to S3.  */
-      if (AWS_BUCKET_NAME) {
+      if (AWS_DEFINED) {
         await uploadFileToS3(req.file);
         await fs.promises.unlink(path.join(IMAGE_DIR, req.file.filename));
       }
@@ -663,6 +663,10 @@ battleRouter.get('/:id/comments', upload.none(), checkSchema(ValidObjectId), asy
  *     responses:
  *       200:
  *         description: Successfully created new comment.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/Comment'
  *       400:
  *         description: Missing information to create a new comment.
  *       401:

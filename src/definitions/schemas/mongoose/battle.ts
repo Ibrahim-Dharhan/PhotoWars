@@ -3,7 +3,7 @@
 import async = require('async');
 import mongoose = require('mongoose');
 import { Comment } from './comment';
-import { AWS_BUCKET_NAME, deleteFileFromS3 } from '../../s3';
+import { AWS_DEFINED, deleteFileFromS3 } from '../../s3';
 import { Submission } from './submission';
 import { Vote } from './vote';
 
@@ -19,7 +19,7 @@ import { Vote } from './vote';
  *         __v:
  *           type: number
  *         author:
- *           type: string
+ *           $ref: '#/components/schemas/UserFrontend'
  *         caption:
  *           type: string
  *         creationTime:
@@ -43,7 +43,7 @@ battleSchema.pre([
     'find',
     'findOne',
   ], async function() {
-    this.populate('author');
+    if (!this.projection() || 'author' in this.projection()) this.populate('author');
 });
 
 /* Middleware to delete or update Battle-related documents before deletion.  */
@@ -67,7 +67,7 @@ battleSchema.pre(['deleteMany', 'findOneAndDelete'], async function () {
   });
 
   /* Delete image associated with Battle.  */
-  if (AWS_BUCKET_NAME) {
+  if (AWS_DEFINED) {
     try {
       await async.each(filenames, async (filename, callback) => {
         await deleteFileFromS3(filename);

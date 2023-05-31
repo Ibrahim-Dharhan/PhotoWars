@@ -17,8 +17,8 @@ interface IProps {
 const CommentCard = ({ commentId }: IProps) => {
   const { loggedInUser } = useContext(UserContext);
   const [commentLink, setCommentLink] = useState<string | { pathname: string, search: string }>('');
-  const [comment, setComment] = useState(new PopulatedCommentFrontend());
-  const [imageUrl, setImageUrl] = useState('');
+  const [comment, setComment] = useState<PopulatedCommentFrontend>(new PopulatedCommentFrontend());
+  const [imageUrl, setImageUrl] = useState<string>('');
 
   const navigate = useNavigate();
 

@@ -25,9 +25,9 @@ interface IProps {
 const DailyBattleCard = ({ battleId }: IProps) => {
   const { loggedInUser } = useContext(UserContext);
 
-  const [caption, setCaption] = useState('');
-  const [filename, setFilename] = useState('');
-  const [imageUrl, setImageUrl] = useState('');
+  const [caption, setCaption] = useState<string>('');
+  const [filename, setFilename] = useState<string>('');
+  const [imageUrl, setImageUrl] = useState<string>('');
   const [submitted, setSubmitted] = useState<boolean | null>(false);
 
   const location = useLocation();

@@ -15,7 +15,7 @@ import { Vote } from './vote';
  *         __v:
  *           type: number
  *         author:
- *           type: string
+ *           $ref: '#/components/schemas/UserFrontend'
  *         caption:
  *           type: string
  *         commentedModel:

@@ -12,11 +12,17 @@ module.exports = {
       jsx: true
     }
   },
-  plugins: ['@typescript-eslint'],
+  plugins: ['@typescript-eslint', 'require-explicit-generics'],
   root: true,
   settings: {
     react: {
       version: 'detect'
     }
+  },
+  rules: {
+    'require-explicit-generics/require-explicit-generics': [
+      'error',
+      [ 'useParams', 'useRef', 'useState', 'axios.get' ]
+    ]
   }
 };

@@ -17,7 +17,7 @@ interface IProps {
 }
 
 const CommentModalCommentCard = ({ comment }: IProps) => {
-  const [imageUrl, setImageUrl] = useState('');
+  const [imageUrl, setImageUrl] = useState<string>('');
 
   const navigate = useNavigate();
 

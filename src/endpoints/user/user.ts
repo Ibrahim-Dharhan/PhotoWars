@@ -3,7 +3,7 @@
 import { Request, Response, Router } from 'express';
 import fs = require('fs');
 import path = require('path');
-import { AWS_BUCKET_NAME, deleteFileFromS3, uploadFileToS3 } from '../../definitions/s3';
+import { AWS_DEFINED, deleteFileFromS3, uploadFileToS3 } from '../../definitions/s3';
 import { checkSchema, matchedData, validationResult } from 'express-validator';
 import { Battle } from '../../definitions/schemas/mongoose/battle';
 import { Comment } from '../../definitions/schemas/mongoose/comment';
@@ -31,20 +31,7 @@ const userRouter = Router();
  *         content:
  *           application/json:
  *             schema:
- *               type: object
- *               properties:
- *                 _id:
- *                   type: string
- *                 description:
- *                   type: string
- *                 displayName:
- *                   type: string
- *                 filename:
- *                   type: string
- *                 firstName:
- *                   type: string
- *                 lastName:
- *                   type: string
+ *               $ref: '#/components/schemas/UserFrontend'
  *       404:
  *         $ref: '#/components/responses/404NotFound'
  *       500:
@@ -101,7 +88,7 @@ userRouter.get('/:id', async (req, res) => {
  *         content:
  *           application/json:
  *             schema:
- *               $ref: '#/components/schemas/User'
+ *               $ref: '#/components/schemas/UserFrontend'
  *       400:
  *         description: Invalid information to update user.
  *       401:
@@ -143,7 +130,7 @@ userRouter.put('/', upload.single('file'), checkSchema(UpdateUser), async (req: 
       res.status(404).send('Failed to find user.');
       console.error('Failed to find user.');
     } else {
-      if (AWS_BUCKET_NAME && req.file) {
+      if (AWS_DEFINED && req.file) {
         /* Uploading profile picture to S3 and delete old profile picture.  */
         await deleteFileFromS3(userObj.filename);
         await uploadFileToS3(req.file);

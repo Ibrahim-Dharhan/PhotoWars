@@ -3,7 +3,7 @@
 import async = require('async');
 import mongoose = require('mongoose');
 import { Comment } from './comment';
-import { AWS_BUCKET_NAME, deleteFileFromS3 } from '../../s3';
+import { AWS_DEFINED, deleteFileFromS3 } from '../../s3';
 import { Vote } from './vote';
 
 /**
@@ -18,15 +18,15 @@ import { Vote } from './vote';
  *         __v:
  *           type: number
  *         author:
- *           type: string
- *         post:
- *           type: string
+ *           $ref: '#/components/schemas/UserFrontend'
  *         caption:
  *           type: string
  *         creationTime:
  *           type: string
  *           format: date-time
  *         filename:
+ *           type: string
+ *         post:
  *           type: string
  */
 const submissionSchema = new mongoose.Schema({
@@ -61,7 +61,7 @@ submissionSchema.pre(['deleteMany', 'findOneAndDelete'], async function () {
   });
   
   /* Delete image associated with Submission.  */
-  if (AWS_BUCKET_NAME) {
+  if (AWS_DEFINED) {
     try {
       await async.each(filenames, async (filename, callback) => {
         await deleteFileFromS3(filename);

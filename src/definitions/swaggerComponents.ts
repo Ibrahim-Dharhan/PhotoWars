@@ -19,4 +19,23 @@
  *       description: Resource not found.
  *     500:
  *       description: Internal server error.
+ * 
+ *   schemas:
+ *     UserFrontend:
+ *       type: object
+ *       properties:
+ *         _id:
+ *           type: string
+ *         __v:
+ *           type: number
+ *         description:
+ *           type: string
+ *         displayName:
+ *           type: string
+ *         filename:
+ *           type: string
+ *         firstName:
+ *           type: string
+ *         lastName:
+ *           type: string
  */

@@ -23,8 +23,8 @@ const PostCardHeader = ({
   post
 }: IProps) => {
   const { loggedInUser } = useContext(UserContext);
-  const [openDeleteDialog, setOpenDeleteDialog] = useState(false);
-  const [imageUrl, setImageUrl] = useState('');
+  const [openDeleteDialog, setOpenDeleteDialog] = useState<boolean>(false);
+  const [imageUrl, setImageUrl] = useState<string>('');
 
   const navigate = useNavigate();
 

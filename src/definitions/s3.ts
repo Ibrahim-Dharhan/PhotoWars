@@ -57,4 +57,4 @@ const deleteFileFromS3 = async (filename: string) => {
   }
 };
 
-export { AWS_BUCKET_NAME, AWS_REGION, AWS_DEFINED, uploadFileToS3, deleteFileFromS3 };
+export { AWS_BUCKET_NAME, AWS_DEFINED, AWS_REGION, uploadFileToS3, deleteFileFromS3 };

@@ -37,7 +37,7 @@ interface IFormData {
 const UserHeaderEdit = () => {
   const { setLoggedInUser } = useContext(UserContext);
   const { user } = useOutletContext() as { user: IUser };
-  const [imageUrl, setImageUrl] = useState('');
+  const [imageUrl, setImageUrl] = useState<string>('');
   const [image, setImage] = useState<File | null>(null);
   const navigate = useNavigate();
 

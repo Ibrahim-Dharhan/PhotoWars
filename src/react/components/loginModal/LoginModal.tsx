@@ -36,8 +36,8 @@ interface IFormData {
 
 const LoginModal = () => {
   const { openLoginModal, setOpenLoginModal, setLoggedInUser } = useContext(UserContext);
-  const [responseError, setResponseError] = useState('');
-  const [registering, setRegistering] = useState(false);
+  const [responseError, setResponseError] = useState<string>('');
+  const [registering, setRegistering] = useState<boolean>(false);
 
   const { control,
           getValues,
