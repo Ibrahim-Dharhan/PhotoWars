@@ -7,7 +7,7 @@ import { VoteFrontend } from "../definitions/classes/vote";
 function dummyDataFunc() {
   /* Fake users.  */
   const user1 = {
-    _id: '645449c2d0215be49c7e1300',
+    _id: '645449c2d0215be49c7e1a00',
     description: "I'm Spiderman!",
     displayName: 'Spidey',
     filename: 'seagull.jpg',
@@ -18,7 +18,7 @@ function dummyDataFunc() {
   };
 
   const user2 = {
-    _id: '645449c2d0215be49c7e1301',
+    _id: '645449c2d0215be49c7e1a01',
     description: 'I do all of my stunts!',
     displayName: 'RushHour',
     filename: 'seagull.jpg',
@@ -29,7 +29,7 @@ function dummyDataFunc() {
   };
 
   const user3 = {
-    _id: '645449c2d0215be49c7e1302',
+    _id: '645449c2d0215be49c7e1a02',
     description: 'Unholy is the best song',
     displayName: 'Sammy',
     filename: 'seagull.jpg',
@@ -40,7 +40,7 @@ function dummyDataFunc() {
   };
 
   const user4 = {
-    _id: '645449c2d0215be49c7e1303',
+    _id: '645449c2d0215be49c7e1a03',
     description: "I'm deadpool",
     displayName: 'Deadpool',
     filename: 'seagull.jpg',
@@ -51,7 +51,7 @@ function dummyDataFunc() {
   };
 
   const user5 = {
-    _id: '645449c2d0215be49c7e1304',
+    _id: '645449c2d0215be49c7e1a04',
     description: 'La La La La Land',
     displayName: 'Emmaaa',
     filename: 'seagull.jpg',
@@ -65,7 +65,7 @@ function dummyDataFunc() {
 
   /* Fake battles.  */
   const battle1 = {
-    _id: '64544bf83f9238e774994e00',
+    _id: '64544bf83f9238e774994b00',
     author: user1._id,
     caption: 'This cat with a skull on his chest',
     creationTime: '2023-05-05T00:24:14.710Z',
@@ -74,7 +74,7 @@ function dummyDataFunc() {
   };
 
   const battle2 = {
-    _id: '64544bf83f9238e774994e01',
+    _id: '64544bf83f9238e774994b01',
     author: user2._id,
     caption: 'This hedgehog posing in a tiny kayak',
     creationTime: '2023-05-05T00:24:14.710Z',
@@ -83,7 +83,7 @@ function dummyDataFunc() {
   };
 
   const battle3 = {
-    _id: '64544bf83f9238e774994e02',
+    _id: '64544bf83f9238e774994b02',
     author: user3._id,
     caption: 'Obama winning connect four against Stephen Curry',
     creationTime: '2023-05-05T00:24:14.710Z',
@@ -95,7 +95,7 @@ function dummyDataFunc() {
 
   /* Fake submissions.  */
   const submission1 = {
-    _id: '64544e66d74751fa1b70b200',
+    _id: '64544e66d74751fa1b70bd00',
     author: user1._id,
     post: battle1._id,
     caption: 'The Dark Mark',
@@ -105,7 +105,7 @@ function dummyDataFunc() {
   };
 
   const submission2 = {
-    _id: '64544e66d74751fa1b70b201',
+    _id: '64544e66d74751fa1b70bd01',
     author: user2._id,
     post: battle1._id,
     caption: 'Old Skull Pirate Holding Skull',
@@ -115,7 +115,7 @@ function dummyDataFunc() {
   };
 
   const submission3 = {
-    _id: '64544e66d74751fa1b70b202',
+    _id: '64544e66d74751fa1b70bd02',
     author: user3._id,
     post: battle1._id,
     caption: 'Hamlet holding a skull',
@@ -125,7 +125,7 @@ function dummyDataFunc() {
   };
 
   const submission4 = {
-    _id: '64544e66d74751fa1b70b203',
+    _id: '64544e66d74751fa1b70bd03',
     author: user4._id,
     post: battle1._id,
     caption: 'Coming soon on Catflix',
@@ -135,7 +135,7 @@ function dummyDataFunc() {
   };
 
   const submission5 = {
-    _id: '64544e66d74751fa1b70b204',
+    _id: '64544e66d74751fa1b70bd04',
     author: user5._id,
     post: battle1._id,
     caption: 'Get your motor running',
@@ -145,7 +145,7 @@ function dummyDataFunc() {
   };
 
   const submission6 = {
-    _id: '64544e66d74751fa1b70b205',
+    _id: '64544e66d74751fa1b70bd05',
     author: user1._id,
     post: battle2._id,
     caption: "Titanic 2: There's Room For Everyone!",
@@ -155,7 +155,7 @@ function dummyDataFunc() {
   };
 
   const submission7 = {
-    _id: '64544e66d74751fa1b70b206',
+    _id: '64544e66d74751fa1b70bd06',
     author: user2._id,
     post: battle2._id,
     caption: 'Flock to me, my sea brethren!!',
@@ -165,7 +165,7 @@ function dummyDataFunc() {
   };
 
   const submission8 = {
-    _id: '64544e66d74751fa1b70b207',
+    _id: '64544e66d74751fa1b70bd07',
     author: user3._id,
     post: battle2._id,
     caption: "He's just happy to be participating",
@@ -175,7 +175,7 @@ function dummyDataFunc() {
   };
 
   const submission9 = {
-    _id: '64544e66d74751fa1b70b208',
+    _id: '64544e66d74751fa1b70bd08',
     author: user4._id,
     post: battle2._id,
     caption: "Let's ride this",
@@ -185,7 +185,7 @@ function dummyDataFunc() {
   };
 
   const submission10 = {
-    _id: '64544e66d74751fa1b70b209',
+    _id: '64544e66d74751fa1b70bd09',
     author: user5._id,
     post: battle2._id,
     caption: 'Canoe & Kayak Magazine',
@@ -195,7 +195,7 @@ function dummyDataFunc() {
   };
 
   const submission11 = {
-    _id: '64544e66d74751fa1b70b210',
+    _id: '64544e66d74751fa1b70bd10',
     author: user1._id,
     post: battle3._id,
     caption: 'Pucker Up, Steph',
@@ -205,7 +205,7 @@ function dummyDataFunc() {
   };
 
   const submission12 = {
-    _id: '64544e66d74751fa1b70b211',
+    _id: '64544e66d74751fa1b70bd11',
     author: user2._id,
     post: battle3._id,
     caption: 'bros pumping it at the white house',
@@ -215,7 +215,7 @@ function dummyDataFunc() {
   };
 
   const submission13 = {
-    _id: '64544e66d74751fa1b70b212',
+    _id: '64544e66d74751fa1b70bd12',
     author: user3._id,
     post: battle3._id,
     caption: "Curry doesn't like heights...",
@@ -225,7 +225,7 @@ function dummyDataFunc() {
   };
 
   const submission14 = {
-    _id: '64544e66d74751fa1b70b213',
+    _id: '64544e66d74751fa1b70bd13',
     author: user4._id,
     post: battle3._id,
     caption: 'NeverEnding Victory Lap',
@@ -235,7 +235,7 @@ function dummyDataFunc() {
   };
 
   const submission15 = {
-    _id: '64544e66d74751fa1b70b214',
+    _id: '64544e66d74751fa1b70bd14',
     author: user5._id,
     post: battle3._id,
     caption: "The President's Gambit",
@@ -264,7 +264,7 @@ function dummyDataFunc() {
 
   /* Fake comments.  */
   const comment1 = {
-    _id: '64544dd0803990cdf005ca00',
+    _id: '64544dd0803990cdf005cc00',
     author: user2._id,
     commentedModel: 'Submission',
     creationTime: '2023-05-05T00:29:04.296Z',
@@ -273,7 +273,7 @@ function dummyDataFunc() {
   };
 
   const comment2 = {
-    _id: '64544dd0803990cdf005ca01',
+    _id: '64544dd0803990cdf005cc01',
     author: user3._id,
     commentedModel: 'Submission',
     creationTime: '2023-05-05T00:29:04.296Z',
@@ -282,7 +282,7 @@ function dummyDataFunc() {
   };
 
   const comment3 = {
-    _id: '64544dd0803990cdf005ca02',
+    _id: '64544dd0803990cdf005cc02',
     author: user4._id,
     commentedModel: 'Submission',
     creationTime: '2023-05-05T00:29:04.296Z',
@@ -291,7 +291,7 @@ function dummyDataFunc() {
   };
 
   const comment4 = {
-    _id: '64544dd0803990cdf005ca03',
+    _id: '64544dd0803990cdf005cc03',
     author: user5._id,
     commentedModel: 'Submission',
     creationTime: '2023-05-05T00:29:04.296Z',
@@ -300,7 +300,7 @@ function dummyDataFunc() {
   };
 
   const comment5 = {
-    _id: '64544dd0803990cdf005ca04',
+    _id: '64544dd0803990cdf005cc04',
     author: user5._id,
     commentedModel: 'Submission',
     creationTime: '2023-05-05T00:29:04.296Z',
@@ -309,7 +309,7 @@ function dummyDataFunc() {
   };
 
   const comment6 = {
-    _id: '64544dd0803990cdf005ca05',
+    _id: '64544dd0803990cdf005cc05',
     author: user1._id,
     commentedModel: 'Submission',
     creationTime: '2023-05-05T00:29:04.296Z',
@@ -318,7 +318,7 @@ function dummyDataFunc() {
   };
 
   const comment7 = {
-    _id: '64544dd0803990cdf005ca06',
+    _id: '64544dd0803990cdf005cc06',
     author: user3._id,
     commentedModel: 'Submission',
     creationTime: '2023-05-05T00:29:04.296Z',
@@ -327,7 +327,7 @@ function dummyDataFunc() {
   };
 
   const comment8 = {
-    _id: '64544dd0803990cdf005ca07',
+    _id: '64544dd0803990cdf005cc07',
     author: user4._id,
     commentedModel: 'Submission',
     creationTime: '2023-05-05T00:29:04.296Z',
@@ -336,7 +336,7 @@ function dummyDataFunc() {
   };
 
   const comment9 = {
-    _id: '64544dd0803990cdf005ca08',
+    _id: '64544dd0803990cdf005cc08',
     author: user5._id,
     commentedModel: 'Submission',
     creationTime: '2023-05-05T00:29:04.296Z',
@@ -345,7 +345,7 @@ function dummyDataFunc() {
   };
 
   const comment10 = {
-    _id: '64544dd0803990cdf005ca09',
+    _id: '64544dd0803990cdf005cc09',
     author: user1._id,
     commentedModel: 'Submission',
     creationTime: '2023-05-05T00:29:04.296Z',
@@ -354,7 +354,7 @@ function dummyDataFunc() {
   };
 
   const comment11 = {
-    _id: '64544dd0803990cdf005ca10',
+    _id: '64544dd0803990cdf005cc10',
     author: user3._id,
     commentedModel: 'Submission',
     creationTime: '2023-05-05T00:29:04.296Z',
@@ -363,7 +363,7 @@ function dummyDataFunc() {
   };
 
   const comment12 = {
-    _id: '64544dd0803990cdf005ca11',
+    _id: '64544dd0803990cdf005cc11',
     author: user4._id,
     commentedModel: 'Submission',
     creationTime: '2023-05-05T00:29:04.296Z',
