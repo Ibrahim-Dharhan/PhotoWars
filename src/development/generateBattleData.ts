@@ -3,7 +3,7 @@ import * as fs from 'fs/promises';
 import path = require('path');
 import { Battle } from '../definitions/schemas/mongoose/battle';
 import { generateSubmissionsData } from './generateSubmissionData';
-import { getLocalISOString, moveImagesToPublic } from './loadDatabaseNew';
+import { getLocalISOString, moveImagesToPublic } from './loadDatabase';
 import { uploadFileToS3 } from '../definitions/s3';
 import { generateComment } from './generateCommentData';
 // import { generateVote } from './generateVoteData';
@@ -11,6 +11,8 @@ import { generateComment } from './generateCommentData';
 /* Get constants.  */
 import * as constants from '../definitions/constants';
 import dotenv = require('dotenv');
+import { Vote } from '../definitions/schemas/mongoose/vote';
+import { UserFrontend } from '../definitions/classes/user';
 dotenv.config();
 const IMAGE_DIR = process.env['IMAGE_DIR'] || constants._imageDir;
 
@@ -26,7 +28,7 @@ const generateBattleData = async (pathToBattle: string) => {
     for await (const entry of dir) {
       switch (entry.name) {
         case 'comments': {
-          const { comments } = await import(path.join(pathToBattle, 'comments/comments'));
+          const { comments } = await import(path.join(pathToBattle, 'comments'));
           try {
             const generateCommentBind = generateComment.bind({
               model: model,
@@ -61,6 +63,18 @@ const generateBattleData = async (pathToBattle: string) => {
           battle.creationTime = getLocalISOString(new Date());
 
           try {
+            await async.eachOf(battle.votes, async (voter: UserFrontend, index: any, callback) => {
+              let voteIdx = index.toString();
+              if (index <= 9) voteIdx = '0' + voteIdx; // Turns '9' into '09'
+              await Vote.create({
+                _id: `${postId.slice(3)}d${voteIdx}`,
+                author: voter._id,
+                creationTime: getLocalISOString(new Date()),
+                post: postId,
+                votedModel: 'Battle'
+              })
+              callback();
+            });
             await Battle.create(battle);
           } catch (err) {
             console.error(err);
@@ -73,22 +87,6 @@ const generateBattleData = async (pathToBattle: string) => {
           await generateSubmissionsData(pathToSubmissions, postId);
           break;
         }
-
-        /*
-        case 'votes.ts': {
-          const { votes } = await import(path.join(pathToBattle, 'votes'));
-          try {
-            const generateVoteBind = generateVote.bind({
-              postId: postId,
-              postIdx: postIdx
-            });
-            await async.eachOf(votes, generateVoteBind);
-          } catch (err) {
-            console.error(err);
-          }
-          break;
-        }
-        */
       }
     }
   } catch (err) {

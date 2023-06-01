@@ -9,8 +9,7 @@
     "build": "webpack --config webpack.config.ts",
     "start": "nodemon server.ts",
     "watch": "npm run build && webpack serve --config webpack.config.ts",
-    "load": "mkdir -p public/images && cp development/images/* public/images/ && ts-node ./development/loadDatabase.ts",
-    "loadNew": "mkdir -p public/images && ts-node ./development/loadDatabaseNew.ts",
+    "load": "mkdir -p public/images && ts-node ./development/loadDatabase.ts",
     "clear": "ts-node ./development/clearDatabase.ts"
   },
   "author": "",

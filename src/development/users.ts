@@ -2,7 +2,7 @@ import { UserFrontend } from "../definitions/classes/user";
 
 /* Fake users.  */
 const user0 = {
-  _id: '645449c2d0215be49c7e1a00',
+  _id: '000000000000000000000e00',
   description: "I'm Spiderman!",
   displayName: 'Spidey',
   filename: 'seagull.jpg',
@@ -13,7 +13,7 @@ const user0 = {
 };
 
 const user1 = {
-  _id: '645449c2d0215be49c7e1a01',
+  _id: '000000000000000000000e01',
   description: 'I do all of my stunts!',
   displayName: 'RushHour',
   filename: 'seagull.jpg',
@@ -24,7 +24,7 @@ const user1 = {
 };
 
 const user2 = {
-  _id: '645449c2d0215be49c7e1a02',
+  _id: '000000000000000000000e02',
   description: 'Unholy is the best song',
   displayName: 'Sammy',
   filename: 'seagull.jpg',
@@ -35,7 +35,7 @@ const user2 = {
 };
 
 const user3 = {
-  _id: '645449c2d0215be49c7e1a03',
+  _id: '000000000000000000000e03',
   description: "I'm deadpool",
   displayName: 'Deadpool',
   filename: 'seagull.jpg',
@@ -46,7 +46,7 @@ const user3 = {
 };
 
 const user4 = {
-  _id: '645449c2d0215be49c7e1a04',
+  _id: '000000000000000000000e04',
   description: 'La La La La Land',
   displayName: 'Emmaaa',
   filename: 'seagull.jpg',

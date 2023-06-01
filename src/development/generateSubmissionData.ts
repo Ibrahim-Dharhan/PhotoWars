@@ -1,7 +1,7 @@
 import * as fs from 'fs/promises';
 import async = require('async');
 import path = require('path');
-import { getLocalISOString, moveImagesToPublic } from './loadDatabaseNew';
+import { getLocalISOString, moveImagesToPublic } from './loadDatabase';
 import { generateComment } from './generateCommentData';
 import { Submission } from '../definitions/schemas/mongoose/submission';
 import { uploadFileToS3 } from '../definitions/s3';
@@ -9,6 +9,8 @@ import { uploadFileToS3 } from '../definitions/s3';
 /* Get constants.  */
 import * as constants from '../definitions/constants';
 import dotenv = require('dotenv');
+import { Vote } from '../definitions/schemas/mongoose/vote';
+import { UserFrontend } from '../definitions/classes/user';
 dotenv.config();
 const IMAGE_DIR = process.env['IMAGE_DIR'] || constants._imageDir;
 
@@ -41,6 +43,18 @@ async function generateSubmissionData(this: any, pathToSubmission: string, callb
         submission._id = postId;
         submission.creationTime = getLocalISOString(new Date());
         try {
+          await async.eachOf(submission.votes, async (voter: UserFrontend, index: any, callback) => {
+            let voteIdx = index.toString();
+            if (index <= 9) voteIdx = '0' + voteIdx; // Turns '9' into '09'
+            await Vote.create({
+              _id: `${postId.slice(3)}d${voteIdx}`,
+              author: voter._id,
+              creationTime: getLocalISOString(new Date()),
+              post: postId,
+              votedModel: 'Submission'
+            })
+            callback();
+          });
           await Submission.create(submission);
         } catch (err) {
           console.log(err);

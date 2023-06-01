@@ -7,7 +7,7 @@ import { uploadFileToS3 } from '../definitions/s3';
 /* Get constants.  */
 import * as constants from '../definitions/constants';
 import dotenv = require('dotenv');
-import { moveImagesToPublic } from './loadDatabaseNew';
+import { moveImagesToPublic } from './loadDatabase';
 dotenv.config();
 const IMAGE_DIR = process.env['IMAGE_DIR'] || constants._imageDir;
 
