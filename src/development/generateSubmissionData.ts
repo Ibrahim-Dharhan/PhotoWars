@@ -17,8 +17,8 @@ const IMAGE_DIR = process.env['IMAGE_DIR'] || constants._imageDir;
 async function generateSubmissionData(this: any, pathToSubmission: string, callback: any) {
   const model = 'Submission';
   const battleIdx = this.battleId.slice(-2);
-  const commentPrefix = `0000000000000000b${battleIdx}a`;
   const postIdx = pathToSubmission.replace(/^\/*|\/*$/g, '').split('/').slice(-1)[0]!.slice(0, 2);
+  const commentPrefix = `0000000000000000b${battleIdx}a${postIdx}`;
   const postId = `000000000000000000b${battleIdx}a${postIdx}`;
   const dir = await fs.opendir(pathToSubmission);
   for await (const entry of dir) {
@@ -68,7 +68,6 @@ async function generateSubmissionData(this: any, pathToSubmission: string, callb
           const generateCommentBind = generateComment.bind({
             model: model,
             postId: postId,
-            postIdx: postIdx,
             commentPrefix: commentPrefix
           });
           await async.eachOf(comments, generateCommentBind);

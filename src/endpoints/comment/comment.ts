@@ -241,6 +241,7 @@ commentRouter.put('/:id/vote', upload.none(), checkSchema(ValidObjectId), async 
     }
 
     await voteOn('Comment', commentId, req.session.userId);
+    console.log("Successfully voted on");
     res.status(200).send('Successfully voted on comment.');
 
   } catch (err) {

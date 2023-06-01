@@ -9,7 +9,7 @@ async function generateComment(this: any, comment: any, index: any, callback: an
   if (index <= 9) commentIdx = '0' + commentIdx; // Turns '9' into '09'
 
   /* Set _id.  */
-  const postId = this.commentPrefix + this.postIdx + commentIdx;
+  const postId = this.commentPrefix + commentIdx;
   comment._id = postId;
 
   /* Set creationTime.  */

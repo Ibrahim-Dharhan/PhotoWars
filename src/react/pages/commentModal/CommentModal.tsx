@@ -196,7 +196,7 @@ const CommentModal = () => {
               {comments.map((comment: PopulatedCommentFrontend) => {
                 return (
                   <div key={comment._id}>
-                    <CommentModalCommentCard comment={comment} />
+                    <CommentModalCommentCard commentId={comment._id} />
                   </div>
                 );
               })}
