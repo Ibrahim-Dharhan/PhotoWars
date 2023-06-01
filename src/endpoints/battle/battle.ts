@@ -841,7 +841,6 @@ battleRouter.get(
     }
 
     const battleId = req.params['id'];
-    console.log(battleId);
     try {
       const battleObj = await Battle.findById(battleId).lean().exec();
       /* Did not find battle with matching battleId. */
@@ -854,7 +853,6 @@ battleRouter.get(
       })
         .lean()
         .exec();
-      console.log(result);
       if (req.query['sort'] === 'top') {
         for (const submission of result) {
           (submission as any).numVotes = await Vote.countDocuments({

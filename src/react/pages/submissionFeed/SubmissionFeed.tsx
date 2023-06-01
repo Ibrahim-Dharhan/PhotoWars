@@ -6,11 +6,9 @@ import { SubmissionCard } from '../../components/submissionCard/SubmissionCard';
 import { PopulatedSubmissionFrontend } from '../../../definitions/classes/submission';
 
 const submissionFeedLoader: LoaderFunction = async ({ params, request }) => {
-  console.log('params are', params);
   const battleId = params['battleId'];
   const path = `/battle/${battleId}/submissions`;
   const url = new URL(request.url);
-  console.log(request);
   const res = await axios.get<PopulatedSubmissionFrontend[]>(path, {
     params: { sort: url.searchParams.get('sort') },
   });
