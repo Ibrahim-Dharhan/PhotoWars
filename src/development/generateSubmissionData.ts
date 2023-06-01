@@ -14,10 +14,10 @@ const IMAGE_DIR = process.env['IMAGE_DIR'] || constants._imageDir;
 
 async function generateSubmissionData(this: any, pathToSubmission: string, callback: any) {
   const model = 'Submission';
-  const commentPrefix = '00000000000000000aac';
-  let postId = '000000000000000000000a';
+  const battleIdx = this.battleId.slice(-2);
+  const commentPrefix = `0000000000000000b${battleIdx}a`;
   const postIdx = pathToSubmission.replace(/^\/*|\/*$/g, '').split('/').slice(-1)[0]!.slice(0, 2);
-  postId += postIdx;
+  const postId = `000000000000000000b${battleIdx}a${postIdx}`;
   const dir = await fs.opendir(pathToSubmission);
   for await (const entry of dir) {
     switch (entry.name) {
@@ -40,14 +40,23 @@ async function generateSubmissionData(this: any, pathToSubmission: string, callb
         submission.post = this.battleId;
         submission._id = postId;
         submission.creationTime = getLocalISOString(new Date());
-        await Submission.create(submission);
+        try {
+          await Submission.create(submission);
+        } catch (err) {
+          console.log(err);
+        }
         break;
       }
 
       case 'comments.ts': {
         const { comments } = await import(path.join(pathToSubmission, 'comments'))
         try {
-          const generateCommentBind = generateComment.bind({model: model, postId: postId, postIdx: postIdx, commentPrefix: commentPrefix});
+          const generateCommentBind = generateComment.bind({
+            model: model,
+            postId: postId,
+            postIdx: postIdx,
+            commentPrefix: commentPrefix
+          });
           await async.eachOf(comments, generateCommentBind);
         } catch (err) {
           console.error(err);
@@ -56,7 +65,6 @@ async function generateSubmissionData(this: any, pathToSubmission: string, callb
       }
     }
   }
-
   callback();
 }
 
