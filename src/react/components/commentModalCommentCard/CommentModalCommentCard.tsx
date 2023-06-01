@@ -9,7 +9,6 @@ import {
   ListItem,
   ListItemAvatar,
   ListItemText,
-  Typography
 } from '@mui/material';
 import { PopulatedCommentFrontend } from '../../../definitions/classes/comment';
 
@@ -55,20 +54,16 @@ const CommentModalCommentCard = ({ comment }: IProps) => {
           </Link>
         </ListItemAvatar>
         <ListItemText
+          sx={{
+            display: 'inline'
+          }}
+          color='text.primary'
           secondary={
             <React.Fragment>
-              <Typography
-                sx={{
-                  display: 'inline'
-                }}
-                variant='body2'
-                color='text.primary'
-              >
                 <Link href={`/users/${comment.author._id}`}>
                   {comment.author.displayName}
                 </Link>
                 {'\n'}
-              </Typography>
               {comment.caption}
             </React.Fragment>
           }
