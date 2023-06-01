@@ -1,8 +1,16 @@
 import * as fs from 'fs/promises';
 import async = require('async');
 import path = require('path');
-import { getLocalISOString, loadComment } from './loadDatabaseNew';
+import { getLocalISOString, moveImagesToPublic } from './loadDatabaseNew';
+import { generateComment } from './generateCommentData';
 import { Submission } from '../definitions/schemas/mongoose/submission';
+import { uploadFileToS3 } from '../definitions/s3';
+
+/* Get constants.  */
+import * as constants from '../definitions/constants';
+import dotenv = require('dotenv');
+dotenv.config();
+const IMAGE_DIR = process.env['IMAGE_DIR'] || constants._imageDir;
 
 async function generateSubmissionData(this: any, pathToSubmission: string, callback: any) {
   const model = 'Submission';
@@ -19,6 +27,15 @@ async function generateSubmissionData(this: any, pathToSubmission: string, callb
         for (const imageName of imageDir) {
           /* Should only be one image here.  */
           submission.filename = imageName;
+          if (process.env['IMAGE_DIR']) {
+            await uploadFileToS3({
+              path: path.join(IMAGE_DIR, submission.filename),
+              filename: submission.filename
+            });
+            console.log(`Uploaded file ${submission.filename} to Amazon S3.`);
+          } else {
+            await moveImagesToPublic(path.join(pathToSubmission, 'image'), submission.filename);
+          }
         }
         submission.post = this.battleId;
         submission._id = postId;
@@ -30,7 +47,8 @@ async function generateSubmissionData(this: any, pathToSubmission: string, callb
       case 'comments.ts': {
         const { comments } = await import(path.join(pathToSubmission, 'comments'))
         try {
-          await async.eachOf(comments, loadComment.bind({model: model, postId: postId, postIdx: postIdx, commentPrefix: commentPrefix}));
+          const generateCommentBind = generateComment.bind({model: model, postId: postId, postIdx: postIdx, commentPrefix: commentPrefix});
+          await async.eachOf(comments, generateCommentBind);
         } catch (err) {
           console.error(err);
         }

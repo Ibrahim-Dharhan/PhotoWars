@@ -3,7 +3,15 @@ import * as fs from 'fs/promises';
 import path = require('path');
 import { Battle } from '../definitions/schemas/mongoose/battle';
 import { generateSubmissionsData } from './generateSubmissionData';
-import { getLocalISOString, loadComment } from './loadDatabaseNew';
+import { getLocalISOString, moveImagesToPublic } from './loadDatabaseNew';
+import { uploadFileToS3 } from '../definitions/s3';
+import { generateComment } from './generateCommentData';
+
+/* Get constants.  */
+import * as constants from '../definitions/constants';
+import dotenv = require('dotenv');
+dotenv.config();
+const IMAGE_DIR = process.env['IMAGE_DIR'] || constants._imageDir;
 
 const generateBattleData = async (pathToBattle: string) => {
   console.log('Generating battle data for ' + pathToBattle);
@@ -29,6 +37,15 @@ const generateBattleData = async (pathToBattle: string) => {
           for (const imageName of imageDir) {
             /* Should only be one image here.  */
             battle.filename = imageName;
+            if (process.env['IMAGE_DIR']) {
+              await uploadFileToS3({
+                path: path.join(IMAGE_DIR, battle.filename),
+                filename: battle.filename
+              });
+              console.log(`Uploaded file ${battle.filename} to Amazon S3.`);
+            } else {
+              await moveImagesToPublic(path.join(pathToBattle, 'image'), battle.filename);
+            }
           }
           battle._id = postId;
           battle.creationTime = getLocalISOString(new Date());
@@ -44,8 +61,8 @@ const generateBattleData = async (pathToBattle: string) => {
         case 'comments.ts': {
           const { comments } = await import(path.join(pathToBattle, 'comments'));
           try {
-            const loadCommentBind = loadComment.bind({ model: model, postId: postId, postIdx: postIdx, commentPrefix: commentPrefix});
-            await async.eachOf(comments, loadCommentBind);
+            const generateCommentBind = generateComment.bind({ model: model, postId: postId, postIdx: postIdx, commentPrefix: commentPrefix});
+            await async.eachOf(comments, generateCommentBind);
           } catch (err) {
             console.error(err);
           }
@@ -57,7 +74,6 @@ const generateBattleData = async (pathToBattle: string) => {
   } catch (err) {
     console.error(err);
   }
-  
 };
 
 export { generateBattleData };
