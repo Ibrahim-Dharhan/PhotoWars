@@ -20,20 +20,19 @@ const generateBattleData = async (pathToBattle: string) => {
   console.log('Generating battle data for ' + pathToBattle);
   pathToBattle = path.join(process.cwd(), pathToBattle);
   const model = 'Battle';
-  const commentPrefix = '000000000000000000bc';
   const postIdx = pathToBattle.replace(/^\/*|\/*$/g, '').split('/').slice(-1)[0]!.slice(0, 2);
+  const commentPrefix = `000000000000000000b${postIdx}c`;
   const postId = '000000000000000000000b' + postIdx;
   try {
     const dir = await fs.opendir(pathToBattle);
     for await (const entry of dir) {
       switch (entry.name) {
-        case 'comments': {
+        case 'comments.ts': {
           const { comments } = await import(path.join(pathToBattle, 'comments'));
           try {
             const generateCommentBind = generateComment.bind({
               model: model,
               postId: postId,
-              postIdx: postIdx,
               commentPrefix: commentPrefix
             });
             await async.eachOf(comments, generateCommentBind);

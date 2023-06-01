@@ -69,7 +69,6 @@ module.exports = {
       watch: [
         './server.ts',
         './definitions/**/*.ts',
-        './development/**/*.ts',
         './endpoints/**/*.ts',
         './types/**/*.ts'
       ], 
