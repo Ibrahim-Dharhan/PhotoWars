@@ -849,14 +849,14 @@ battleRouter.get(
         res.status(404).send('Invalid battle id.');
         return;
       }
-      let result = await Submission.find({
+      const result = await Submission.find({
         post: battleId,
       })
         .lean()
         .exec();
       console.log(result);
       if (req.query['sort'] === 'top') {
-        for (let submission of result) {
+        for (const submission of result) {
           (submission as any).numVotes = await Vote.countDocuments({
             post: submission._id,
             votedModel: 'Submission',
