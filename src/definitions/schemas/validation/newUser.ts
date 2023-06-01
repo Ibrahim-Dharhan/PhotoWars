@@ -10,15 +10,17 @@ const NewUser = {
       },
     },
     displayNameNotInUse: {
-      custom: async (displayName) => {
+      custom: async (displayName: string) => {
         const query = User.findOne({ 
           displayName: displayName
         });
         const userObj = await query.lean().exec();
         if (userObj) {
-          return Promise.reject('Display name already in use.');
+          return Promise.reject();
         }
-      }
+        return Promise.resolve();
+      },
+      errorMessage: 'Display name already in use.'
     }
   },
   loginName: {
@@ -29,15 +31,17 @@ const NewUser = {
       errorMessage: 'Must be at least 6 characters.'
     },
     loginNameNotInUse: {
-      custom: async (loginName) => {
+      custom: async (loginName: string) => {
         const query = User.findOne({ 
           loginName: loginName
         });
         const userObj = await query.lean().exec();
         if (userObj) {
-          return Promise.reject('Login name already in use.');
+          return Promise.reject();
         }
-      }
+        return Promise.resolve();
+      },
+      errorMessage: 'Login name already in use.'
     }
   },
   loginPassword: {

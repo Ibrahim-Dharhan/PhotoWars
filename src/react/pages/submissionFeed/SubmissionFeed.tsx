@@ -1,38 +1,20 @@
-import React from 'react';
+import * as React from 'react';
 import axios from 'axios';
 import Grid from '@mui/material/Grid';
-import { useLoaderData, useOutletContext } from 'react-router-dom';
+import { LoaderFunction, Outlet, useLoaderData } from 'react-router-dom';
 import { SubmissionCard } from '../../components/submissionCard/SubmissionCard';
+import { PopulatedSubmissionFrontend } from '../../../definitions/classes/submission';
 
-const submissionFeedLoader = async ({ params, request }) => {
-  const id = params.id;
-  const path = `/battle/${id}/submissions`;
+const submissionFeedLoader: LoaderFunction = async ({ params, request }) => {
+  const battleId = params['battleId'];
+  const path = `/battle/${battleId}/submissions`;
   const url = new URL(request.url);
   console.log(request);
-  const res = await axios.get(path, {
+  const res = await axios.get<PopulatedSubmissionFrontend[]>(path, {
     params: { sort: url.searchParams.get('sort') },
   });
   return res.data;
 };
-
-interface Submission {
-  _id: string;
-  __v: number;
-  author: string;
-  caption: string;
-  creationTime: string;
-  filename: string;
-}
-
-interface BVSubmissionFeedState {
-  showModal: (
-    variant: string,
-    id: string,
-    author: string,
-    caption: string,
-    filename: string
-  ) => void;
-}
 
 const feedStyle = {
   paddingTop: 2,
@@ -46,9 +28,7 @@ const feedStyle = {
 };
 
 const SubmissionFeed = () => {
-  const { showModal } = useOutletContext() as BVSubmissionFeedState;
-  const submissions = useLoaderData() as Submission[];
-  console.log('yoyo');
+  const submissions = useLoaderData() as PopulatedSubmissionFrontend[];
 
   return (
     <React.Fragment>
@@ -58,11 +38,11 @@ const SubmissionFeed = () => {
             <SubmissionCard
               submissionId={submission._id}
               key={submission._id}
-              showModal={showModal}
             />
           );
         })}
       </Grid>
+      <Outlet />
     </React.Fragment>
   );
 };

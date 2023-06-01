@@ -1,9 +1,10 @@
-import React, { useContext, useEffect, useRef, useState } from 'react';
-import axios from 'axios';
+import * as React from 'react';
+import { useContext, useEffect, useRef, useState } from 'react';
+import axios, { isAxiosError } from 'axios';
 import ModeCommentOutlinedIcon from '@mui/icons-material/ModeCommentOutlined';
 import FavoriteIcon from '@mui/icons-material/Favorite';
+import LockIcon from '@mui/icons-material/Lock';
 import ImageIcon from '@mui/icons-material/Image';
-import PropTypes from 'prop-types';
 import { blue, pink } from '@mui/material/colors';
 import {
   Box,
@@ -14,39 +15,40 @@ import {
   CardActions,
   CardContent,
   CardMedia,
+  Chip,
   IconButton,
   Tooltip,
   Typography,
 } from '@mui/material';
 import { getImageUrl } from '../../../definitions/getImageUrl';
 import { PostCardHeader } from '../postCardHeader/PostCardHeader';
-import { updateDeadline } from './timerLogic';
-import { useLocation, useNavigate } from 'react-router-dom';
+import { updateDeadline } from '../../../definitions/timerLogic';
+import { createSearchParams, useLocation, useNavigate } from 'react-router-dom';
 import { UserContext } from '../../contexts/UserContext';
 import './battleCard.css';
+import { BattleCardInfo } from '../../../definitions/classes/battle';
 
-const BattleCard = ({
-  battleId,
-  numBVSubmissions,
-  setNumBVSubmissions,
-  showModal,
-}) => {
-  const { userId, setOpen } = useContext(UserContext);
+interface IProps {
+  battleId: string;
+  isPhotoOfTheDay?: boolean;
+}
 
-  const [caption, setCaption] = useState('');
-  const [displayName, setDisplayName] = useState('');
-  const [filename, setFilename] = useState('');
-  const [imageUrl, setImageUrl] = useState('');
-  const [numSubmissions, setNumSubmissions] = useState(0);
-  const [submitted, setSubmitted] = useState(false);
-  const [numComments, setNumComments] = useState(0);
-  const [commented, setCommented] = useState(false);
-  const [numVotes, setNumVotes] = useState(0);
-  const [voted, setVoted] = useState(false);
-  const [timeRemaining, setTimeRemaining] = useState('--:--:--');
+const BattleCard = ({ battleId, isPhotoOfTheDay }: IProps) => {
+  const { loggedInUser, setOpenLoginModal } = useContext(UserContext);
+  const [caption, setCaption] = useState<string>('');
+  const [filename, setFilename] = useState<string>('');
+  const [imageUrl, setImageUrl] = useState<string>('');
+  const [numSubmissions, setNumSubmissions] = useState<number>(0);
+  const [numComments, setNumComments] = useState<number>(0);
+  const [commented, setCommented] = useState<boolean>(false);
+  const [numVotes, setNumVotes] = useState<number>(0);
+  const [submitted, setSubmitted] = useState<boolean>(false);
+  const [voted, setVoted] = useState<boolean>(false);
+  const [timeRemaining, setTimeRemaining] = useState<string>('--:--:--');
+  const [expired, setExpired] = useState<boolean>(true);
 
-  const _battle = useRef(null);
-  const _timerEvent = useRef(null);
+  const _battle = useRef<BattleCardInfo| null>(null);
+  const _timerEvent = useRef<NodeJS.Timer | null>(null);
 
   const location = useLocation();
   const navigate = useNavigate();
@@ -56,88 +58,41 @@ const BattleCard = ({
     let shouldUpdate = true;
     const setBattleInformation = async () => {
       const path = `/battle/${battleId}`;
-      const res = await axios.get(path);
+      const res = await axios.get<BattleCardInfo>(path);
       const battle = res.data;
 
       if (shouldUpdate) {
         setCaption(battle.caption);
-        setDisplayName(battle.author.displayName);
         setFilename(battle.filename);
+        setNumComments(battle.numComments);
+        setCommented(!!battle.commentedOn);
+        setNumSubmissions(battle.numSubmissions);
+        setSubmitted(!!battle.submittedTo);
+        setNumVotes(battle.numVotes);
+        setVoted(!!battle.votedOn);
         _battle.current = battle;
         updateDeadline(
           new Date(battle.deadline),
           _timerEvent,
-          setTimeRemaining
+          setTimeRemaining,
+          setExpired,
+          !!expired
         );
       }
     };
     try {
       setBattleInformation();
     } catch (err) {
-      console.error(err.data);
-    }
-    return () => {
-      shouldUpdate = false;
-    };
-  }, [battleId]);
-
-  /* useEffect for updating submission count.  */
-  useEffect(() => {
-    let shouldUpdate = true;
-    const getSubmissions = async () => {
-      const submissionsPath = `/battle/${battleId}/submissions`;
-      const submissionsRes = await axios.get(submissionsPath);
-
-      if (shouldUpdate) {
-        if (setNumBVSubmissions)
-          setNumBVSubmissions(submissionsRes.data.length);
-        setNumSubmissions(submissionsRes.data.length);
-        setSubmitted(
-          submissionsRes.data
-            .map((submission) => submission.author)
-            .includes(userId)
-        );
+      if (isAxiosError(err)) {
+        console.error(err.response?.data);
+      } else {
+        console.error(err);
       }
-    };
-    try {
-      getSubmissions();
-    } catch (err) {
-      console.error(err.data);
     }
     return () => {
       shouldUpdate = false;
     };
-  }, [battleId, numBVSubmissions, numSubmissions, setNumBVSubmissions, userId]);
-
-  /* useEffect for updating comment and vote count.  */
-  useEffect(() => {
-    let shouldUpdate = true;
-    const getCommentsAndVotes = async () => {
-      const commentsPath = `/comment/${battleId}`;
-      const commentsRes = await axios.get(commentsPath);
-      const { numComments, commentedOn } = commentsRes.data;
-
-      const votesPath = `/vote/${battleId}`;
-      const votesRes = await axios.get(votesPath);
-      const { numVotes, votedOn } = votesRes.data;
-
-      if (shouldUpdate) {
-        setCommented(commentedOn);
-        setNumComments(numComments);
-
-        setVoted(votedOn);
-        setNumVotes(numVotes);
-      }
-    };
-    try {
-      getCommentsAndVotes();
-    } catch (err) {
-      console.error(err.data);
-    }
-    return () => {
-      shouldUpdate = false;
-    };
-  }, [battleId, userId]);
+  }, [battleId, expired, location, loggedInUser._id]);
 
   /* useEffect for retrieving the image.  */
   useEffect(() => {
@@ -148,11 +103,28 @@ const BattleCard = ({
         setImageUrl(newImageUrl);
       }
     };
-    setImage();
+    try {
+      setImage();
+    } catch (err) {
+      if (isAxiosError(err)) {
+        console.error(err.response?.data);
+      } else {
+        console.error(err);
+      }
+    }
     return () => {
       shouldUpdate = false;
     };
   }, [filename]);
+
+  const openCommentModal = () => {
+    navigate({
+      pathname: `/battles/${battleId}/comments/${battleId}`,
+      search: createSearchParams({
+        postType: 'battle'
+      }).toString()
+    });
+  }
 
   const vote = async () => {
     const path = `/battle/${battleId}/${voted ? 'unvote' : 'vote'}`;
@@ -161,7 +133,11 @@ const BattleCard = ({
       setVoted(!voted);
       setNumVotes(numVotes + (voted ? -1 : 1));
     } catch (err) {
-      console.error(err.response.data);
+      if (isAxiosError(err)) {
+        console.error(err.response?.data);
+      } else {
+        console.error(err);
+      }
     }
   };
 
@@ -174,7 +150,6 @@ const BattleCard = ({
             location.pathname === '/' ||
             location.pathname.startsWith('/users')
           ) {
-            console.log('Open post');
             navigate(`/battles/${battleId}`);
           }
         }}
@@ -184,35 +159,47 @@ const BattleCard = ({
           }
         }}
       >
-        <PostCardHeader _post={_battle} />
-        <CardContent sx={{ mt: -3 }}>
-          <Typography variant="h6">{caption}</Typography>
-        </CardContent>
+        <PostCardHeader post={_battle.current} />
         <ButtonBase
           onClick={() => {
-            showModal &&
-            showModal('battle', battleId, displayName, caption, filename);
+            openCommentModal();
           }}
-          sx={{ width: '100%' }}
+          sx={{ width: '100%', position: 'relative' }}
         >
+          {isPhotoOfTheDay &&
+            (
+              <Chip
+                label="Photo of the Day"
+                color="warning"
+                sx={{
+                  position: 'absolute',
+                  top: '5px',
+                  right: '5px',
+                }}
+              />
+            )
+          }
           <CardMedia
             component='img'
             image={imageUrl}
             loading='lazy'
           />
         </ButtonBase>
+        <CardContent sx={{ mb: -3 }}>
+          <Typography variant="h6">{caption}</Typography>
+        </CardContent>
         <CardActions disableSpacing>
           <IconButton
             onMouseDown={(event) => event.stopPropagation()}
             onClick={(event) => {
-              event.stopPropagation();
               event.preventDefault();
             }}
+            disableRipple
           >
             <ImageIcon
               sx={{
                 pr: 1,
-                color: submitted && blue[500],
+                color: submitted ? blue[500] : null,
               }}
             />
             <Typography>{numSubmissions}</Typography>
@@ -222,24 +209,31 @@ const BattleCard = ({
             onClick={(event) => {
               event.stopPropagation();
               event.preventDefault();
-              if (userId !== '') {
+              if (loggedInUser._id !== '' && !expired) {
                 vote();
               } else {
-                setOpen(true);
+                setOpenLoginModal && setOpenLoginModal(true);
               }
             }}
+            disableRipple={!!expired}
           >
-            <FavoriteIcon sx={{ pr: 1, color: voted && pink[500] }} />
+            {
+              expired
+              ? <LockIcon sx={{ pr: 1, color: voted ? pink[500] : null }} />
+              : <FavoriteIcon sx={{ pr: 1, color: voted ? pink[500] : null }} />
+            }
             <Typography>{numVotes}</Typography>
           </IconButton>
           <IconButton
             onMouseDown={(event) => event.stopPropagation()}
             onClick={(event) => {
+              event.stopPropagation();
               event.preventDefault();
+              openCommentModal();
             }}
           >
             <ModeCommentOutlinedIcon
-              sx={{ pr: 1, color: commented && pink[500] }}
+              sx={{ pr: 1, color: commented ? pink[500] : null }}
             />
             <Typography>{numComments}</Typography>
           </IconButton>
@@ -253,7 +247,7 @@ const BattleCard = ({
                   title={
                     submitted
                       ? 'Only one submission is allowed.'
-                      : !userId && 'Log in to submit to this battle.'
+                      : !loggedInUser._id && 'Log in to submit to this battle.'
                   }
                 >
                   <span
@@ -265,7 +259,6 @@ const BattleCard = ({
                       onClick={(event) => {
                         event.stopPropagation();
                         event.preventDefault();
-                        console.log('Open submit page');
                         navigate(`/battles/${battleId}/submit`);
                       }}
                       variant='outlined'
@@ -273,7 +266,7 @@ const BattleCard = ({
                       color='primary'
                       disabled={
                         submitted ||
-                        !userId ||
+                        !loggedInUser._id ||
                         location.pathname.endsWith('submit')
                       }
                     >
@@ -288,13 +281,6 @@ const BattleCard = ({
       </CardActionArea>
     </Card>
   );
-};
-
-BattleCard.propTypes = {
-  battleId: PropTypes.string,
-  numBVSubmissions: PropTypes.number,
-  setNumBVSubmissions: PropTypes.func,
-  showModal: PropTypes.func,
 };
 
 export { BattleCard };

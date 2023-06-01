@@ -11,16 +11,19 @@ const UpdateUser = {
       },
     },
     displayNameNotInUse: {
-      custom: async (displayName, { req }) => {
+      // eslint-disable-next-line
+      custom: async (displayName: string, { req }: any) => {
         const userId = req.session.userId;
         const query = User.findOne({ 
           displayName: displayName
         });
         const userObj = await query.lean().exec();
         if (userObj && userObj._id.toString() !== userId) {
-          return Promise.reject('Display name already in use.');
+          return Promise.reject();
         }
-      }
+        return Promise.resolve();
+      },
+      errorMessage: 'Display name already in use.'
     }
   },
   firstName: {},

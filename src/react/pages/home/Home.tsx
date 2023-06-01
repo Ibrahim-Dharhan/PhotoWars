@@ -1,21 +1,21 @@
-import React from 'react';
-import { RightBar } from '../../components/rightBar/RightBar';
-import { SideBar } from '../../components/sideBar/SideBar';
+import * as React from 'react';
+// import { RightBar } from '../../components/rightBar/RightBar';
+// import { SideBar } from '../../components/sideBar/SideBar';
 import { TopBar } from '../../components/topBar/TopBar';
 import { Outlet } from 'react-router-dom';
 import { Stack, Toolbar } from '@mui/material';
 
 const Home = () => {
   return (
-  <Stack spacing={2}>
+  <Stack spacing={2} m={4}>
     <TopBar />
     <Stack direction="row" justifyContent="space-around" spacing={4}>
-      <SideBar />
+      {/* <SideBar /> */}
       <Stack>
         <Toolbar />
         <Outlet />
       </Stack>
-      <RightBar />
+      {/* <RightBar /> */}
     </Stack>
   </Stack>
   );

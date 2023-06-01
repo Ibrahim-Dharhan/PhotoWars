@@ -1,33 +1,41 @@
-import React from 'react';
+import * as React from 'react';
 import axios from 'axios';
 import { BattleCard } from '../../components/battleCard/BattleCard';
-import { useLoaderData } from 'react-router-dom';
-import Stack from '@mui/material/Stack';
+import { LoaderFunction, useLoaderData } from 'react-router-dom';
+import { ImageList } from '@mui/material';
+import { TabBar } from '../../components/tabBar/TabBar';
 
-const feedLoader = async ({ request }) => {
+const feedLoader: LoaderFunction = async ({ request }) => {
   const url = new URL(request.url);
   const path = '/battle/all';
-  const res = await axios.get(path, {
-    params: { openCompetitionsOnly: url.searchParams.get('opencompetitions') },
+  const res = await axios.get<{ _id: string }[]>(path, {
+    params: { open: url.searchParams.get('open') },
   });
   return res.data;
 };
 
 const Feed = () => {
-  const battleIds = useLoaderData() as string[];
-  const battleIdsRecent = battleIds.slice(0).reverse();
+  /* First element in battles is the battle of the day.  */
+  const battles = useLoaderData() as { _id: string}[];
+  const battlesRecent = battles.slice(1).reverse();
+
+  /* Move battle of the day to the front of the array.  */
+  if (battles[0]) battlesRecent.unshift(battles[0]);
 
   return (
     <React.Fragment>
-      <Stack alignItems='center' spacing={1}>
-        <Stack sx={{ maxWidth: '60%' }}>
-          {battleIdsRecent.map((battleId) => {
+      <TabBar />
+      <ImageList variant="masonry" cols={3} gap={24}>
+         {battlesRecent.map((battle, i) => {
             return (
-              <BattleCard battleId={battleId} key={battleId} showModal={null} />
+              <BattleCard
+                battleId={battle._id}
+                isPhotoOfTheDay={i === 0}
+                key={battle._id}
+              />
             );
           })}
-        </Stack>
-      </Stack>
+      </ImageList>
     </React.Fragment>
   );
 };

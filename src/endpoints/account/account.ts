@@ -1,9 +1,10 @@
 "use strict"
 
 import express = require('express');
-import { checkSchema, validationResult } from 'express-validator';
+import { checkSchema, matchedData, validationResult } from 'express-validator';
 import { NewUser } from '../../definitions/schemas/validation/newUser';
 import { User } from '../../definitions/schemas/mongoose/user';
+import { upload } from '../../server';
 
 const accountRouter = express.Router();
 
@@ -33,7 +34,7 @@ const accountRouter = express.Router();
  *         content:
  *           application/json:
  *             schema:
- *               $ref: '#/components/schemas/User'
+ *               $ref: '#/components/schemas/UserFrontend'
  *       401:
  *         $ref: '#/components/responses/401Unauthorized'
  *       500:
@@ -89,7 +90,7 @@ accountRouter.post('/login', async (req, res) => {
  */
 accountRouter.post('/logout', (req, res) => {
   req.session.loggedIn = false;
-  req.session.userId = null;
+  req.session.userId = '';
   res.status(200).send('Successfully logged out.');
 });
 
@@ -122,13 +123,13 @@ accountRouter.post('/logout', (req, res) => {
  *         content:
  *           application/json:
  *             schema:
- *               $ref: '#/components/schemas/User'
+ *               $ref: '#/components/schemas/UserFrontend'
  *       400:
  *         description: Faulty information to create new user.
  *       500:
  *         $ref: '#/components/responses/500'
  */
-accountRouter.post('/new', checkSchema(NewUser), async (req, res) => {
+accountRouter.post('/new', upload.none(), checkSchema(NewUser), async (req: express.Request, res: express.Response) => {
   const errors = validationResult(req);
   if (!errors.isEmpty()) {
     res.status(400).json({
@@ -137,17 +138,13 @@ accountRouter.post('/new', checkSchema(NewUser), async (req, res) => {
     return;
   }
   try {
-    const userObj = await User.create({
-      ...req.body,
-      ...{
-        firstName: 'first',
-        lastName: 'last'
-      }
-    });
+    const body = matchedData(req);
+    const userObj = await User.create(body);
     req.session.loggedIn = true;
     req.session.userId = userObj._id.toString();
     res.status(200).json(userObj.toObject());
   } catch (err) {
+    console.error(err);
     res.status(500).send('Internal server error.');
   }
 });

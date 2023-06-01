@@ -1,5 +1,6 @@
-import React, { useState } from 'react';
-import axios from 'axios';
+import * as React from 'react';
+import { useState } from 'react';
+import axios, { isAxiosError } from 'axios';
 import { Controller, useForm } from 'react-hook-form';
 import {
   Box,
@@ -9,38 +10,40 @@ import {
   TextField,
   Typography,
 } from '@mui/material';
-import { useParams, useNavigate, useOutletContext } from 'react-router-dom';
+import { useParams, useNavigate } from 'react-router-dom';
 
-interface BVSubmissionState {
-  numBVSubmissions: number,
-  setNumBVSubmissions: React.Dispatch<React.SetStateAction<number>>
+interface IFormData {
+  caption: string;
+  file: File | null;
 }
 
 const Submit = () => {
-  const { id } = useParams();
-  const [image, setImage] = useState(null);
+  const { battleId } = useParams<'battleId'>();
+  const [image, setImage] = useState<File | null>(null);
   const navigate = useNavigate();
-  const {numBVSubmissions, setNumBVSubmissions} = useOutletContext() as BVSubmissionState;
 
   const {
     control,
     handleSubmit,
     reset: clearForm,
     resetField
-  } = useForm();
+  } = useForm<IFormData>();
 
-  const submitForm = async (data) => {
-    const path = `/battle/${id}/submit`;
+  const submitForm = async (data: IFormData) => {
+    const path = `/battle/${battleId}/submit`;
     const form = new FormData();
     form.append('caption', data.caption);
-    form.append('file', image);
+    form.append('file', image as Blob);
     clearForm();
     try {
       await axios.post(path, form);
     } catch (err) {
-      console.error(err);
+      if (isAxiosError(err)) {
+        console.error(err.response?.data);
+      } else {
+        console.error(err);
+      }
     }
-    setNumBVSubmissions(numBVSubmissions + 1);
     navigate('..');
   }
 
@@ -49,9 +52,15 @@ const Submit = () => {
     resetField('file');
   }
 
-  const handleImageDrop = (event) => {
+  const handleImageDrop = (event: React.DragEvent<HTMLDivElement>) => {
     event.preventDefault();
-    const file = event.dataTransfer.files[0];
+    const file = event.dataTransfer.files.item(0);
+    setImage(file);
+  }
+
+  const handleImageChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    if (!event.target.files) return;
+    const file = event.target.files.item(0);
     setImage(file);
   }
 
@@ -108,7 +117,7 @@ const Submit = () => {
            <Controller
              name="file"
              control={control}
-             defaultValue=""
+             defaultValue={null}
              rules={{
                validate: {
                  imageExists: value => !!value || 'Please upload an image.'
@@ -142,7 +151,7 @@ const Submit = () => {
                   id="image-upload"
                   accept="image/*"
                   name="image"
-                  onChange={(event) => setImage(event.target.files[0])}
+                  onChange={handleImageChange}
                 />
               </Button>
             </Stack>

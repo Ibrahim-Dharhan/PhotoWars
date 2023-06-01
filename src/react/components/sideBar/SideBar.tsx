@@ -1,4 +1,4 @@
-import React from 'react';
+import * as React from 'react';
 import ExploreOutlinedIcon from '@mui/icons-material/ExploreOutlined';
 import TrendingUpIcon from '@mui/icons-material/TrendingUp';
 import {
@@ -19,7 +19,7 @@ const SideBar = () => {
 
   return (
     <Drawer
-      variant='permanent'
+      variant="permanent"
       sx={{
         width: drawerWidth,
         [`& .MuiDrawer-paper`]: { width: drawerWidth, boxSizing: 'border-box' },
@@ -37,7 +37,7 @@ const SideBar = () => {
             </ListItemButton>
           </ListItem>
           <ListItem key={'openCompetitions'} disablePadding>
-            <ListItemButton onClick={() => navigate('/?opencompetitions=true')}>
+            <ListItemButton onClick={() => navigate('/?open=true')}>
               <ListItemIcon>
                 <TrendingUpIcon />
               </ListItemIcon>

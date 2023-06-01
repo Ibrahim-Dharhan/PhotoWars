@@ -16,7 +16,7 @@ import { AWS_BUCKET_NAME, uploadFileToS3 } from '../../definitions/s3';
 import { voteOn, unvoteOn } from '../../definitions/schemas/mongoose/vote';
 
 import * as constants from '../../definitions/constants';
-const IMAGE_DIR = process.env.IMAGE_DIR || constants._imageDir;
+const IMAGE_DIR = process.env['IMAGE_DIR'] || constants._imageDir;
 const battleRouter = express.Router();
 
 /**
@@ -649,7 +649,7 @@ battleRouter.get('/:id/submissions', async (req, res) => {
       .lean()
       .exec();
 
-    if (req.query.sort === 'top') {
+    if (req.query['sort'] === 'top') {
       for (let submission of result) {
         (submission as any).numVotes = await Vote.countDocuments({
           post: submission._id,
@@ -659,7 +659,7 @@ battleRouter.get('/:id/submissions', async (req, res) => {
       result.sort((a, b) => {
         return (b as any).numVotes - (a as any).numVotes;
       });
-    } else if (req.query.sort === 'new') {
+    } else if (req.query['sort'] === 'new') {
       result.sort((a, b) => {
         return b.creationTime.getTime() - a.creationTime.getTime();
       });

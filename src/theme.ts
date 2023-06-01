@@ -3,22 +3,49 @@ import { createTheme } from '@mui/material/styles';
 
 // Create a theme instance.
 const theme = createTheme({
+  
   components: {
     MuiButton: {
       styleOverrides: {
         root: {
           borderRadius: 28,
-          padding: "8px 20px"
+          padding: "8px 20px",
+          textTransform: 'none',
         },
       }, 
     }, 
+    MuiCard: {
+      styleOverrides: {
+        root: {
+          borderRadius: 12,
+          border: 'none',
+          backgroundColor: '#37374E'
+        },
+      },
+    },
+    MuiAppBar: {
+      styleOverrides: {
+        root: {
+          borderBottom: '1px solid #666370',
+          boxShadow: 'none'
+        },
+      },
+    }
+  },
+  typography: {
+    "fontFamily": `"Rubik", "Helvetica", "Arial", sans-serif`,
   },
   palette: {
+    mode: 'dark',
+    background: {
+      default: '#27243A',
+      paper: '#27243A'
+    },
     primary: {
-      main: '#4F00D0',
+      main: '#763DF0',
     },
     secondary: {
-      main: '#79DFD9',
+      main: '#FFD338',
     },
     error: {
       main: red.A400,

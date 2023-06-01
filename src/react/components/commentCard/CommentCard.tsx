@@ -1,49 +1,69 @@
-import React, { useEffect, useState } from 'react';
-import axios from 'axios';
+import * as React from 'react';
+import { useContext, useEffect, useState } from 'react';
+import axios, { isAxiosError } from 'axios';
 import { getImageUrl } from '../../../definitions/getImageUrl';
 import { Card, CardMedia, Grid, Typography } from '@mui/material';
-import { useNavigate } from 'react-router-dom';
-import PropTypes from 'prop-types';
+import { createSearchParams, useNavigate } from 'react-router-dom';
 import './style.css';
+import { UserContext } from '../../contexts/UserContext';
+import { CommentCardInfo, PopulatedCommentFrontend } from '../../../definitions/classes/comment';
+import { SubmissionFrontend } from '../../../definitions/classes/submission';
+import { BattleFrontend } from '../../../definitions/classes/battle';
 
-const CommentCard = ({ comment }) => {
+interface IProps {
+  commentId: string;
+}
+
+const CommentCard = ({ commentId }: IProps) => {
+  const { loggedInUser } = useContext(UserContext);
+  const [commentLink, setCommentLink] = useState<string | { pathname: string, search: string }>('');
+  const [comment, setComment] = useState<PopulatedCommentFrontend>(new PopulatedCommentFrontend());
+  const [imageUrl, setImageUrl] = useState<string>('');
+
   const navigate = useNavigate();
-  const [filename, setFilename] = useState('');
-  const [imageUrl, setImageUrl] = useState('');
-  const [caption, setCaption] = useState('');
-  const [battleView, setBattleView] = useState('');
+
   useEffect(() => {
     let shouldUpdate = true;
     const setCommentInfo = async () => {
-      const path =
-        comment.commentedModel === 'Battle'
-          ? `/battle/${comment.post}`
-          : `/submission/${comment.post}`;
-      const res = await axios.get(path);
+      const path = `/comment/${commentId}`;
+      const res = await axios.get<CommentCardInfo>(path);
       if (shouldUpdate) {
-        setFilename(res.data.filename);
-        setCaption(res.data.caption);
-        const linkToView = `/battles/${
-          comment.commentedModel === 'Battle' ? res.data._id : res.data.battle
-        }`;
-        setBattleView(linkToView);
+        setComment(res.data);
+        let battleId: string;
+        const commentedPostId = res.data.post._id
+        if (comment.commentedModel === 'Battle') {
+          battleId = (res.data.post as BattleFrontend)._id;
+        } else {
+          battleId = (res.data.post as SubmissionFrontend).post;
+        }
+        const navigateParams = {
+          pathname: `/battles/${battleId}/comments/${commentedPostId}`,
+          search: createSearchParams({
+            postType: comment.commentedModel
+          }).toString()
+        };
+        setCommentLink(navigateParams);
       }
     };
     try {
       setCommentInfo();
     } catch (err) {
-      console.error(err.data);
+      if (isAxiosError(err)) {
+        console.error(err.response?.data);
+      } else {
+        console.error(err);
+      }
     }
     return () => {
       shouldUpdate = false;
     };
-  });
+  }, [commentId, comment.commentedModel, loggedInUser._id]);
 
   /* useEffect for retrieving the image.  */
   useEffect(() => {
     let shouldUpdate = true;
     const setImage = async () => {
-      const newImageUrl = await getImageUrl(filename);
+      const newImageUrl = await getImageUrl(comment.post.filename);
       if (shouldUpdate) {
         setImageUrl(newImageUrl);
       }
@@ -52,7 +72,7 @@ const CommentCard = ({ comment }) => {
     return () => {
       shouldUpdate = false;
     };
-  }, [filename]);
+  }, [comment.post.filename]);
 
   return (
     <Card
@@ -60,7 +80,7 @@ const CommentCard = ({ comment }) => {
       sx={{ marginBottom: '20px' }}
       onClick={(event) => {
         event.stopPropagation();
-        navigate(battleView);
+        navigate(commentLink);
       }}
     >
       <Grid container spacing={2} sx={{ padding: 0 }}>
@@ -72,16 +92,12 @@ const CommentCard = ({ comment }) => {
           />
         </Grid>
         <Grid item xs={8}>
-          <Typography sx={{ fontWeight: 'bold' }}>{caption}</Typography>
-          <Typography>{comment.text}</Typography>
+          <Typography sx={{ fontWeight: 'bold' }}>{comment.post.caption}</Typography>
+          <Typography>{comment.caption}</Typography>
         </Grid>
       </Grid>
     </Card>
   );
-};
-
-CommentCard.propTypes = {
-  comment: PropTypes.object,
 };
 
 export default CommentCard;
