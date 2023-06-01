@@ -34,11 +34,11 @@ import { Vote } from './vote';
  *           type: string
  */
 const userSchema = new mongoose.Schema({
-  description: { type: String, default: '', required: true },
+  description: { type: String, default: '' },
   displayName: { type: String, required: true },
-  filename: { type: String, default: '', required: true },
-  firstName: { type: String, default: '', required: true },
-  lastName: { type: String, default: '', required: true },
+  filename: { type: String, default: '' },
+  firstName: { type: String, default: '' },
+  lastName: { type: String, default: '' },
   loginName: { type: String, required: true },
   loginPassword: { type: String, required: true }
 });

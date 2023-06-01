@@ -144,6 +144,7 @@ accountRouter.post('/new', upload.none(), checkSchema(NewUser), async (req: expr
     req.session.userId = userObj._id.toString();
     res.status(200).json(userObj.toObject());
   } catch (err) {
+    console.error(err);
     res.status(500).send('Internal server error.');
   }
 });
