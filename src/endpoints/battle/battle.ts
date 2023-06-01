@@ -827,42 +827,56 @@ battleRouter.delete(
  *       500:
  *         $ref: '#/components/responses/500'
  */
-battleRouter.get('/:id/submissions', async (req, res) => {
-  const battleId = req.params.id;
-  try {
-    const battleObj = await Battle.findById(battleId).lean().exec();
-    /* Did not find battle with matching battleId. */
-    if (!battleObj) {
-      res.status(404).send('Invalid battle id.');
+battleRouter.get(
+  '/:id/submissions',
+  upload.none(),
+  checkSchema(ValidObjectId),
+  async (req: express.Request, res: express.Response) => {
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+      res.status(404).json({
+        errors: errors.array(),
+      });
       return;
     }
-    let result = await Submission.find({
-      battle: battleId,
-    })
-      .lean()
-      .exec();
 
-    if (req.query['sort'] === 'top') {
-      for (let submission of result) {
-        (submission as any).numVotes = await Vote.countDocuments({
-          post: submission._id,
-          votedModel: 'Submission',
-        }).exec();
+    const battleId = req.params['id'];
+    console.log(battleId);
+    try {
+      const battleObj = await Battle.findById(battleId).lean().exec();
+      /* Did not find battle with matching battleId. */
+      if (!battleObj) {
+        res.status(404).send('Invalid battle id.');
+        return;
       }
-      result.sort((a, b) => {
-        return (b as any).numVotes - (a as any).numVotes;
-      });
-    } else if (req.query['sort'] === 'new') {
-      result.sort((a, b) => {
-        return b.creationTime.getTime() - a.creationTime.getTime();
-      });
+      let result = await Submission.find({
+        post: battleId,
+      })
+        .lean()
+        .exec();
+      console.log(result);
+      if (req.query['sort'] === 'top') {
+        for (let submission of result) {
+          (submission as any).numVotes = await Vote.countDocuments({
+            post: submission._id,
+            votedModel: 'Submission',
+          }).exec();
+        }
+        result.sort((a, b) => {
+          return (b as any).numVotes - (a as any).numVotes;
+        });
+      } else if (req.query['sort'] === 'new') {
+        result.sort((a, b) => {
+          return b.creationTime.getTime() - a.creationTime.getTime();
+        });
+      }
+      /* Return submissions on battle. */
+      res.status(200).json(result);
+    } catch (err) {
+      res.status(500).send('Internal server error.');
+      console.error(err);
     }
-    /* Return submissions on battle. */
-    res.status(200).json(result);
-  } catch (err) {
-    res.status(500).send('Internal server error.');
-    console.error(err);
   }
-});
+);
 
 export { battleRouter };
