@@ -5,11 +5,12 @@ import { getImageUrl } from '../../../definitions/getImageUrl';
 import {
   Avatar,
   Divider,
+  Link,
   ListItem,
   ListItemAvatar,
   ListItemText,
-  Typography } from '@mui/material';
-import { useNavigate } from 'react-router-dom';
+  Typography
+} from '@mui/material';
 import { PopulatedCommentFrontend } from '../../../definitions/classes/comment';
 
 interface IProps {
@@ -18,8 +19,6 @@ interface IProps {
 
 const CommentModalCommentCard = ({ comment }: IProps) => {
   const [imageUrl, setImageUrl] = useState<string>('');
-
-  const navigate = useNavigate();
 
   /* useEffect for retrieving the image.  */
   useEffect(() => {
@@ -49,25 +48,26 @@ const CommentModalCommentCard = ({ comment }: IProps) => {
       <ListItem
         className='comment-modal-comment'
         alignItems='flex-start'
-        onClick={(event) => {
-          event.stopPropagation();
-          event.preventDefault();
-          navigate(`/users/${comment.author._id}`);
-        }}
       >
         <ListItemAvatar>
-          <Avatar src={imageUrl}>{comment.author.displayName[0]}</Avatar>
+          <Link href={`/users/${comment.author._id}`}>
+            <Avatar src={imageUrl}>{comment.author.displayName[0]}</Avatar>
+          </Link>
         </ListItemAvatar>
         <ListItemText
           secondary={
             <React.Fragment>
               <Typography
-                sx={{ display: 'inline' }}
-                component='span'
+                sx={{
+                  display: 'inline'
+                }}
                 variant='body2'
                 color='text.primary'
               >
-                {comment.author.displayName + '\n'}
+                <Link href={`/users/${comment.author._id}`}>
+                  {comment.author.displayName}
+                </Link>
+                {'\n'}
               </Typography>
               {comment.caption}
             </React.Fragment>
