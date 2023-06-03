@@ -1,6 +1,7 @@
 'use strict';
 
-import express = require('express');
+import mongoose = require('mongoose');
+import { Request, Response, Router } from 'express';
 import { checkSchema, matchedData, validationResult } from 'express-validator';
 import { UpdateSubmission } from '../../definitions/schemas/validation/updateSubmission';
 import { ValidObjectId } from '../../definitions/schemas/validation/validObjectId';
@@ -8,8 +9,9 @@ import { Submission } from '../../definitions/schemas/mongoose/submission';
 import { Vote } from '../../definitions/schemas/mongoose/vote';
 import { Comment } from '../../definitions/schemas/mongoose/comment';
 import { voteOn, unvoteOn } from '../../definitions/schemas/mongoose/vote';
+import { upload } from '../../server';
 
-const submissionRouter = express.Router();
+const submissionRouter = Router();
 
 /**
  * @openapi
@@ -33,24 +35,30 @@ const submissionRouter = express.Router();
 submissionRouter.get('/:id', async (req, res) => {
   const submissionId = req.params.id;
   const query = Submission.findById(submissionId);
+
   const numCommentsQuery = Comment.countDocuments({ post: submissionId });
+  const numVotesQuery = Vote.countDocuments({ post: submissionId });
+
   const commentedOnQuery = Comment.findOne({ post: submissionId,
                                              author: req.session.userId });
-  const numVotesQuery = Vote.countDocuments({ post: submissionId });
   const votedOnQuery = Vote.findOne({ post: submissionId,
-                                      user: req.session.userId });
+                                      author: req.session.userId });
   try {
     let result = await query
                          .populate('author')
-                         .populate('battle', ['deadline'])
+                         .populate('post', ['deadline'])
                          .lean()
                          .exec();
     if (result) {
       /* Found submission matching submissionId.  */
       const numComments = await numCommentsQuery.exec();
-      const commentedOn = !!(await commentedOnQuery.lean().exec());
       const numVotes = await numVotesQuery.exec();
-      const votedOn = !!(await votedOnQuery.lean().exec());
+
+      let commentedOn, votedOn = null;
+      if (mongoose.Types.ObjectId.isValid(req.session.userId || '')) {
+        commentedOn = !!(await commentedOnQuery.lean().exec());
+        votedOn = !!(await votedOnQuery.lean().exec());
+      }
       result = {
         ...result,
         ...{
@@ -106,15 +114,16 @@ submissionRouter.get('/:id', async (req, res) => {
  */
 submissionRouter.put(
   '/:id',
+  upload.none(),
   checkSchema({...ValidObjectId, ...UpdateSubmission}),
-  async (req, res) => {
+  async (req: Request, res: Response) => {
     if (!req.session.loggedIn) {
       res.status(401).send('Not logged in.');
     }
 
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
-      if (errors[0].path === 'id') {
+      if ('id' in errors.mapped()) {
         res.status(404);
       } else {
         res.status(400);
@@ -125,7 +134,7 @@ submissionRouter.put(
       return;
     }
 
-    const submissionId = req.params.id;
+    const submissionId = req.params['id'];
     const query = Submission.findById(submissionId);
     try {
       const result = await query.exec();
@@ -171,8 +180,8 @@ submissionRouter.put(
  *       500:
  *         $ref: '#/components/responses/500'
  */
-submissionRouter.put('/:id/vote', checkSchema(ValidObjectId), async (req, res) => {
-  if (!req.session.loggedIn) {
+submissionRouter.put('/:id/vote', upload.none(), checkSchema(ValidObjectId), async (req: Request, res: Response) => {
+  if (!req.session.loggedIn || !req.session.userId) {
     res.status(401).send('Must be logged in to perform this action.');
     return;
   }
@@ -185,7 +194,11 @@ submissionRouter.put('/:id/vote', checkSchema(ValidObjectId), async (req, res) =
     return;
   }
 
-  const submissionId = req.params.id;
+  const submissionId = req.params['id'];
+  if (!submissionId) {
+    res.status(404).send('Resource not found.');
+    return;
+  }
   const query = Submission.findById(submissionId);
   try {
     const result = await query.lean().exec();
@@ -217,8 +230,8 @@ submissionRouter.put('/:id/vote', checkSchema(ValidObjectId), async (req, res) =
  *       500:
  *         $ref: '#/components/responses/500'
  */
-submissionRouter.put('/:id/unvote', checkSchema(ValidObjectId), async (req, res) => {
-  if (!req.session.loggedIn) {
+submissionRouter.put('/:id/unvote', upload.none(), checkSchema(ValidObjectId), async (req: Request, res: Response) => {
+  if (!req.session.loggedIn || !req.session.userId) {
     res.status(401).send('Must be logged in to perform this action.');
     return;
   }
@@ -231,7 +244,11 @@ submissionRouter.put('/:id/unvote', checkSchema(ValidObjectId), async (req, res)
     return;
   }
 
-  const submissionId = req.params.id;
+  const submissionId = req.params['id'];
+  if (!submissionId) {
+    res.status(404).send('Resource not found.');
+    return;
+  }
   const query = Submission.findById(submissionId);
   try {
     const result = await query.lean().exec();
@@ -269,7 +286,7 @@ submissionRouter.put('/:id/unvote', checkSchema(ValidObjectId), async (req, res)
  *       500:
  *         $ref: '#/components/responses/500'
  */
-submissionRouter.get('/:id/comments', checkSchema(ValidObjectId), async (req, res) => {
+submissionRouter.get('/:id/comments', upload.none(), checkSchema(ValidObjectId), async (req: Request, res: Response) => {
   const errors = validationResult(req);
   if (!errors.isEmpty()) {
     res.status(404).json({
@@ -278,13 +295,16 @@ submissionRouter.get('/:id/comments', checkSchema(ValidObjectId), async (req, re
     return;
   }
 
-  const submissionId = req.params.id;
+  const submissionId = req.params['id'];
   const query = Comment.find({
     commentedModel: 'Submission',
     post: submissionId,
-  });
+  }).populate('author').populate('post', [
+    '-author',
+    '-__v'
+  ]);
   try {
-    const result = await query.populate('author').lean().exec();
+    const result = await query.lean().exec();
     if (result) {
       /* Found comments on submission. */
       res.status(200).json(result);
@@ -328,7 +348,7 @@ submissionRouter.get('/:id/comments', checkSchema(ValidObjectId), async (req, re
  *       500:
  *         $ref: '#/components/responses/500'
  */
-submissionRouter.post('/:id/comment', checkSchema(ValidObjectId), async (req, res) => {
+submissionRouter.post('/:id/comment', upload.none(), checkSchema(ValidObjectId), async (req: Request, res: Response) => {
   if (!req.session.loggedIn) {
     res.status(401).send('Not logged in.');
     return;
@@ -347,13 +367,13 @@ submissionRouter.post('/:id/comment', checkSchema(ValidObjectId), async (req, re
     return;
   }
 
-  const submissionId = req.params.id;
+  const submissionId = req.params['id'];
   try {
     const newComment = await Comment.create({
       author: req.session.userId,
       commentedModel: 'Submission',
       post: submissionId,
-      text: req.body.comment,
+      caption: req.body.comment,
     });
     res.status(200).json(newComment);
   } catch (err) {
@@ -381,7 +401,7 @@ submissionRouter.post('/:id/comment', checkSchema(ValidObjectId), async (req, re
  *       500:
  *         $ref: '#/components/responses/500'
  */
-submissionRouter.delete('/:id', checkSchema(ValidObjectId), async (req, res) => {
+submissionRouter.delete('/:id', upload.none(), checkSchema(ValidObjectId), async (req: Request, res: Response) => {
   if (!req.session.loggedIn) {
     res.status(401).send('User not logged in.');
     return;
@@ -395,7 +415,7 @@ submissionRouter.delete('/:id', checkSchema(ValidObjectId), async (req, res) => 
     return;
   }
 
-  const submissionId = req.params.id;
+  const submissionId = req.params['id'];
   /* Delete submission.  */
   const query = Submission.findOneAndDelete({
     _id: submissionId,

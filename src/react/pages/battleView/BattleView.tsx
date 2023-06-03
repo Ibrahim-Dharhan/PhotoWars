@@ -1,53 +1,36 @@
-import React, { useState } from 'react';
-import axios from 'axios';
+import * as React from 'react';
+import axios, { isAxiosError } from 'axios';
 import {
   Stack
 } from '@mui/material';
 import { BattleCard } from '../../components/battleCard/BattleCard';
-import { CommentModal } from '../../components/commentModal/CommentModal';
-import { Outlet, redirect, useParams } from 'react-router-dom';
+import { LoaderFunction, Outlet, redirect, useParams } from 'react-router-dom';
 
-const battleViewLoader = async ({ params }) => {
-  const id = params.id
-  const path = `/battle/${id}`;
+const battleViewLoader: LoaderFunction = async ({ params }) => {
+  const battleId = params['battleId'];
+  const path = `/battle/${battleId}`;
   try {
-    await axios.get(path);
+    await axios.get<{ _id: string }[]>(path);
   } catch (err) {
-    if (err.response.status === 404) {
-      return redirect('/404');
-    }
+      if (isAxiosError(err)) {
+        if (err.response?.status === 404) {
+          return redirect('/404');
+        }
+        console.error(err.response?.data);
+      } else {
+        console.error(err);
+      }
   }
   return null;
 }
 
+interface IParams {
+  battleId: string
+}
+
 const BattleView = () => {
-  const { id } = useParams();
+  const { battleId } = useParams<'battleId'>() as IParams;
 
-  const [modalOpen, setModalOpen] = useState(false);
-  const [modalVariant, setModalVariant] = useState('');
-  const [modalId, setModalId] = useState('');
-  const [modalAuthor, setModalAuthor] = useState('');
-  const [modalCaption, setModalCaption] = useState('');
-  const [modalImage, setModalImage] = useState('');
-
-  const showModal = (variant: string, id: string, author: string, caption: string, filename: string) => {
-    setModalAuthor(author);
-    setModalId(id);
-    setModalVariant(variant);
-    setModalCaption(caption);
-    setModalImage(filename);
-    setModalOpen(true);
-  };
-
-  const closeModal = () => {
-    setModalOpen(false);
-    setModalAuthor('');
-    setModalId('');
-    setModalVariant('');
-    setModalCaption('');
-    setModalImage('');
-  };
-  
   return (
     <Stack
       sx={{
@@ -55,19 +38,9 @@ const BattleView = () => {
       }}
     >
       <BattleCard
-        battleId={id}
-        showModal={showModal}
+        battleId={battleId}
       />
-      <Outlet context={{ showModal }}/>
-      <CommentModal 
-        open={modalOpen}
-        handleClose={closeModal}
-        variant={modalVariant}
-        id={modalId}
-        displayName={modalAuthor}
-        caption={modalCaption}
-        filename={modalImage}
-      />
+      <Outlet />
     </Stack>
   );
 };

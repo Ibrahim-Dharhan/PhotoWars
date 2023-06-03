@@ -22,7 +22,7 @@ const testRouter = express.Router();
  *         $ref: '#/components/responses/500'
  *
  */
-testRouter.get('/kitten', (req, res) => {
+testRouter.get('/kitten', (_req, res) => {
   Kitten.create({
     name: 'Silence'
   }).then((kittyObj) => {
@@ -51,7 +51,7 @@ testRouter.get('/kitten', (req, res) => {
  *              type: string
  *              example: Pong
  */
-testRouter.get('/ping', (req, res) => {
+testRouter.get('/ping', (_req, res) => {
   res.status(200).send("Pong");
 });
 

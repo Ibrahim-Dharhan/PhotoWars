@@ -1,9 +1,9 @@
-import axios from 'axios';
+import axios, { isAxiosError } from 'axios';
 
-const getImageUrl = async (filename) => {
+const getImageUrl = async (filename: string) => {
   const path = `/image/${filename}`;
   try {
-    const res = await axios.get(path);
+    const res = await axios.get<string>(path);
     if (!res.data.startsWith('https')) {
       /* Using local filesystem for images.  */
       return path;
@@ -12,7 +12,12 @@ const getImageUrl = async (filename) => {
       return res.data;
     }
   } catch (err) {
-    console.error(err.response.data);
+    if (isAxiosError(err)) {
+      console.error(err.response?.data);
+    } else {
+      console.error(err);
+    }
+    return '';
   }
 };
 

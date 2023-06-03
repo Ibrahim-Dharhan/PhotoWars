@@ -1,5 +1,5 @@
-"use strict"
-import React, { useContext, useState } from 'react';
+import * as React from 'react';
+import { useContext, useState } from 'react';
 import axios from 'axios';
 import {
   Button,
@@ -10,40 +10,46 @@ import {
   DialogTitle,
 } from '@mui/material';
 import { useLocation, useNavigate } from 'react-router-dom';
-import { UserContext } from '../../contexts/UserContext';
-import PropTypes from 'prop-types';
+// import { LoggedInUser, UserContext } from '../../pages/Layout';
+import { LoggedInUser, UserContext } from '../../contexts/UserContext';
+
+interface IProps {
+  openDeleteDialog: boolean;
+  setOpenDeleteDialog: React.Dispatch<React.SetStateAction<boolean>>;
+  objectId: string | undefined;
+  objectModel: string;
+}
 
 const DeleteDialog = ({
   openDeleteDialog,
   setOpenDeleteDialog,
-  postId,
-  variant
-}) => {
+  objectId,
+  objectModel 
+}: IProps) => {
   const location = useLocation();
   const navigate = useNavigate();
-  const [deleting, setDeleting] = useState(false);
-  const { setDisplayName, setUserId } = useContext(UserContext);
+  const [deleting, setDeleting] = useState<boolean>(false);
+  const { setLoggedInUser } = useContext(UserContext);
 
   const handleClose = () => {
     !deleting && setOpenDeleteDialog(false);
   };
 
   const handleDelete = async () => {
-    const path = `/${variant}${postId ? '/' : ''}${postId || ''}`;
+    const path = `/${objectModel}${objectId ? '/' : ''}${objectId || ''}`;
     try {
       !deleting && await axios.delete(path);
-      if (location.pathname.startsWith(`/${variant}`)) {
+      if (location.pathname.startsWith(`/${objectModel}`)) {
         navigate('/');
       } else {
         navigate(0);
       }
-      if (variant === 'user') {
+      if (objectModel === 'user') {
         /* Log user out and update state.  */
         const path = '/account/logout';
         await axios.post(path);
-        setDisplayName('');
-        setUserId('');
-        localStorage.removeItem('user');
+        setLoggedInUser && setLoggedInUser(new LoggedInUser());
+        localStorage.removeItem('loggedInUser');
       }
       setDeleting(true);
     } catch (err) {
@@ -66,7 +72,7 @@ const DeleteDialog = ({
         </DialogTitle>
         <DialogContent>
           <DialogContentText>
-            Do you want to delete this {variant}? This action cannot be undone.
+            Do you want to delete this {objectModel}? This action cannot be undone.
           </DialogContentText>
         </DialogContent>
         <DialogActions>
@@ -79,12 +85,5 @@ const DeleteDialog = ({
     </React.Fragment>
   );
 }
-
-DeleteDialog.propTypes = {
-  openDeleteDialog: PropTypes.bool,
-  setOpenDeleteDialog: PropTypes.func,
-  postId: PropTypes.string,
-  variant: PropTypes.string
-};
 
 export { DeleteDialog };

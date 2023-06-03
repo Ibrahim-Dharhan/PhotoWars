@@ -3,10 +3,10 @@
 import express = require('express');
 import path = require('path');
 
-import { AWS_BUCKET_NAME, AWS_REGION } from '../../definitions/s3';
+import { AWS_BUCKET_NAME, AWS_DEFINED, AWS_REGION } from '../../definitions/s3';
 import * as constants from '../../definitions/constants';
 
-const IMAGE_DIR = process.env.IMAGE_DIR || constants._imageDir;
+const IMAGE_DIR = process.env['IMAGE_DIR'] || constants._imageDir;
 const imageRouter = express.Router();
 
 /**
@@ -24,13 +24,17 @@ const imageRouter = express.Router();
  *     responses:
  *       200:
  *         description: Resource successfully retrieved.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: string
  *       404:
  *         $ref: '#/components/responses/404NotFound'
  *
  */
 imageRouter.get('/:filename', async (req, res) => {
   const filename = req.params.filename;
-  if (AWS_BUCKET_NAME) {
+  if (AWS_DEFINED) {
     /* Get file from Amazon S3 storage.  */
     const fileKey = path.join(IMAGE_DIR, filename);
     const url = `https://${AWS_BUCKET_NAME}.s3.${AWS_REGION}.amazonaws.com/${fileKey}`;

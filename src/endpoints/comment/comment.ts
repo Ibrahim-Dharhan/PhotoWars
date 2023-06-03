@@ -1,12 +1,14 @@
 "use strict"
 
-import express = require('express');
+import mongoose = require('mongoose');
+import { Request, Response, Router } from 'express';
 import { checkSchema, validationResult } from 'express-validator';
 import { Comment } from '../../definitions/schemas/mongoose/comment';
 import { ValidObjectId } from '../../definitions/schemas/validation/validObjectId';
 import { Vote, voteOn, unvoteOn } from '../../definitions/schemas/mongoose/vote';
+import { upload } from '../../server';
 
-const commentRouter = express.Router();
+const commentRouter = Router();
 
 /**
  * @openapi
@@ -29,15 +31,23 @@ const commentRouter = express.Router();
 */
 commentRouter.get('/:id', async (req, res) => {
   const commentId = req.params.id;
-  const query = Comment.findById(commentId);
+  const query = Comment.findById(commentId, [
+    '-__v'
+  ]).populate('post', [
+    '-__v'
+  ]);
   const numVotesQuery = Vote.countDocuments({ post: commentId });
   const votedOnQuery = Vote.findOne({ post: commentId,
-                                      user: req.session.userId });
+                                      author: req.session.userId });
 
   try {
     let result = await query.lean().exec();
     const numVotes = await numVotesQuery.exec();
-    const votedOn = !!(await votedOnQuery.lean().exec());
+
+    let votedOn = null;
+    if (mongoose.Types.ObjectId.isValid(req.session.userId || '')) {
+      votedOn = !!(await votedOnQuery.lean().exec());
+    }
     if (result) {
       /* Found comment with id.  */
       result = {
@@ -77,7 +87,7 @@ commentRouter.get('/:id', async (req, res) => {
  *       500:
  *         $ref: '#/components/responses/500'
  */
-commentRouter.delete('/:id', checkSchema(ValidObjectId), async (req, res) => {
+commentRouter.delete('/:id', upload.none(), checkSchema(ValidObjectId), async (req: Request, res: Response) => {
   if (!req.session.loggedIn) {
     res.status(401).send('User is not logged in.');
     return;
@@ -91,7 +101,7 @@ commentRouter.delete('/:id', checkSchema(ValidObjectId), async (req, res) => {
     return;
   }
 
-  const commentId = req.params.id;
+  const commentId = req.params['id'];
   const query = Comment.findById(commentId);
 
   try {
@@ -106,9 +116,9 @@ commentRouter.delete('/:id', checkSchema(ValidObjectId), async (req, res) => {
       await Comment.findByIdAndUpdate(commentId,
                                       {
                                         author: '000000000000000000000000',
-                                        text: ''
+                                        caption: ''
                                       });
-      res.status(200).send('Successfully deleted comment text.');
+      res.status(200).send('Successfully deleted comment caption.');
     }
   } catch (err) {
     console.error(err);
@@ -129,10 +139,10 @@ commentRouter.delete('/:id', checkSchema(ValidObjectId), async (req, res) => {
  *           schema:
  *             type: object
  *             properties:
- *               text:
+ *               caption:
  *                 type: string
  *             required:
- *               - text
+ *               - caption 
  *     parameters:
  *       - $ref: '#/components/parameters/idParam'
  *     responses:
@@ -151,7 +161,7 @@ commentRouter.delete('/:id', checkSchema(ValidObjectId), async (req, res) => {
  *       500:
  *         $ref: '#/components/responses/500'
  */
-commentRouter.put('/:id', checkSchema(ValidObjectId), async (req, res) => {
+commentRouter.put('/:id', upload.none(), checkSchema(ValidObjectId), async (req: Request, res: Response) => {
   if (!req.session.loggedIn) {
     res.status(401).send('User is not logged in.');
     return;
@@ -165,7 +175,7 @@ commentRouter.put('/:id', checkSchema(ValidObjectId), async (req, res) => {
     return;
   }
 
-  const commentId = req.params.id;
+  const commentId = req.params['id'];
   const query = Comment.findById(commentId);
 
   try {
@@ -177,7 +187,7 @@ commentRouter.put('/:id', checkSchema(ValidObjectId), async (req, res) => {
       /* User requesting change is not the comment's author.  */
       res.status(403).send('User is not the comment author.');
     } else {
-      result.text = req.body.text;
+      result.caption = req.body.caption;
       const updatedComment = await result.save();
       res.status(200).send(updatedComment);
     }
@@ -203,8 +213,8 @@ commentRouter.put('/:id', checkSchema(ValidObjectId), async (req, res) => {
  *       500:
  *         $ref: '#/components/responses/500'
  */
-commentRouter.put('/:id/vote', checkSchema(ValidObjectId), async (req, res) => {
-  if (!req.session.loggedIn) {
+commentRouter.put('/:id/vote', upload.none(), checkSchema(ValidObjectId), async (req: Request, res: Response) => {
+  if (!req.session.loggedIn || !req.session.userId) {
     res.status(401).send('Must be logged in to perform this action.');
     return;
   }
@@ -217,7 +227,11 @@ commentRouter.put('/:id/vote', checkSchema(ValidObjectId), async (req, res) => {
     return;
   }
 
-  const commentId = req.params.id;
+  const commentId = req.params['id'];
+  if (!commentId) {
+    res.status(404).send('Resource not found.');
+    return;
+  }
   const query = Comment.findOne({ _id: commentId });
   try {
     const result = await query.lean().exec();
@@ -227,6 +241,7 @@ commentRouter.put('/:id/vote', checkSchema(ValidObjectId), async (req, res) => {
     }
 
     await voteOn('Comment', commentId, req.session.userId);
+    console.log("Successfully voted on");
     res.status(200).send('Successfully voted on comment.');
 
   } catch (err) {
@@ -252,8 +267,8 @@ commentRouter.put('/:id/vote', checkSchema(ValidObjectId), async (req, res) => {
  *       500:
  *         $ref: '#/components/responses/500'
  */
-commentRouter.put('/:id/unvote', checkSchema(ValidObjectId), async (req, res) => {
-  if (!req.session.loggedIn) {
+commentRouter.put('/:id/unvote', upload.none(), checkSchema(ValidObjectId), async (req: Request, res: Response) => {
+  if (!req.session.loggedIn || !req.session.userId) {
     res.status(401).send('Must be logged in to perform this action.');
     return;
   }
@@ -266,7 +281,11 @@ commentRouter.put('/:id/unvote', checkSchema(ValidObjectId), async (req, res) =>
     return;
   }
 
-  const commentId = req.params.id;
+  const commentId = req.params['id'];
+  if (!commentId) {
+    res.status(404).send('Resource not found.');
+    return;
+  }
   const query = Comment.findOne({ _id: commentId });
   try {
     const result = await query.lean().exec();

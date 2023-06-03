@@ -1,6 +1,6 @@
-import React, { useContext, useEffect, useState } from 'react';
-import axios from 'axios';
-import PropTypes from 'prop-types';
+import * as React from 'react';
+import { useContext, useEffect, useState } from 'react';
+import axios, { isAxiosError } from 'axios';
 import {
   Box,
   Button,
@@ -16,16 +16,19 @@ import {
 import { getImageUrl } from '../../../definitions/getImageUrl';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { UserContext } from '../../contexts/UserContext';
+import { BattleCardInfo } from '../../../definitions/classes/battle';
 
-const DailyBattleCard = ({
-  battleId,
-}) => {
-  const { userId } = useContext(UserContext);
+interface IProps {
+  battleId: string;
+}
 
-  const [caption, setCaption] = useState('');
-  const [filename, setFilename] = useState('');
-  const [imageUrl, setImageUrl] = useState('');
-  const [submitted, setSubmitted] = useState(false);
+const DailyBattleCard = ({ battleId }: IProps) => {
+  const { loggedInUser } = useContext(UserContext);
+
+  const [caption, setCaption] = useState<string>('');
+  const [filename, setFilename] = useState<string>('');
+  const [imageUrl, setImageUrl] = useState<string>('');
+  const [submitted, setSubmitted] = useState<boolean | null>(false);
 
   const location = useLocation();
   const navigate = useNavigate();
@@ -35,48 +38,28 @@ const DailyBattleCard = ({
     let shouldUpdate = true;
     const setBattleInformation = async () => {
       const path = `/battle/${battleId}`;
-      const res = await axios.get(path);
+      const res = await axios.get<BattleCardInfo>(path);
       const battle = res.data;
 
       if (shouldUpdate) {
         setCaption(battle.caption);
         setFilename(battle.filename);
+        setSubmitted(battle.submittedTo)
       }
     };
     try {
       setBattleInformation();
     } catch (err) {
-      console.error(err.data);
+      if (isAxiosError(err)) {
+        console.error(err.response?.data);
+      } else {
+        console.error(err);
+      }
     }
     return () => {
       shouldUpdate = false;
     };
   }, [battleId]);
-
-  /* useEffect for updating submission count.  */
-  useEffect(() => {
-    let shouldUpdate = true;
-    const getSubmissions = async () => {
-      const submissionsPath = `/battle/${battleId}/submissions`;
-      const submissionsRes = await axios.get(submissionsPath);
-
-      if (shouldUpdate) {
-        setSubmitted(
-          submissionsRes.data
-            .map((submission) => submission.author)
-            .includes(userId)
-        );
-      }
-    };
-    try {
-      getSubmissions();
-    } catch (err) {
-      console.error(err.data);
-    }
-    return () => {
-      shouldUpdate = false;
-    };
-  }, [battleId, userId]);
 
   /* useEffect for retrieving the image.  */
   useEffect(() => {
@@ -102,7 +85,6 @@ const DailyBattleCard = ({
             location.pathname === '/' ||
             location.pathname.startsWith('/users')
           ) {
-            console.log('Open post');
             navigate(`/battles/${battleId}`);
           }
         }}
@@ -130,7 +112,7 @@ const DailyBattleCard = ({
             title={
               submitted
                 ? 'Only one submission is allowed.'
-                : !userId && 'Log in to submit to this battle.'
+                : !loggedInUser._id && 'Log in to submit to this battle.'
             }
           >
             <Box
@@ -143,13 +125,12 @@ const DailyBattleCard = ({
                 onClick={(event) => {
                   event.stopPropagation();
                   event.preventDefault();
-                  console.log('Open submit page');
                   navigate(`/battles/${battleId}/submit`);
                 }}
                 variant='contained'
                 disabled={
                   submitted ||
-                  !userId ||
+                  !loggedInUser._id ||
                   location.pathname.endsWith('submit')
                 }
                 fullWidth
@@ -162,10 +143,6 @@ const DailyBattleCard = ({
       </CardActionArea>
     </Card>
   );
-};
-
-DailyBattleCard.propTypes = {
-  battleId: PropTypes.string,
 };
 
 export { DailyBattleCard };

@@ -1,5 +1,6 @@
-import React, { useContext, useEffect, useRef, useState } from 'react';
-import axios from 'axios';
+import * as React from 'react';
+import { useContext, useEffect, useRef, useState } from 'react';
+import axios, { isAxiosError } from 'axios';
 import {
   ButtonBase,
   Card,
@@ -18,61 +19,69 @@ import { pink } from '@mui/material/colors';
 import { UserContext } from '../../contexts/UserContext';
 import { PostCardHeader } from '../postCardHeader/PostCardHeader';
 import { updateDeadline } from '../../../definitions/timerLogic';
-import PropTypes from 'prop-types';
+import { createSearchParams, useLocation, useNavigate } from 'react-router-dom';
 import './submissionCard.css';
+import { SubmissionCardInfo } from '../../../definitions/classes/submission';
 
-const SubmissionCard = ({ submissionId, showModal }) => {
-  const { userId, setOpen } = useContext(UserContext);
-  const [caption, setCaption] = useState('');
-  const [displayName, setDisplayName] = useState('');
-  const [imageUrl, setImageUrl] = useState('');
-  const [filename, setFilename] = useState('');
-  const [numComments, setNumComments] = useState(0);
-  const [commented, setCommented] = useState(false);
-  const [expired, setExpired] = useState(true);
-  const [numVotes, setNumVotes] = useState(0);
-  const [voted, setVoted] = useState(false);
+interface IProps {
+  submissionId: string
+}
 
-  const _isAuthor = useRef(false);
-  const _submission = useRef(null);
-  const _timerEvent = useRef(null);
+const SubmissionCard = ({ submissionId }: IProps) => {
+  const { loggedInUser, setOpenLoginModal } = useContext(UserContext);
+  const [caption, setCaption] = useState<string>('');
+  const [imageUrl, setImageUrl] = useState<string>('');
+  const [filename, setFilename] = useState<string>('');
+  const [numComments, setNumComments] = useState<number>(0);
+  const [commented, setCommented] = useState<boolean | null>(false);
+  const [expired, setExpired] = useState<boolean>(true);
+  const [numVotes, setNumVotes] = useState<number>(0);
+  const [voted, setVoted] = useState<boolean | null>(false);
+
+  const _submission = useRef<SubmissionCardInfo | null>(null);
+  const _timerEvent = useRef<NodeJS.Timer | null>(null);
+
+  const location = useLocation();
+  const navigate = useNavigate();
 
   /* useEffect for updating caption, display name, and image.  */
   useEffect(() => {
     let shouldUpdate = true;
     const setSubmissionInformation = async () => {
       const path = `/submission/${submissionId}`;
-      const res = await axios.get(path);
+      const res = await axios.get<SubmissionCardInfo>(path);
       const submission = res.data;
 
       if (shouldUpdate) {
         setCaption(submission.caption);
-        setDisplayName(submission.author.displayName);
         setFilename(submission.filename);
         setNumComments(submission.numComments);
         setCommented(submission.commentedOn);
         setNumVotes(submission.numVotes);
         setVoted(submission.votedOn);
-        _isAuthor.current = submission.author._id;
         _submission.current = submission;
         updateDeadline(
-          new Date(submission.battle.deadline),
+          new Date(submission.post.deadline),
           _timerEvent,
           null,
           setExpired,
-          expired
+          !!expired
         );
       }
     };
     try {
       setSubmissionInformation();
     } catch (err) {
-      console.error(err.data);
+      if (isAxiosError(err)) {
+        console.error(err.response?.data);
+      } else {
+        console.error(err);
+      }
     }
     return () => {
       shouldUpdate = false;
     };
-  }, [expired, submissionId, userId]);
+  }, [expired, location, submissionId, loggedInUser._id]);
 
   /* useEffect for retrieving the image.  */
   useEffect(() => {
@@ -89,6 +98,15 @@ const SubmissionCard = ({ submissionId, showModal }) => {
     };
   }, [filename]);
 
+  const openCommentModal = () => {
+    navigate({
+      pathname: `comments/${submissionId}`,
+      search: createSearchParams({
+        postType: 'submission'
+      }).toString()
+    });
+  }
+
   const vote = async () => {
     const path = `/submission/${submissionId}/${voted ? 'unvote' : 'vote'}`;
     try {
@@ -96,30 +114,27 @@ const SubmissionCard = ({ submissionId, showModal }) => {
       setVoted(!voted);
       setNumVotes(numVotes + (voted ? -1 : 1));
     } catch (err) {
-      console.error(err.response.data);
+      if (isAxiosError(err)) {
+        console.error(err.response?.data);
+      } else {
+        console.error(err);
+      }
     }
   };
 
   return (
     <Card variant='outlined' sx={{ height: 475, width: '100%' }}>
       <CardActionArea component='div'>
-        <PostCardHeader _post={_submission} />
+        <PostCardHeader post={_submission.current} />
         <CardContent sx={{ mt: -3 }}>
           <Typography noWrap variant='h6'>
             {caption}
           </Typography>
         </CardContent>
         <ButtonBase
-          onClick={() =>
-            showModal &&
-            showModal(
-              'submission',
-              submissionId,
-              displayName,
-              caption,
-              filename
-            )
-          }
+          onClick={() => {
+            openCommentModal();
+          }}
           sx={{ width: '100%' }}
         >
           <CardMedia
@@ -135,18 +150,18 @@ const SubmissionCard = ({ submissionId, showModal }) => {
             onClick={(event) => {
               event.stopPropagation();
               event.preventDefault();
-              if (userId !== '' && !expired) {
+              if (loggedInUser._id !== '' && !expired) {
                 vote();
               } else {
-                setOpen(true);
+                setOpenLoginModal && setOpenLoginModal(true);
               }
             }}
-            disableRipple={expired}
+            disableRipple={!!expired}
           >
             {
               expired
-              ? <LockIcon sx={{ pr: 1, color: voted && pink[500] }} />
-              : <FavoriteIcon sx={{ pr: 1, color: voted && pink[500] }} />
+              ? <LockIcon sx={{ pr: 1, color: voted ? pink[500] : null }} />
+              : <FavoriteIcon sx={{ pr: 1, color: voted ? pink[500] : null }} />
             }
             <Typography>{numVotes}</Typography>
           </IconButton>
@@ -155,18 +170,11 @@ const SubmissionCard = ({ submissionId, showModal }) => {
             onClick={(event) => {
               event.stopPropagation();
               event.preventDefault();
-              showModal &&
-              showModal(
-                'submission',
-                submissionId,
-                displayName,
-                caption,
-                filename
-              )
+              openCommentModal();
             }}
           >
             <ModeCommentOutlinedIcon
-              sx={{ pr: 1, color: commented && pink[500] }}
+              sx={{ pr: 1, color: commented ? pink[500] : null }}
             />
             <Typography>{numComments}</Typography>
           </IconButton>
@@ -174,11 +182,6 @@ const SubmissionCard = ({ submissionId, showModal }) => {
       </CardActionArea>
     </Card>
   );
-};
-
-SubmissionCard.propTypes = {
-  submissionId: PropTypes.string,
-  showModal: PropTypes.func,
 };
 
 export { SubmissionCard };

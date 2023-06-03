@@ -1,4 +1,4 @@
-import React from 'react';
+import * as React from 'react';
 import { createRoot } from 'react-dom/client';
 import { CssBaseline, ThemeProvider, Box } from '@mui/material';
 import {
@@ -10,6 +10,7 @@ import {
 
 /* Importing Components */
 import { BattleView, battleViewLoader } from './react/pages/battleView/BattleView';
+import { CommentModal, commentModalLoader } from './react/pages/commentModal/CommentModal';
 import { Create } from './react/pages/create/Create';
 import { Feed, feedLoader } from './react/pages/feed/Feed';
 import { Home } from './react/pages/home/Home';
@@ -23,6 +24,7 @@ import { UserHeader } from './react/pages/userHeader/UserHeader';
 import { UserHeaderEdit } from './react/pages/userHeaderEdit/UserHeaderEdit';
 import { UserView, userViewLoader } from './react/pages/userView/UserView';
 import theme from './theme';
+import { RequireLoginRoute } from './react/components/requireLoginRoute/RequireLoginRoute';
 
 const PhotoWars = () => {
   const router = createBrowserRouter(
@@ -30,22 +32,29 @@ const PhotoWars = () => {
       <Route path='/' element={<Layout />}>
         <Route path='/' element={<Home />}>
           <Route
-            path='battles/:id'
+            path='battles/:battleId'
             element={<BattleView />}
             loader={battleViewLoader}
             errorElement={<div>Error viewing battle</div>}
           >
             <Route
-              index
+              path=""
               element={<SubmissionFeed />}
               loader={submissionFeedLoader}
               errorElement={<div>Error loading submissions</div>}
-            />
-            <Route path='submit' element={<Submit />} />
+            >
+              <Route
+                path="comments/:postId"
+                element={<CommentModal />}
+                loader={commentModalLoader}
+                errorElement={<div>Error loading comments</div>}
+              />
+            </Route>
+            <Route path='submit' element={<RequireLoginRoute><Submit /></RequireLoginRoute>} />
           </Route>
           <Route path='create' element={<Create />} />
           <Route
-            path='users/:id'
+            path='users/:userId'
             element={<UserView />}
             loader={userViewLoader}
           >

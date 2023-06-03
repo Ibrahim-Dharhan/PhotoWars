@@ -15,6 +15,8 @@ import { Vote } from './vote';
  *         __v:
  *           type: number
  *         author:
+ *           $ref: '#/components/schemas/UserFrontend'
+ *         caption:
  *           type: string
  *         commentedModel:
  *           type: string
@@ -23,18 +25,32 @@ import { Vote } from './vote';
  *           format: date-time
  *         post:
  *           type: string
- *         text:
- *           type: string
  */
 const commentSchema = new mongoose.Schema({
-  author: { type: mongoose.Schema.Types.ObjectId, ref: 'User' },
+  author: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'User',
+    required: true
+  },
+  caption: { type: String, required: true },
   commentedModel: {
     type: String,
     enum: ['Battle', 'Comment', 'Submission'],
+    required: true
   },
-  creationTime: { type: Date, default: Date.now },
-  post: { type: mongoose.Schema.Types.ObjectId, refPath: 'commentedModel' },
-  text: String,
+  creationTime: { type: Date, default: Date.now, required: true },
+  post: {
+    type: mongoose.Schema.Types.ObjectId,
+    refPath: 'commentedModel',
+    required: true
+  },
+});
+
+commentSchema.pre([
+    'find',
+    'findOne',
+  ], async function() {
+    this.populate('author');
 });
 
 commentSchema.pre(['deleteMany'], async function () {

@@ -3,7 +3,7 @@
 import async = require('async');
 import mongoose = require('mongoose');
 import { Comment } from './comment';
-import { AWS_BUCKET_NAME, deleteFileFromS3 } from '../../s3';
+import { AWS_DEFINED, deleteFileFromS3 } from '../../s3';
 import { Vote } from './vote';
 
 /**
@@ -18,9 +18,7 @@ import { Vote } from './vote';
  *         __v:
  *           type: number
  *         author:
- *           type: string
- *         battle:
- *           type: string
+ *           $ref: '#/components/schemas/UserFrontend'
  *         caption:
  *           type: string
  *         creationTime:
@@ -28,13 +26,28 @@ import { Vote } from './vote';
  *           format: date-time
  *         filename:
  *           type: string
+ *         post:
+ *           type: string
  */
 const submissionSchema = new mongoose.Schema({
-  author: { type: mongoose.Schema.Types.ObjectId, ref: 'User' },
-  battle: { type: mongoose.Schema.Types.ObjectId, ref: 'Battle' },
-  caption: String,
-  creationTime: { type: Date, default: Date.now },
-  filename: String,
+  author: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true },
+  post: { type: mongoose.Schema.Types.ObjectId, ref: 'Battle', required: true },
+  caption: { type: String, default: '' },
+  creationTime: { type: Date, default: Date.now, required: true },
+  filename: { type: String, required: true },
+});
+
+/* Enforce that each user can only submit once.  */
+submissionSchema.index(
+  { post: 1, author: 1 },
+  { unique: true }
+);
+
+submissionSchema.pre([
+    'find',
+    'findOne',
+  ], async function() {
+    this.populate('author');
 });
 
 /* Middleware to delete or update Submission-related documents before deletion.  */
@@ -54,7 +67,7 @@ submissionSchema.pre(['deleteMany', 'findOneAndDelete'], async function () {
   });
   
   /* Delete image associated with Submission.  */
-  if (AWS_BUCKET_NAME) {
+  if (AWS_DEFINED) {
     try {
       await async.each(filenames, async (filename, callback) => {
         await deleteFileFromS3(filename);

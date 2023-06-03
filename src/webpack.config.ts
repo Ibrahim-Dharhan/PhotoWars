@@ -15,9 +15,14 @@ module.exports = {
       {
         test: /\.(js|jsx|ts|tsx)$/,
         exclude: /node_modules/,
-        use: {
-          loader: "babel-loader"
-        }
+        use: [
+          {
+            loader: "babel-loader"
+          },
+          {
+            loader: "ts-loader"
+          }
+        ]
       },
       {
         test: /\.css$/,
@@ -64,7 +69,6 @@ module.exports = {
       watch: [
         './server.ts',
         './definitions/**/*.ts',
-        './development/**/*.ts',
         './endpoints/**/*.ts',
         './types/**/*.ts'
       ], 

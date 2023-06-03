@@ -3,7 +3,7 @@
 import async = require('async');
 import mongoose = require('mongoose');
 import { Comment } from './comment';
-import { AWS_BUCKET_NAME, deleteFileFromS3 } from '../../s3';
+import { AWS_DEFINED, deleteFileFromS3 } from '../../s3';
 import { Submission } from './submission';
 import { Vote } from './vote';
 
@@ -19,7 +19,7 @@ import { Vote } from './vote';
  *         __v:
  *           type: number
  *         author:
- *           type: string
+ *           $ref: '#/components/schemas/UserFrontend'
  *         caption:
  *           type: string
  *         creationTime:
@@ -32,11 +32,18 @@ import { Vote } from './vote';
  *           type: string
  */
 const battleSchema = new mongoose.Schema({
-  author: { type: mongoose.Schema.Types.ObjectId, ref: 'User' },
-  caption: String,
-  creationTime: { type: Date, default: Date.now },
-  deadline: Date,
-  filename: String,
+  author: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true },
+  caption: { type: String, required: true},
+  creationTime: { type: Date, default: Date.now, required: true },
+  deadline: { type: Date, required: true},
+  filename: { type: String, required: true},
+});
+
+battleSchema.pre([
+    'find',
+    'findOne',
+  ], async function() {
+    if (!this.projection() || 'author' in this.projection()) this.populate('author');
 });
 
 /* Middleware to delete or update Battle-related documents before deletion.  */
@@ -56,11 +63,11 @@ battleSchema.pre(['deleteMany', 'findOneAndDelete'], async function () {
   });
   /* Delete all submissions to Battle.  */
   await Submission.deleteMany({
-    battle: { $in: _ids },
+    post: { $in: _ids },
   });
 
   /* Delete image associated with Battle.  */
-  if (AWS_BUCKET_NAME) {
+  if (AWS_DEFINED) {
     try {
       await async.each(filenames, async (filename, callback) => {
         await deleteFileFromS3(filename);

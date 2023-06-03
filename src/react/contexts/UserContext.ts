@@ -1,12 +1,36 @@
+import React from 'react';
 import { createContext } from 'react';
 
-const UserContext = createContext({
-  displayName: '',
-  setDisplayName: null,
-  open: false,
-  setOpen: null,
-  userId: '',
-  setUserId: null,
+class LoggedInUser {
+  _id: string;
+  description: string;
+  displayName: string;
+  filename: string;
+  firstName: string;
+  lastName: string;
+
+  constructor() {
+    this._id = '';
+    this.description = '';
+    this.displayName = '';
+    this.filename = '';
+    this.firstName = '';
+    this.lastName = '';
+  }
+}
+
+interface IUserContext {
+  openLoginModal: boolean;
+  setOpenLoginModal: React.Dispatch<React.SetStateAction<boolean>> | null;
+  loggedInUser: LoggedInUser;
+  setLoggedInUser: React.Dispatch<React.SetStateAction<LoggedInUser>> | null;
+}
+
+const UserContext = createContext<IUserContext>({
+  openLoginModal: false,
+  setOpenLoginModal: null,
+  loggedInUser: new LoggedInUser(),
+  setLoggedInUser: null
 });
 
-export { UserContext };
+export { LoggedInUser, UserContext };

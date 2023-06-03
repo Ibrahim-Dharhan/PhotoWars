@@ -1,9 +1,9 @@
 'use strict';
 
-import express = require('express');
+import { Request, Response, Router } from 'express';
 import fs = require('fs');
 import path = require('path');
-import { AWS_BUCKET_NAME, deleteFileFromS3, uploadFileToS3 } from '../../definitions/s3';
+import { AWS_DEFINED, deleteFileFromS3, uploadFileToS3 } from '../../definitions/s3';
 import { checkSchema, matchedData, validationResult } from 'express-validator';
 import { Battle } from '../../definitions/schemas/mongoose/battle';
 import { Comment } from '../../definitions/schemas/mongoose/comment';
@@ -14,9 +14,9 @@ import { Vote } from '../../definitions/schemas/mongoose/vote';
 import { UpdateUser } from '../../definitions/schemas/validation/updateUser';
 
 import * as constants from '../../definitions/constants';
-const IMAGE_DIR = process.env.IMAGE_DIR || constants._imageDir;
+const IMAGE_DIR = process.env['IMAGE_DIR'] || constants._imageDir;
 
-const userRouter = express.Router();
+const userRouter = Router();
 
 /**
  * @openapi
@@ -31,20 +31,7 @@ const userRouter = express.Router();
  *         content:
  *           application/json:
  *             schema:
- *               type: object
- *               properties:
- *                 _id:
- *                   type: string
- *                 description:
- *                   type: string
- *                 displayName:
- *                   type: string
- *                 filename:
- *                   type: string
- *                 firstName:
- *                   type: string
- *                 lastName:
- *                   type: string
+ *               $ref: '#/components/schemas/UserFrontend'
  *       404:
  *         $ref: '#/components/responses/404NotFound'
  *       500:
@@ -52,11 +39,7 @@ const userRouter = express.Router();
  */
 userRouter.get('/:id', async (req, res) => {
   const userId = req.params.id;
-  const query = User.findOne({ _id: userId }, [
-    '-__v',
-    '-loginName',
-    '-loginPassword',
-  ]);
+  const query = User.findOne({ _id: userId });
 
   try {
     const userObj = await query.lean().exec();
@@ -105,7 +88,7 @@ userRouter.get('/:id', async (req, res) => {
  *         content:
  *           application/json:
  *             schema:
- *               $ref: '#/components/schemas/User'
+ *               $ref: '#/components/schemas/UserFrontend'
  *       400:
  *         description: Invalid information to update user.
  *       401:
@@ -115,7 +98,7 @@ userRouter.get('/:id', async (req, res) => {
  *       500:
  *         $ref: '#/components/responses/500'
  */
-userRouter.put('/', upload.single('file'), checkSchema(UpdateUser), async (req, res) => {
+userRouter.put('/', upload.single('file'), checkSchema(UpdateUser), async (req: Request, res: Response) => {
   const errors = validationResult(req);
   if (!errors.isEmpty()) {
     req.file && await fs.promises.unlink(path.join(IMAGE_DIR, req.file.filename));
@@ -147,7 +130,7 @@ userRouter.put('/', upload.single('file'), checkSchema(UpdateUser), async (req, 
       res.status(404).send('Failed to find user.');
       console.error('Failed to find user.');
     } else {
-      if (AWS_BUCKET_NAME && req.file) {
+      if (AWS_DEFINED && req.file) {
         /* Uploading profile picture to S3 and delete old profile picture.  */
         await deleteFileFromS3(userObj.filename);
         await uploadFileToS3(req.file);
@@ -259,11 +242,11 @@ userRouter.get('/:id/battles', async (req, res) => {
  */
 userRouter.get('/:id/comments', async (req, res) => {
   const userId = req.params.id;
-  const query = Comment.find({ author: userId }, ['_id', 'text', 'post']);
+  const query = Comment.find({ author: userId }, ['_id']);
 
   try {
-    const commentProps = await query.lean().exec();
-    res.status(200).json(commentProps);
+    const comments = await query.lean().exec();
+    res.status(200).json(comments);
   } catch (err) {
     res.status(500).send('Internal server error.');
     return;
@@ -291,11 +274,11 @@ userRouter.get('/:id/comments', async (req, res) => {
  */
 userRouter.get('/:id/submissions', async (req, res) => {
   const userId = req.params.id;
-  const query = Submission.find({ author: userId }, ['_id', 'battle']);
+  const query = Submission.find({ author: userId }, ['_id', 'post']);
 
   try {
-    const submissionProps = await query.lean().exec();
-    res.status(200).json(submissionProps);
+    const submissions = await query.lean().exec();
+    res.status(200).json(submissions);
   } catch (err) {
     res.status(500).send('Internal server error.');
     return;
@@ -323,7 +306,7 @@ userRouter.get('/:id/submissions', async (req, res) => {
  */
 userRouter.get('/:id/votes', async (req, res) => {
   const userId = req.params.id;
-  const query = Vote.find({ user: userId }, ['-_id', '-__v']);
+  const query = Vote.find({ author: userId }, ['-_id', '-__v']);
 
   try {
     const voteIds = await query.populate('post', ['_id']).lean().exec();
