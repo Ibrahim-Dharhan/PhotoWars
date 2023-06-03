@@ -19,14 +19,18 @@ const startTimer = (
 ) => {
   const { total, days, hours, minutes, seconds } = getTimeRemaining(deadline);
   if (total >= 0) {
-    const dd = `${days < 10 ? '0' : ''}${days}d:`;
-    const hh = `${hours < 10 ? '0' : ''}${hours}h:`;
-    const mm = `${minutes < 10 ? '0' : ''}${minutes}m:`;
-    const ss = `${seconds < 10 ? '0' : ''}${seconds}s`;
-    setTimeRemaining && setTimeRemaining(dd + hh + mm + ss);
+    let remainingTime = '';
+    if (days > 0) {
+      remainingTime = `${days}d left`;
+    } else if (hours > 0) {
+      remainingTime = `${hours}h left`;
+    } else {
+      remainingTime = `${minutes}m left`;
+    }
+    setTimeRemaining && setTimeRemaining(remainingTime);
     if (expired) setExpired(false);
   } else {
-    setTimeRemaining && setTimeRemaining('00d:00h:00m:00s');
+    setTimeRemaining && setTimeRemaining('Finished');
     clearInterval(timerEvent);
   }
 };

@@ -33,7 +33,6 @@ const BattleView = () => {
 
   return (
     <Stack
-      alignItems="center"
       sx={{
         width: "100%"
       }}
