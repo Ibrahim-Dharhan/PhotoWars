@@ -32,10 +32,16 @@ import { Vote } from './vote';
 const submissionSchema = new mongoose.Schema({
   author: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true },
   post: { type: mongoose.Schema.Types.ObjectId, ref: 'Battle', required: true },
-  caption: { type: String, required: true },
+  caption: { type: String, default: '' },
   creationTime: { type: Date, default: Date.now, required: true },
   filename: { type: String, required: true },
 });
+
+/* Enforce that each user can only submit once.  */
+submissionSchema.index(
+  { post: 1, author: 1 },
+  { unique: true }
+);
 
 submissionSchema.pre([
     'find',

@@ -57,6 +57,7 @@ const AddComment = ({ postComment }: IProps) => {
             fullWidth
             placeholder='Add a comment'
             value={commentText}
+            disabled={!loggedInUser._id}
             onChange={(e) => {
               setCommentText(e.target.value);
             }}
@@ -64,6 +65,7 @@ const AddComment = ({ postComment }: IProps) => {
           <Button
             size='large'
             variant='contained'
+            disabled={!loggedInUser._id}
             onClick={(e) => {
               if (commentText.trim()) {
                 postComment(commentText.trim());

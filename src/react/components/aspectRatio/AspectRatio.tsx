@@ -2,9 +2,9 @@ import * as React from 'react';
 import { Box } from '@mui/material';
 
 interface IProps {
-  imageUrl: string;
+  src: string;
 }
-const AspectRatio = ({ imageUrl }: IProps) => {
+const AspectRatio = ({ src }: IProps) => {
   return (
     <Box
       sx={{
@@ -22,7 +22,7 @@ const AspectRatio = ({ imageUrl }: IProps) => {
       >
         <Box
           component="img"
-          src={imageUrl}
+          src={src}
           sx={{
             width: '100%',
             height: '100%',

@@ -9,6 +9,7 @@ import {
   Stack,
   TextField,
   Typography,
+  Paper
 } from '@mui/material';
 import { useParams, useNavigate } from 'react-router-dom';
 
@@ -66,32 +67,32 @@ const Submit = () => {
 
   return (
     <React.Fragment>
-      <Box sx={{ mt: 4 }}>
-      <form onSubmit={handleSubmit(submitForm)}>
-      <Stack spacing={2}>
-      <Typography variant="h6">
-        Enter a submission
-      </Typography>
-        <Controller
-          name="caption"
-          control={control}
-          defaultValue=""
-          rules={{
-            required: 'Caption required'
-          }}
-          render={({ field, fieldState: { error } }) => (
-            <TextField
-              error={!!error}
-              helperText={error ? error.message : null}
-              fullWidth
-              id="outlined-basic"
-              label="Photo caption"
-              variant="outlined"
-              inputProps = {{ maxLength: 60 }}
-              {...field}
+      <Paper elevation={0} sx={{ mt: 4 }}>
+        <form onSubmit={handleSubmit(submitForm)}>
+          <Stack spacing={2}>
+            <Typography variant="h6">
+              Enter a submission
+            </Typography>
+            <Controller
+              name="caption"
+              control={control}
+              defaultValue=""
+              rules={{
+                required: 'Caption required'
+              }}
+              render={({ field, fieldState: { error } }) => (
+                <TextField
+                  error={!!error}
+                  helperText={error ? error.message : null}
+                  fullWidth
+                  id="outlined-basic"
+                  label="Photo caption"
+                  variant="outlined"
+                  inputProps={{ maxLength: 60 }}
+                  {...field}
+                />
+              )}
             />
-          )}
-        />
 
         {image ?
            <React.Fragment>
@@ -114,64 +115,65 @@ const Submit = () => {
            </Box>
            </React.Fragment>
          :
-           <Controller
-             name="file"
-             control={control}
-             defaultValue={null}
-             rules={{
-               validate: {
-                 imageExists: value => !!value || 'Please upload an image.'
-               }
-             }}
-             render={({ field, fieldState: { error } }) => (
-             <React.Fragment>
-             <Box
-               onDrop={handleImageDrop}
-               onDragOver={(event) => event.preventDefault()}
-               sx={{ border: '1px dashed grey' }}
-               {...field}
-             >
-               <Stack
-              sx={{ height: "200px" }}
-              direction="row"
-              justifyContent="center"
-              alignItems="center"
-            >
-              <label>
-                 {'Drag and drop an image, or '}
-               </label>
-              <Button
-                variant="outlined"
-                component="label"
-                sx={{ ml: 1 }}>
-                Upload File
-                <input
-                  type="file"
-                  hidden
-                  id="image-upload"
-                  accept="image/*"
-                  name="image"
-                  onChange={handleImageChange}
-                />
-              </Button>
-            </Stack>
-             </Box>
-             <FormHelperText error={!!error}>
-               {error ? error.message : ''}
-             </FormHelperText>
-             </React.Fragment>
-             )}
-           />
-        }
-        <Button
-          variant="contained"
-          type="submit"
-        >
-          Post
-        </Button>
-        </Stack>
-      </form>
-      </Box>
+              <Controller
+                name="file"
+                control={control}
+                defaultValue={null}
+                rules={{
+                  validate: {
+                    imageExists: value => !!value || 'Please upload an image.'
+                  }
+                }}
+                render={({ field, fieldState: { error } }) => (
+                  <React.Fragment>
+                    <Box
+                      onDrop={handleImageDrop}
+                      onDragOver={(event) => event.preventDefault()}
+                      sx={{ border: '1px dashed grey' }}
+                      {...field}
+                    >
+                      <Stack
+                        sx={{ height: "200px" }}
+                        direction="row"
+                        justifyContent="center"
+                        alignItems="center"
+                      >
+                        <label>
+                          {'Drag and drop an image, or '}
+                        </label>
+                        <Button
+                          variant="outlined"
+                          component="label"
+                          color="info"
+                          sx={{ ml: 1 }}>
+                          Upload File
+                          <input
+                            type="file"
+                            hidden
+                            id="image-upload"
+                            accept="image/*"
+                            name="image"
+                            onChange={handleImageChange}
+                          />
+                        </Button>
+                      </Stack>
+                    </Box>
+                    <FormHelperText error={!!error}>
+                      {error ? error.message : ''}
+                    </FormHelperText>
+                  </React.Fragment>
+                )}
+              />
+            }
+          </Stack>
+          <Button
+            variant="contained"
+            type="submit"
+          >
+            Post
+          </Button>
+        </form>
+      </Paper>
     </React.Fragment>
   );
 };
