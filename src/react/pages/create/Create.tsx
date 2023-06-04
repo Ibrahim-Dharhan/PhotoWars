@@ -75,8 +75,8 @@ const Create = () => {
   return (
     <React.Fragment>
       <form onSubmit={handleSubmit(handleFormSubmit)}>
-        <Stack spacing={2}>
-          <Typography variant="h6" >
+        <Stack spacing={2} width={"500px"}>
+          <Typography variant="h3" color="#FFF">
             Create a war
           </Typography>
 
@@ -135,7 +135,7 @@ const Create = () => {
                     {...field}
                   >
                     <Stack
-                      sx={{ height: "200px" }}
+                      sx={{ height: "300px" }}
                       direction="row"
                       justifyContent="center"
                       alignItems="center"
