@@ -40,8 +40,10 @@ const BattleView = () => {
   const { battleId } = useParams<'battleId'>() as IParams;
   const navigate = useNavigate();
   useEffect(() => {
-    navigate(`?sort=${sortBy.toLocaleLowerCase()}`);
-  }, [sortBy, navigate]);
+    if (!location.pathname.includes('comments')) {
+      sortBy && navigate(`?sort=${sortBy.toLocaleLowerCase()}`);
+    }
+  }, [sortBy]);
   const handleSortChange = (event: {
     target: { value: React.SetStateAction<string> };
   }) => {
