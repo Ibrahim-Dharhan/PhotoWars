@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { useEffect, useState } from 'react';
+import { useEffect, useContext } from 'react';
 import axios, { isAxiosError } from 'axios';
 import { Box, MenuItem, Select, Stack } from '@mui/material';
 import { BattleCard } from '../../components/battleCard/BattleCard';
@@ -10,6 +10,7 @@ import {
   useNavigate,
   useParams,
 } from 'react-router-dom';
+import { UserContext } from '../../contexts/UserContext';
 import theme from '../../../theme';
 
 const battleViewLoader: LoaderFunction = async ({ params }) => {
@@ -35,16 +36,16 @@ interface IParams {
 }
 
 const BattleView = () => {
+  const { sortBy, setSortBy } = useContext(UserContext);
   const { battleId } = useParams<'battleId'>() as IParams;
-  const [sort, setSort] = useState<string>('New');
   const navigate = useNavigate();
   useEffect(() => {
-    navigate(`?sort=${sort.toLocaleLowerCase()}`);
-  }, [sort, navigate]);
+    navigate(`?sort=${sortBy.toLocaleLowerCase()}`);
+  }, [sortBy, navigate]);
   const handleSortChange = (event: {
     target: { value: React.SetStateAction<string> };
   }) => {
-    setSort(event.target.value);
+    setSortBy && setSortBy(event.target.value);
   };
   return (
     <Stack
@@ -58,7 +59,7 @@ const BattleView = () => {
         <Select
           labelId='demo-select-small-label'
           id='demo-select-small'
-          value={sort}
+          value={sortBy}
           renderValue={(selected) => {
             return `Sort By: ${selected}`;
           }}

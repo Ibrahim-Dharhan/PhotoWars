@@ -24,13 +24,17 @@ interface IUserContext {
   setOpenLoginModal: React.Dispatch<React.SetStateAction<boolean>> | null;
   loggedInUser: LoggedInUser;
   setLoggedInUser: React.Dispatch<React.SetStateAction<LoggedInUser>> | null;
+  sortBy: string;
+  setSortBy: React.Dispatch<React.SetStateAction<string>> | null;
 }
 
 const UserContext = createContext<IUserContext>({
   openLoginModal: false,
   setOpenLoginModal: null,
   loggedInUser: new LoggedInUser(),
-  setLoggedInUser: null
+  setLoggedInUser: null,
+  sortBy: 'New',
+  setSortBy: null,
 });
 
 export { LoggedInUser, UserContext };
