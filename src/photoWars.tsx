@@ -85,13 +85,13 @@ const PhotoWars = () => {
     <React.StrictMode>
       <CssBaseline />
       <ThemeProvider theme={theme}>
-      <Box
-        sx={{
-          minHeight: '100vh',
-          backgroundColor: theme.palette.background.default,
-        }}
-      >
-        <RouterProvider router={router} />
+        <Box
+          sx={{
+            minHeight: '100vh',
+            backgroundColor: theme.palette.background.default
+          }}
+        >
+          <RouterProvider router={router} />
         </Box>
       </ThemeProvider>
     </React.StrictMode>
