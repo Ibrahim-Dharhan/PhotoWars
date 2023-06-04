@@ -11,12 +11,7 @@ import {
   Typography,
   Paper
 } from '@mui/material';
-import { useParams, useNavigate, useOutletContext } from 'react-router-dom';
-
-interface BVSubmissionState {
-  numBVSubmissions: number,
-  setNumBVSubmissions: React.Dispatch<React.SetStateAction<number>>
-}
+import { useParams, useNavigate } from 'react-router-dom';
 
 interface IFormData {
   caption: string;
@@ -27,7 +22,6 @@ const Submit = () => {
   const { battleId } = useParams<'battleId'>();
   const [image, setImage] = useState<File | null>(null);
   const navigate = useNavigate();
-  const { numBVSubmissions, setNumBVSubmissions } = useOutletContext() as BVSubmissionState;
 
   const {
     control,
@@ -54,12 +48,7 @@ const Submit = () => {
     navigate('..');
   }
 
-  function handleImageChange(event) {
-    const file = event.target.files[0];
-    setImage(file);
-  }
-
-  function handleClearImage() {
+  const handleClearImage = () => {
     setImage(null);
     resetField('file');
   }
@@ -126,61 +115,10 @@ const Submit = () => {
            </Box>
            </React.Fragment>
          :
-           <Controller
-             name="file"
-             control={control}
-             defaultValue={null}
-             rules={{
-               validate: {
-                 imageExists: value => !!value || 'Please upload an image.'
-               }
-             }}
-             render={({ field, fieldState: { error } }) => (
-             <React.Fragment>
-             <Box
-               onDrop={handleImageDrop}
-               onDragOver={(event) => event.preventDefault()}
-               sx={{ border: '1px dashed grey' }}
-               {...field}
-             >
-               <Stack
-              sx={{ height: "200px" }}
-              direction="row"
-              justifyContent="center"
-              alignItems="center"
-            >
-              <label>
-                 {'Drag and drop an image, or '}
-               </label>
-              <Button
-                variant="outlined"
-                component="label"
-                sx={{ ml: 1 }}>
-                Upload File
-                <input
-                  type="file"
-                  hidden
-                  id="image-upload"
-                  accept="image/*"
-                  name="image"
-                  onChange={handleImageChange}
-                />
-                <Box display="flex" justifyContent="flex-end">
-                  <Button
-                    onClick={handleClearImage}
-                    sx={{ width: '10px' }}
-                    variant="outlined"
-                    color="info"
-                  >
-                    Clear
-                  </Button>
-                </Box>
-              </React.Fragment>
-              :
               <Controller
                 name="file"
                 control={control}
-                defaultValue=""
+                defaultValue={null}
                 rules={{
                   validate: {
                     imageExists: value => !!value || 'Please upload an image.'
@@ -215,7 +153,7 @@ const Submit = () => {
                             id="image-upload"
                             accept="image/*"
                             name="image"
-                            onChange={(event) => setImage(event.target.files[0])}
+                            onChange={handleImageChange}
                           />
                         </Button>
                       </Stack>

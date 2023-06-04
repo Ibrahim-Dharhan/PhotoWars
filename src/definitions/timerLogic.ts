@@ -17,7 +17,7 @@ const startTimer = (
   setExpired: React.Dispatch<React.SetStateAction<boolean>>,
   expired: boolean
 ) => {
-  const { total, days, hours, minutes, seconds } = getTimeRemaining(deadline);
+  const { total, days, hours, minutes/*, seconds */} = getTimeRemaining(deadline);
   if (total >= 0) {
     let remainingTime = '';
     if (days > 0) {

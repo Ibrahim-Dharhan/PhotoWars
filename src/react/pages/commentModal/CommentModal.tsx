@@ -153,7 +153,7 @@ const CommentModal = () => {
       <Box sx={modalStyle}>
         <Grid direction='row' container spacing={1} sx={{height: "100%"}}>
           <Grid item xs={6}>
-            <AspectRatio imageUrl={imageUrl} />
+            <AspectRatio src={imageUrl} />
           </Grid>
           <Grid item xs={6}>
             <List>

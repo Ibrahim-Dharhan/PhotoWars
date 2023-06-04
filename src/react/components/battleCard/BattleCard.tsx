@@ -5,7 +5,7 @@ import ModeCommentOutlinedIcon from '@mui/icons-material/ModeCommentOutlined';
 import FavoriteIcon from '@mui/icons-material/Favorite';
 import LockIcon from '@mui/icons-material/Lock';
 import ImageIcon from '@mui/icons-material/Image';
-import { blue, pink } from '@mui/material/colors';
+import { blue, pink, grey } from '@mui/material/colors';
 import {
   Box,
   Button,

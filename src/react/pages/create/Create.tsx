@@ -85,7 +85,7 @@ const Create = () => {
             <Controller
               name="caption"
               control={control}
-              defaultValue={null}
+              defaultValue=""
               rules={{
                 required: 'Caption required'
               }}
@@ -123,7 +123,7 @@ const Create = () => {
               <Controller
                 name="file"
                 control={control}
-                defaultValue=""
+                defaultValue={null}
                 rules={{
                   validate: {
                     imageExists: value => !!value || 'Please upload an image.'
@@ -158,7 +158,7 @@ const Create = () => {
                             id="image-upload"
                             accept="image/*"
                             name="image"
-                            onChange={(event) => setImage(event.target.files[0])}
+                            onChange={handleImageChange}
                           />
                         </Button>
                       </Stack>
