@@ -17,6 +17,8 @@ import AccountCircleOutlinedIcon from '@mui/icons-material/AccountCircleOutlined
 import { LoggedInUser, UserContext } from '../../contexts/UserContext';
 import { LoginModal } from '../loginModal/LoginModal';
 import { Link, useNavigate } from 'react-router-dom';
+// import SwordIcon from '../../assets/swords-icon.svg';
+const SwordIcon = require('../../assets/swords-icon.svg');
 
 const TopBar = () => {
   const {
@@ -68,8 +70,8 @@ const TopBar = () => {
             variant="h5"
           >
             <Icon>
-  <img src="../../assets/swords-icon.svg"/>
-</Icon>
+              <img src={SwordIcon as string} />
+            </Icon>
             PHOTOWARS
           </Typography>
           <Box>

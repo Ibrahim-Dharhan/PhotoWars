@@ -1,5 +1,3 @@
-"use strict"
-
 import path = require('path');
 import HtmlWebpackPlugin = require('html-webpack-plugin');
 import NodemonPlugin = require('nodemon-webpack-plugin');
@@ -29,7 +27,7 @@ module.exports = {
         use: ["style-loader", "css-loader"]
       },
       {
-        test: /\.(png|jpeg|jpg|gif)$/i,
+        test: /\.(png|jp(e*)g|gif|svg)$/i,
         type: 'asset'
       },
       {
