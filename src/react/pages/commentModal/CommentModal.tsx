@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { useEffect, useState } from 'react';
+import { useEffect, useContext, useState } from 'react';
 import axios, { isAxiosError } from 'axios';
 import {
   Avatar,
@@ -20,7 +20,7 @@ import {
   redirect,
   useLoaderData,
   useNavigate,
-  useParams
+  useParams,
 } from 'react-router-dom';
 import { AspectRatio } from '../../components/aspectRatio/AspectRatio';
 import { CommentModalCommentCard } from '../../components/commentModalCommentCard/CommentModalCommentCard';
@@ -28,6 +28,7 @@ import { PopulatedBattleFrontend } from '../../../definitions/classes/battle';
 import { PopulatedSubmissionFrontend } from '../../../definitions/classes/submission';
 import { PopulatedCommentFrontend } from '../../../definitions/classes/comment';
 import { Post } from '../../../definitions/classes/post';
+import { UserContext } from '../../contexts/UserContext';
 
 const modalStyle = {
   position: 'absolute',
@@ -50,35 +51,39 @@ interface ILoaderData {
 
 const commentModalLoader: LoaderFunction = async ({ params, request }) => {
   const postId = params['postId'];
-  const postType = (new URL(request.url)).searchParams.get('postType');
+  const postType = new URL(request.url).searchParams.get('postType');
   if (!postType) return redirect('..');
   const commentsPath = `/${postType}/${postId}/comments`;
   const postPath = `/${postType}/${postId}`;
   try {
-    const commentsRes = await axios.get<PopulatedCommentFrontend[]>(commentsPath);
+    const commentsRes = await axios.get<PopulatedCommentFrontend[]>(
+      commentsPath
+    );
     const postRes = await axios.get<Post>(postPath);
     return {
       postComments: commentsRes.data,
       post: postRes.data,
-      postType: postType
+      postType: postType,
     } as ILoaderData;
   } catch (err) {
-      if (isAxiosError(err)) {
-        if (err.response?.status === 404) {
-          return redirect('/404');
-        }
-        console.error(err.response?.data);
-      } else {
-        console.error(err);
+    if (isAxiosError(err)) {
+      if (err.response?.status === 404) {
+        return redirect('/404');
       }
+      console.error(err.response?.data);
+    } else {
+      console.error(err);
+    }
     return null;
   }
 };
 
 const CommentModal = () => {
+  const sortBy = useContext(UserContext).sortBy;
   const { postId } = useParams<'battleId' | 'postId'>();
   const { postComments, post, postType } = useLoaderData() as ILoaderData;
-  const [comments, setComments] = useState<PopulatedCommentFrontend[]>(postComments)
+  const [comments, setComments] =
+    useState<PopulatedCommentFrontend[]>(postComments);
   const [imageUrl, setImageUrl] = useState<string>('');
   const [authorImageUrl, setAuthorImageUrl] = useState<string>('');
 
@@ -122,8 +127,8 @@ const CommentModal = () => {
     };
   }, [post.author.filename]);
 
-  const handleClose = () => {
-    navigate('..');
+  const handleClose = (sortBy: string) => {
+    navigate(`../?sort=${sortBy.toLocaleLowerCase()}`);
   };
 
   /* Handler for posting a new comment. */
@@ -131,7 +136,7 @@ const CommentModal = () => {
     const path = `/${postType}/${postId}/comment`;
     const commentsPath = `/${postType}/${postId}/comments`;
     try {
-      await axios.post(path, {comment: newComment});
+      await axios.post(path, { comment: newComment });
       const res = await axios.get<PopulatedCommentFrontend[]>(commentsPath);
       setComments(res.data);
     } catch (err) {
@@ -141,17 +146,17 @@ const CommentModal = () => {
         console.error(err);
       }
     }
-  }
+  };
 
   return (
     <Modal
       open={true}
-      onClose={handleClose}
+      onClose={() => handleClose(sortBy)}
       aria-labelledby='modal-modal-title'
       aria-describedby='modal-modal-description'
     >
       <Box sx={modalStyle}>
-        <Grid direction='row' container spacing={1} sx={{height: "100%"}}>
+        <Grid direction='row' container spacing={1} sx={{ height: '100%' }}>
           <Grid item xs={6}>
             <AspectRatio src={imageUrl} />
           </Grid>
@@ -159,9 +164,7 @@ const CommentModal = () => {
             <List>
               <ListItem alignItems='flex-start'>
                 <ListItemAvatar>
-                  <Avatar
-                    src={authorImageUrl}
-                  >
+                  <Avatar src={authorImageUrl}>
                     {post.author?.displayName[0]}
                   </Avatar>
                 </ListItemAvatar>
@@ -201,9 +204,7 @@ const CommentModal = () => {
                 );
               })}
             </List>
-            <AddComment 
-              postComment={handlePostComment}
-            />
+            <AddComment postComment={handlePostComment} />
           </Grid>
         </Grid>
       </Box>
