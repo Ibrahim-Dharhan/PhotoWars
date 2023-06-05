@@ -7,16 +7,17 @@ import {
   Stack,
   TextField,
   Typography,
-  Paper
+  Paper,
 } from '@mui/material';
 import './create.css';
 import axios, { isAxiosError } from "axios";
 import { Controller, useForm } from 'react-hook-form';
 import { Dayjs } from 'dayjs';
-import { DatePicker } from '@mui/x-date-pickers/DatePicker';
+import { DateTimePicker } from '@mui/x-date-pickers/DateTimePicker';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { useNavigate } from 'react-router-dom';
+
 
 interface IFormData {
   caption: string;
@@ -77,7 +78,7 @@ const Create = () => {
     <React.Fragment>
       <Paper elevation={0} sx={{ mt: 4, width: '800px' }}>
         <form onSubmit={handleSubmit(handleFormSubmit)}>
-          <Stack spacing={2} width="500px">
+          <Stack spacing={2}>
             <Typography variant="h3" color="#FFF">
               Create a war
             </Typography>
@@ -170,15 +171,16 @@ const Create = () => {
                 )}
               />
             )}
-
-            <LocalizationProvider dateAdapter={AdapterDayjs}>
-              <DatePicker label="Deadline"
-                value={length}
-                onChange={(value) => {
-                  setLength(value);
-                }}
-              />
-            </LocalizationProvider>
+          <LocalizationProvider dateAdapter={AdapterDayjs}>
+          <DateTimePicker label="Deadline"
+            disableOpenPicker={false}
+            disablePast={true}
+            value={length}
+            onChange={(value) => {
+              setLength(value);
+            }}
+          />
+          </LocalizationProvider>
             {/* <Select
           labelId="demo-simple-select-label"
           id="demo-simple-select"
