@@ -70,7 +70,10 @@ const TopBar = () => {
             variant="h5"
           >
             <Icon>
-              <img src={SwordIcon as string} />
+              <Box
+                component="img"
+                src={SwordIcon}
+              />
             </Icon>
             PHOTOWARS
           </Typography>
