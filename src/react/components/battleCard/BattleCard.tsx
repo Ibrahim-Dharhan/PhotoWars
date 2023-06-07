@@ -185,6 +185,7 @@ const BattleCard = ({ battleId, isPhotoOfTheDay }: IProps) => {
             component='img'
             image={imageUrl}
             loading='lazy'
+            sx={{ height: '80vh', objectFit: 'contain' }}
           />
         </ButtonBase>
         <CardContent sx={{ mb: -2 }}>
