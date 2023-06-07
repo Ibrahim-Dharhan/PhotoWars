@@ -2,7 +2,7 @@ import * as React from 'react';
 import axios from 'axios';
 import { BattleCard } from '../../components/battleCard/BattleCard';
 import { LoaderFunction, useLoaderData } from 'react-router-dom';
-import { ImageList } from '@mui/material';
+import { ImageList, ImageListItem } from '@mui/material';
 import { TabBar } from '../../components/tabBar/TabBar';
 
 const feedLoader: LoaderFunction = async ({ request }) => {
@@ -25,16 +25,15 @@ const Feed = () => {
   return (
     <React.Fragment>
       <TabBar />
-      <ImageList variant="masonry" cols={3} gap={24}>
-         {battlesRecent.map((battle, i) => {
-            return (
+      <ImageList variant="masonry" cols={3} gap={12}>
+         {battlesRecent.map((battle, i) => (
+            <ImageListItem key={battle._id}>
               <BattleCard
                 battleId={battle._id}
                 isPhotoOfTheDay={i === 0}
-                key={battle._id}
               />
-            );
-          })}
+            </ImageListItem>
+          ))}
       </ImageList>
     </React.Fragment>
   );
