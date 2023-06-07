@@ -25,7 +25,7 @@ const Feed = () => {
   return (
     <React.Fragment>
       <TabBar />
-      <ImageList variant="masonry" cols={3} gap={8}>
+      <ImageList variant="masonry" cols={3} gap={12}>
          {battlesRecent.map((battle, i) => (
             <ImageListItem key={battle._id}>
               <BattleCard
