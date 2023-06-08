@@ -18,6 +18,8 @@ import { LoggedInUser, UserContext } from '../../contexts/UserContext';
 import { LoginModal } from '../loginModal/LoginModal';
 import { Link, useNavigate } from 'react-router-dom';
 // import SwordIcon from '../../assets/swords-icon.svg';
+
+// eslint-disable-next-line
 const SwordIcon = require('../../assets/swords-icon.svg');
 
 const TopBar = () => {

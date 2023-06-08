@@ -2,7 +2,6 @@
   "ts-node": {
     "files": true
   },
-  "include": ["./**/*.d.ts"],
   "compilerOptions": {
     "typeRoots": ["./node_modules/@types", "./**/*.d.ts"],
     "jsx": "react",
