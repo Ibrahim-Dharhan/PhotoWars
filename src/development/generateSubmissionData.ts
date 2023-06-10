@@ -7,12 +7,10 @@ import { Submission } from '../definitions/schemas/mongoose/submission';
 import { uploadFileToS3 } from '../definitions/s3';
 
 /* Get constants.  */
-import * as constants from '../definitions/constants';
 import dotenv = require('dotenv');
 import { Vote } from '../definitions/schemas/mongoose/vote';
 import { UserFrontend } from '../definitions/classes/user';
 dotenv.config();
-const IMAGE_DIR = process.env['IMAGE_DIR'] || constants._imageDir;
 
 async function generateSubmissionData(this: any, pathToSubmission: string, callback: any) {
   const model = 'Submission';
@@ -31,7 +29,7 @@ async function generateSubmissionData(this: any, pathToSubmission: string, callb
           submission.filename = imageName;
           if (process.env['IMAGE_DIR']) {
             await uploadFileToS3({
-              path: path.join(IMAGE_DIR, submission.filename),
+              path: path.join(pathToSubmission, 'image', submission.filename),
               filename: submission.filename
             });
             console.log(`Uploaded file ${submission.filename} to Amazon S3.`);
