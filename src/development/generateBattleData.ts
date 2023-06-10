@@ -9,12 +9,10 @@ import { generateComment } from './generateCommentData';
 // import { generateVote } from './generateVoteData';
 
 /* Get constants.  */
-import * as constants from '../definitions/constants';
 import dotenv = require('dotenv');
 import { Vote } from '../definitions/schemas/mongoose/vote';
 import { UserFrontend } from '../definitions/classes/user';
 dotenv.config();
-const IMAGE_DIR = process.env['IMAGE_DIR'] || constants._imageDir;
 
 const generateBattleData = async (pathToBattle: string) => {
   console.log('Generating battle data for ' + pathToBattle);
@@ -48,13 +46,14 @@ const generateBattleData = async (pathToBattle: string) => {
           for (const imageName of imageDir) {
             /* Should only be one image here.  */
             battle.filename = imageName;
-            await moveImagesToPublic(path.join(pathToBattle, 'image'), battle.filename);
             if (process.env['IMAGE_DIR']) {
               await uploadFileToS3({
-                path: path.join(IMAGE_DIR, battle.filename),
+                path: path.join(pathToBattle, 'image', battle.filename),
                 filename: battle.filename
               });
               console.log(`Uploaded file ${battle.filename} to Amazon S3.`);
+            } else {
+              await moveImagesToPublic(path.join(pathToBattle, 'image'), battle.filename);
             }
           }
           battle._id = postId;
