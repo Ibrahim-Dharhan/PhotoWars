@@ -29,13 +29,14 @@ async function generateSubmissionData(this: any, pathToSubmission: string, callb
         for (const imageName of imageDir) {
           /* Should only be one image here.  */
           submission.filename = imageName;
-          await moveImagesToPublic(path.join(pathToSubmission, 'image'), submission.filename);
           if (process.env['IMAGE_DIR']) {
             await uploadFileToS3({
               path: path.join(IMAGE_DIR, submission.filename),
               filename: submission.filename
             });
             console.log(`Uploaded file ${submission.filename} to Amazon S3.`);
+          } else {
+            await moveImagesToPublic(path.join(pathToSubmission, 'image'), submission.filename);
           }
         }
         submission.post = this.battleId;

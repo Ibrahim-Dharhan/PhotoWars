@@ -15,14 +15,15 @@ const generateUserData = async () => {
   try {
     await async.each(fakeUsers, async (user, callback) => {
       await User.create(user);
-      const imagePath = 'development/images';
-      await moveImagesToPublic(imagePath, user.filename);
       if (process.env['IMAGE_DIR']) {
         await uploadFileToS3({
           path: path.join(IMAGE_DIR, user.filename),
           filename: user.filename
         });
         console.log(`Uploaded file ${user.filename} to Amazon S3.`);
+      } else {
+        const imagePath = 'development/images';
+        await moveImagesToPublic(imagePath, user.filename);
       }
       callback();
     });

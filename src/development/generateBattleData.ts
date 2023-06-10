@@ -48,13 +48,14 @@ const generateBattleData = async (pathToBattle: string) => {
           for (const imageName of imageDir) {
             /* Should only be one image here.  */
             battle.filename = imageName;
-            await moveImagesToPublic(path.join(pathToBattle, 'image'), battle.filename);
             if (process.env['IMAGE_DIR']) {
               await uploadFileToS3({
                 path: path.join(IMAGE_DIR, battle.filename),
                 filename: battle.filename
               });
               console.log(`Uploaded file ${battle.filename} to Amazon S3.`);
+            } else {
+              await moveImagesToPublic(path.join(pathToBattle, 'image'), battle.filename);
             }
           }
           battle._id = postId;
